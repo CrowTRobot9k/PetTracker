@@ -8,6 +8,9 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Alert from '@mui/material/Alert';
 import FileUpload from './FileUpload';
 import React, { useState } from 'react';
+import Carousel from '../Components/Carousel/Carousel'
+import { EmblaOptionsType } from 'embla-carousel'
+import '../Styles/embla.css';
 
 interface AddPetProps {
     open: boolean;
@@ -18,6 +21,11 @@ export default function AddPet({ open, handleClose }: AddPetProps)
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
+    const OPTIONS: EmblaOptionsType = {}
+    const SLIDE_COUNT = 5
+    const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
+
 
     const handleFileInputChange = (newValue:File[]) => {
         setSelectedFiles(newValue);
@@ -69,8 +77,9 @@ export default function AddPet({ open, handleClose }: AddPetProps)
           <form name="addPetForm" onSubmit={handleAddPetSubmit}>
                 <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', width: '100%', alignItems: 'center' }}
-                >
-                    <DialogTitle>Add Pet</DialogTitle>
+          >
+          <DialogTitle>Add Pet</DialogTitle>
+          <Carousel slides={SLIDES} options={OPTIONS} />
 
             <FileUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} />
           </DialogContent>
@@ -136,6 +145,10 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                   type="text"
                   fullWidth
               />
+              </DialogContent>
+              <DialogContent
+                        sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', flex:1 }}
+              >
               <DialogContentText>
                   Birth Date
               </DialogContentText>
@@ -149,11 +162,7 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                   placeholder="Pet Birth Date"
                   type="text"
                   fullWidth
-                        />
-              </DialogContent>
-              <DialogContent
-                        sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', flex:1 }}
-              >
+              />
               <DialogContentText>
                   Weight
               </DialogContentText>

@@ -14,6 +14,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\Components\Logos\" />
+    <Folder Include="src\Components\Carousel\" />
     <Folder Include="src\Stores\" />
   </ItemGroup>
 </Project>
