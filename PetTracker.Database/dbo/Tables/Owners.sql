@@ -1,0 +1,11 @@
+﻿CREATE TABLE [dbo].[Owners]
+(
+	[Id]		INT IDENTITY (1, 1) NOT NULL,
+	[UserId]	NVARCHAR (450) NULL,
+    [FirstName] NVARCHAR(500) NOT NULL,
+	[LastName]  NVARCHAR(500) NOT NULL,
+	[Email]		NVARCHAR(500) NOT NULL,
+	[Phone]		NVARCHAR(500) NOT NULL,
+	 CONSTRAINT [PK_Owners] PRIMARY KEY CLUSTERED ([Id] ASC),
+	CONSTRAINT [FK_Owners_Users] FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id])
+)

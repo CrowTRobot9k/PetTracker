@@ -1,0 +1,10 @@
+{
+"SpaProxyServer": {
+"ServerUrl": "https://localhost:50449",
+"RedirectUrl": "",
+"LaunchCommand": "npm run dev",
+"WorkingDirectory": "C:\\Repositories\\PetTracker\\PetTracker.Server\\..\\pettracker.client",
+"MaxTimeoutInSeconds": "120",
+"KeepRunning": "false"
+}
+}

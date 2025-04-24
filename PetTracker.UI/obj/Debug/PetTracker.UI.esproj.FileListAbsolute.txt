@@ -1,0 +1,2 @@
+C:\Repositories\PetTracker\pettracker.client\obj\Debug\PetTracker.UI.esproj.CoreCompileInputs.cache
+C:\Repositories\PetTracker\PetTracker.UI\obj\Debug\PetTracker.UI.esproj.CoreCompileInputs.cache

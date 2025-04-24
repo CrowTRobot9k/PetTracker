@@ -1,0 +1,86 @@
+3/27/2025 11:36:49 AM	This log contains information about the import schema operation into project 'PetTracker.Database' on computer 'PETEVECTORPC' by user 'peter'.
+3/27/2025 11:36:50 AM	Import of database schema has started.
+3/27/2025 11:36:52 AM	Gathering logins
+3/27/2025 11:37:04 AM	Gathering database credentials
+3/27/2025 11:37:04 AM	Gathering database options
+3/27/2025 11:37:04 AM	Gathering generic database scoped configuration option
+3/27/2025 11:37:04 AM	Gathering users
+3/27/2025 11:37:04 AM	Gathering roles
+3/27/2025 11:37:04 AM	Gathering application roles
+3/27/2025 11:37:04 AM	Gathering role memberships
+3/27/2025 11:37:04 AM	Gathering filegroups
+3/27/2025 11:37:04 AM	Gathering full-text catalogs
+3/27/2025 11:37:04 AM	Gathering assemblies
+3/27/2025 11:37:04 AM	Gathering certificates
+3/27/2025 11:37:04 AM	Gathering symmetric keys
+3/27/2025 11:37:04 AM	Gathering encrypted symmetric keys
+3/27/2025 11:37:04 AM	Gathering schemas
+3/27/2025 11:37:04 AM	Gathering XML schema collections
+3/27/2025 11:37:04 AM	Gathering user-defined data types
+3/27/2025 11:37:04 AM	Gathering user-defined types
+3/27/2025 11:37:04 AM	Gathering table types
+3/27/2025 11:37:04 AM	Gathering unique keys for table types
+3/27/2025 11:37:04 AM	Gathering primary keys for table types
+3/27/2025 11:37:05 AM	Gathering indexes for table types
+3/27/2025 11:37:05 AM	Gathering check constraints for table types
+3/27/2025 11:37:05 AM	Gathering default constraints for table types
+3/27/2025 11:37:05 AM	Gathering partition functions
+3/27/2025 11:37:05 AM	Gathering partition schemes
+3/27/2025 11:37:05 AM	Gathering functions
+3/27/2025 11:37:05 AM	Gathering encrypted functions
+3/27/2025 11:37:05 AM	Gathering aggregates
+3/27/2025 11:37:05 AM	Gathering procedures
+3/27/2025 11:37:05 AM	Gathering encrypted procedures
+3/27/2025 11:37:05 AM	Gathering tables
+3/27/2025 11:37:05 AM	Gathering primary keys
+3/27/2025 11:37:05 AM	Gathering unique constraints
+3/27/2025 11:37:05 AM	Gathering foreign keys
+3/27/2025 11:37:05 AM	Gathering default constraints
+3/27/2025 11:37:05 AM	Gathering check constraints
+3/27/2025 11:37:05 AM	Gathering views
+3/27/2025 11:37:05 AM	Gathering encrypted views
+3/27/2025 11:37:05 AM	Gathering indexes
+3/27/2025 11:37:05 AM	Gathering statistics
+3/27/2025 11:37:05 AM	Gathering full-text index stoplists
+3/27/2025 11:37:05 AM	Gathering search property lists
+3/27/2025 11:37:05 AM	Gathering search properties
+3/27/2025 11:37:05 AM	Gathering full-text indexes
+3/27/2025 11:37:05 AM	Gathering column store indexes
+3/27/2025 11:37:05 AM	Gathering spatial indexes
+3/27/2025 11:37:05 AM	Gathering XML indexes
+3/27/2025 11:37:05 AM	Gathering Selective XML indexes
+3/27/2025 11:37:05 AM	Gathering encrypted triggers
+3/27/2025 11:37:05 AM	Gathering triggers
+3/27/2025 11:37:05 AM	Gathering encrypted and clr ddl triggers
+3/27/2025 11:37:05 AM	Gathering ddl triggers
+3/27/2025 11:37:05 AM	Creating edge constraints
+3/27/2025 11:37:05 AM	Gathering synonyms
+3/27/2025 11:37:05 AM	Gathering defaults
+3/27/2025 11:37:05 AM	Gathering data constraint uddt bindings
+3/27/2025 11:37:05 AM	Gathering rules
+3/27/2025 11:37:05 AM	Gathering data constraint uddt bindings
+3/27/2025 11:37:05 AM	Gathering message types
+3/27/2025 11:37:05 AM	Gathering queues
+3/27/2025 11:37:05 AM	Gathering contracts
+3/27/2025 11:37:05 AM	Gathering services
+3/27/2025 11:37:05 AM	Gathering event notifications
+3/27/2025 11:37:05 AM	Gathering remote service bindings
+3/27/2025 11:37:05 AM	Gathering broker priorities
+3/27/2025 11:37:05 AM	Gathering signatures
+3/27/2025 11:37:05 AM	Gathering compression options
+3/27/2025 11:37:05 AM	Gathering sequence types
+3/27/2025 11:37:05 AM	Gathering security policies
+3/27/2025 11:37:05 AM	Gather column encryption keys
+3/27/2025 11:37:05 AM	Gathering column master keys
+3/27/2025 11:37:05 AM	Gathering external data sources
+3/27/2025 11:37:05 AM	Gathering external file formats
+3/27/2025 11:37:05 AM	Gathering external tables
+3/27/2025 11:37:05 AM	Gathering XML index compression options
+3/27/2025 11:37:05 AM	Gathering extended properties
+3/27/2025 11:37:05 AM	Gathering assemblies
+3/27/2025 11:37:06 AM	Gathering logins
+3/27/2025 11:37:07 AM	Scanning project for duplicate elements
+3/27/2025 11:37:07 AM	Finished duplicate element processing
+3/27/2025 11:37:07 AM	Finished importing database.
+3/27/2025 11:37:07 AM	A summary of the import was saved to the following location: C:\Repositories\PetTracker\PetTracker.Database\Import Schema Logs\PetTracker.Database_20250327063649.log
+3/27/2025 11:37:07 AM	Click Finish to continue...

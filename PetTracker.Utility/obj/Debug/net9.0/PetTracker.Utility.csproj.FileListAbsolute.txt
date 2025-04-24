@@ -1,0 +1,12 @@
+C:\Repositories\PetTracker\PetTracker.Utility\bin\Debug\net9.0\PetTracker.Utility.deps.json
+C:\Repositories\PetTracker\PetTracker.Utility\bin\Debug\net9.0\PetTracker.Utility.dll
+C:\Repositories\PetTracker\PetTracker.Utility\bin\Debug\net9.0\PetTracker.Utility.pdb
+C:\Repositories\PetTracker\PetTracker.Utility\obj\Debug\net9.0\PetTracker.Utility.GeneratedMSBuildEditorConfig.editorconfig
+C:\Repositories\PetTracker\PetTracker.Utility\obj\Debug\net9.0\PetTracker.Utility.AssemblyInfoInputs.cache
+C:\Repositories\PetTracker\PetTracker.Utility\obj\Debug\net9.0\PetTracker.Utility.AssemblyInfo.cs
+C:\Repositories\PetTracker\PetTracker.Utility\obj\Debug\net9.0\PetTracker.Utility.csproj.CoreCompileInputs.cache
+C:\Repositories\PetTracker\PetTracker.Utility\obj\Debug\net9.0\PetTracker.Utility.sourcelink.json
+C:\Repositories\PetTracker\PetTracker.Utility\obj\Debug\net9.0\PetTracker.Utility.dll
+C:\Repositories\PetTracker\PetTracker.Utility\obj\Debug\net9.0\refint\PetTracker.Utility.dll
+C:\Repositories\PetTracker\PetTracker.Utility\obj\Debug\net9.0\PetTracker.Utility.pdb
+C:\Repositories\PetTracker\PetTracker.Utility\obj\Debug\net9.0\ref\PetTracker.Utility.dll

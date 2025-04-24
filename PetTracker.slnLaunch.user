@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "PetTracker.Server\\PetTracker.Server.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "PetTracker.UI\\PetTracker.UI.esproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

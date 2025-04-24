@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "8brzbiRoVV1hprQz+G7C4MddBo4tBzpLdyd9igzUn7I=",
+  "Source": "PetTracker.Server",
+  "BasePath": "_content/PetTracker.Server",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

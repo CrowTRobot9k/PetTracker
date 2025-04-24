@@ -1,0 +1,10 @@
+C:\Repositories\PetTracker\PetTracker.Database\bin\Debug\PetTracker.Database.dacpac
+C:\Repositories\PetTracker\PetTracker.Database\obj\Debug\PetTracker.Database.sqlproj.AssemblyReference.cache
+C:\Repositories\PetTracker\PetTracker.Database\obj\Debug\PetTracker.Database.dll
+C:\Repositories\PetTracker\PetTracker.Database\obj\Debug\PetTracker.Database.pdb
+C:\Repositories\PetTracker\PetTracker.Database\bin\Debug\PetTracker.Database.dll
+C:\Repositories\PetTracker\PetTracker.Database\bin\Debug\PetTracker.Database.pdb
+C:\Repositories\PetTracker\PetTracker.Database\obj\Debug\Model.xml
+C:\Repositories\PetTracker\PetTracker.Database\obj\Debug\refactor.xml
+C:\Repositories\PetTracker\PetTracker.Database\obj\Debug\postdeploy.sql
+C:\Repositories\PetTracker\PetTracker.Database\obj\Debug\predeploy.sql
