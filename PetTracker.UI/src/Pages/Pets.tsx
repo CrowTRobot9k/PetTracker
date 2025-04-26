@@ -62,7 +62,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
     };
 
     return (
-        <AuthorizeView>
+       /* <AuthorizeView>*/
         <AppTheme {...props}>
             <CssBaseline enableColorScheme />
             <AppAppBar currentPage="pets" />
@@ -300,6 +300,6 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                 </Grid>
             </Grid>
             </AppTheme>
-        </AuthorizeView>
+       /* </AuthorizeView>*/
     );
 }

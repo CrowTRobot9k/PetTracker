@@ -6,11 +6,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Alert from '@mui/material/Alert';
-import FileUpload from './FileUpload';
+import ImageUpload from './ImageUpload';
 import React, { useState } from 'react';
-import Carousel from '../Components/Carousel/Carousel'
-import { EmblaOptionsType } from 'embla-carousel'
-import '../Styles/embla.css';
 
 interface AddPetProps {
     open: boolean;
@@ -21,11 +18,6 @@ export default function AddPet({ open, handleClose }: AddPetProps)
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-
-    const OPTIONS: EmblaOptionsType = {}
-    const SLIDE_COUNT = 5
-    const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
-
 
     const handleFileInputChange = (newValue:File[]) => {
         setSelectedFiles(newValue);
@@ -75,13 +67,11 @@ export default function AddPet({ open, handleClose }: AddPetProps)
             maxWidth="lg"
           >
           <form name="addPetForm" onSubmit={handleAddPetSubmit}>
-                <DialogContent
+          <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', width: '100%', alignItems: 'center' }}
           >
-          <DialogTitle>Add Pet</DialogTitle>
-          <Carousel slides={SLIDES} options={OPTIONS} />
-
-            <FileUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} />
+          <DialogTitle>Add Pet</DialogTitle>      
+          <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} />
           </DialogContent>
           <DialogContent
               sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width: '100%' }}
@@ -201,7 +191,7 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                   id="petMedicalProblems"
                   name="petMedicalProblems"
                   label="Pet Medical Problems"
-                  placeholder="Pet Mecical Problems"
+                  placeholder="Pet Medical Problems"
                   type="textArea"
                   fullWidth
               />

@@ -1,5 +1,7 @@
 import React, { ChangeEvent } from 'react';
 import Button from '@mui/material/Button';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+
 
 interface FileUploadProps {
     label: string;
@@ -20,6 +22,7 @@ export default function FileUpload({ label, selectedFiles, onChange }: FileUploa
                 variant="contained"
                 component="label"
                 color="info"
+                endIcon={<FileUploadIcon />}
             >
                 {label}
                 <input

@@ -277,7 +277,7 @@ export default function MainContent() {
       </Box>
       <Grid container spacing={2} columns={12}>
         <Grid size={{ xs: 12, md: 6 }}>
-          <SyledCard
+          <Card
             variant="outlined"
             onFocus={() => handleFocus(0)}
             onBlur={handleBlur}
@@ -294,19 +294,19 @@ export default function MainContent() {
                 borderColor: 'divider',
               }}
             />
-            <SyledCardContent>
-              <Typography gutterBottom variant="caption" component="div">
-                {cardData[0].tag}
-              </Typography>
-              <Typography gutterBottom variant="h6" component="div">
-                {cardData[0].title}
-              </Typography>
-              <StyledTypography variant="body2" color="text.secondary" gutterBottom>
-                {cardData[0].description}
-              </StyledTypography>
-            </SyledCardContent>
-            <Author authors={cardData[0].authors} />
-          </SyledCard>
+            {/*<SyledCardContent>*/}
+            {/*  <Typography gutterBottom variant="caption" component="div">*/}
+            {/*    {cardData[0].tag}*/}
+            {/*  </Typography>*/}
+            {/*  <Typography gutterBottom variant="h6" component="div">*/}
+            {/*    {cardData[0].title}*/}
+            {/*  </Typography>*/}
+            {/*  <StyledTypography variant="body2" color="text.secondary" gutterBottom>*/}
+            {/*    {cardData[0].description}*/}
+            {/*  </StyledTypography>*/}
+            {/*</SyledCardContent>*/}
+            {/*<Author authors={cardData[0].authors} />*/}
+          </Card>
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           <SyledCard

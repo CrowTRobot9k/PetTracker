@@ -3,6 +3,8 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { Navigate } from 'react-router';
 import { User } from '../Types/SharedTypes';
+import { useLocation } from 'react-router';
+
 
 
 const UserContext = createContext({});
@@ -16,6 +18,8 @@ function AuthorizeView(props: { children: React.ReactNode }) {
 
     const [user, setUser] = useState(emptyuser);
 
+    const location = useLocation();
+    const currentRoute = location.pathname;
 
     useEffect(() => {
         // Get the cookie value
@@ -76,6 +80,11 @@ function AuthorizeView(props: { children: React.ReactNode }) {
             });
     }, []);
 
+    return (
+        <>
+            <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
+        </>
+    );
 
     if (loading) {
         return (
@@ -84,8 +93,27 @@ function AuthorizeView(props: { children: React.ReactNode }) {
             </>
         );
     }
-    else {
-        if (authorized && !loading) {
+    else
+    {
+        if (currentRoute == '/signin')
+        {
+            if (authorized && !loading && currentRoute == '/signin') {
+                return (
+                    <>
+                        <Navigate to="/" />
+                    </>
+                )
+            }
+            else
+            {
+                return (
+                    <>
+                        <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
+                    </>
+                );
+            }
+        }
+        else if (authorized && !loading) {
             return (
                 <>
                     <UserContext.Provider value={user}>{props.children}</UserContext.Provider>

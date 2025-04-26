@@ -158,7 +158,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
 
   return (
-            <AppTheme {...props}>
+      <AuthorizeView>
+      <AppTheme {...props}>
       <CssBaseline enableColorScheme />
       <SignInContainer direction="column" justifyContent="space-between">
         <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
@@ -254,6 +255,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           <ForgotPassword open={open} handleClose={handleClose} />
         </Card>
       </SignInContainer>
-            </AppTheme>
+          </AppTheme>
+      </AuthorizeView>
   );
 }
