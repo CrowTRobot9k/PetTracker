@@ -17,6 +17,7 @@
     <PackageJsonDependenciesEmblaCarouselReact Condition="$(PackageJsonDependenciesEmblaCarouselReact) == ''">^8.6.0</PackageJsonDependenciesEmblaCarouselReact>
     <PackageJsonDependenciesReact Condition="$(PackageJsonDependenciesReact) == ''">^19.0.0</PackageJsonDependenciesReact>
     <PackageJsonDependenciesReactDom Condition="$(PackageJsonDependenciesReactDom) == ''">^19.0.0</PackageJsonDependenciesReactDom>
+    <PackageJsonDependenciesReactMaterialUiCarousel Condition="$(PackageJsonDependenciesReactMaterialUiCarousel) == ''">^3.4.2</PackageJsonDependenciesReactMaterialUiCarousel>
     <PackageJsonDependenciesReactRouter Condition="$(PackageJsonDependenciesReactRouter) == ''">^7.4.0</PackageJsonDependenciesReactRouter>
     <PackageJsonDependenciesZustand Condition="$(PackageJsonDependenciesZustand) == ''">^5.0.3</PackageJsonDependenciesZustand>
     <PackageJsonDevdependenciesEslintJs Condition="$(PackageJsonDevdependenciesEslintJs) == ''">^9.21.0</PackageJsonDevdependenciesEslintJs>

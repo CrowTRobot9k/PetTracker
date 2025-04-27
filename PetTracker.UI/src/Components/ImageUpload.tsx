@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from 'react';
 import Button from '@mui/material/Button';
-import Carousel from '../Components/Carousel/Carousel'
+//import Carousel from '../Components/Carousel/Carousel'
 import { EmblaOptionsType } from 'embla-carousel'
 import '../Styles/embla.css';
 import Card from '@mui/material/Card';
@@ -8,6 +8,7 @@ import CardContent from '@mui/material/CardContent';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import Container from '@mui/material/Container';
 import CardMedia from '@mui/material/CardMedia';
+import Carousel from 'react-material-ui-carousel'
 
 import '../Styles/petTracker.css';
 
@@ -91,14 +92,15 @@ export default function ImageUpload({ label, selectedFiles, onChange }: FileUplo
             </Button>
             </Container>
             {selectedFiles?.length > 0 && (
-                <Container
-                    maxWidth="md"
-                    sx={{ display: 'flex', flexDirection: 'column', my: 1, gap: 1 }}
-                >
-                    <Card variant="outlined">
-                        <Carousel slides={slides} options={OPTIONS} />
-                    </Card>
-                </Container>
+
+                        <Carousel>
+                        {
+                            slides.map((s) => (
+                                s.slide
+                            ))
+                        }
+                        </Carousel>
+
             )}  
         </div>
     );
