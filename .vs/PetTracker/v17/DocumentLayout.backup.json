@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "C:\\Repositories\\PetTracker\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|c:\\repositories\\pettracker\\pettracker.ui\\src\\styles\\pettracker.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|solutionrelative:pettracker.ui\\src\\styles\\pettracker.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|c:\\repositories\\pettracker\\pettracker.ui\\src\\components\\imageupload.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
       "RelativeMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|solutionrelative:pettracker.ui\\src\\components\\imageupload.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|c:\\repositories\\pettracker\\pettracker.ui\\src\\components\\appappbar.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
-      "RelativeMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|solutionrelative:pettracker.ui\\src\\components\\appappbar.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+      "AbsoluteMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|c:\\repositories\\pettracker\\pettracker.ui\\src\\components\\addpet.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}|",
+      "RelativeMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|solutionrelative:pettracker.ui\\src\\components\\addpet.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|c:\\repositories\\pettracker\\pettracker.ui\\src\\components\\carousel\\carousel.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
@@ -19,16 +23,16 @@
       "RelativeMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|solutionrelative:pettracker.ui\\src\\components\\authorizeview.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|c:\\repositories\\pettracker\\pettracker.ui\\src\\components\\addpet.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}|",
-      "RelativeMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|solutionrelative:pettracker.ui\\src\\components\\addpet.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}|"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|c:\\repositories\\pettracker\\pettracker.ui\\src\\components\\fileupload.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
       "RelativeMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|solutionrelative:pettracker.ui\\src\\components\\fileupload.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|c:\\repositories\\pettracker\\pettracker.ui\\src\\components\\maincontent.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
       "RelativeMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|solutionrelative:pettracker.ui\\src\\components\\maincontent.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|c:\\repositories\\pettracker\\pettracker.ui\\src\\components\\appappbar.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|solutionrelative:pettracker.ui\\src\\components\\appappbar.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|c:\\repositories\\pettracker\\pettracker.ui\\src\\pages\\signin.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
@@ -105,11 +109,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "AddPet.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\AddPet.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Components\\AddPet.tsx",
@@ -123,57 +127,60 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "ImageUpload.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\ImageUpload.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Components\\ImageUpload.tsx",
               "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\ImageUpload.tsx",
               "RelativeToolTip": "PetTracker.UI\\src\\Components\\ImageUpload.tsx",
-              "ViewState": "AgIAACQAAAAAAAAAAAAowDEAAABBAAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAowDEAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
               "WhenOpened": "2025-04-25T20:09:41.363Z",
               "IsPinned": true,
               "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:132:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:133:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{68487888-204a-11d3-87eb-00c04f7971a5}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{a80febb4-e7e0-4147-b476-21aaf2453969}"
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "petTracker.css",
+              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Styles\\petTracker.css",
+              "RelativeDocumentMoniker": "PetTracker.UI\\src\\Styles\\petTracker.css",
+              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Styles\\petTracker.css",
+              "RelativeToolTip": "PetTracker.UI\\src\\Styles\\petTracker.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-04-27T03:25:02.973Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
+              "Title": "FileUpload.tsx",
+              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\FileUpload.tsx",
+              "RelativeDocumentMoniker": "PetTracker.UI\\src\\Components\\FileUpload.tsx",
+              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\FileUpload.tsx",
+              "RelativeToolTip": "PetTracker.UI\\src\\Components\\FileUpload.tsx",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2025-04-25T20:09:54.875Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Carousel.tsx",
+              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\Carousel\\Carousel.tsx",
+              "RelativeDocumentMoniker": "PetTracker.UI\\src\\Components\\Carousel\\Carousel.tsx",
+              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\Carousel\\Carousel.tsx",
+              "RelativeToolTip": "PetTracker.UI\\src\\Components\\Carousel\\Carousel.tsx",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAABUAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2025-04-26T04:23:21.793Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "AppAppBar.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\AppAppBar.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Components\\AppAppBar.tsx",
@@ -181,21 +188,7 @@
               "RelativeToolTip": "PetTracker.UI\\src\\Components\\AppAppBar.tsx",
               "ViewState": "AgIAAEcAAAAAAAAAAAAQwEsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2025-04-26T05:38:12.805Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Carousel.tsx",
-              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\Carousel\\Carousel.tsx",
-              "RelativeDocumentMoniker": "PetTracker.UI\\src\\Components\\Carousel\\Carousel.tsx",
-              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\Carousel\\Carousel.tsx",
-              "RelativeToolTip": "PetTracker.UI\\src\\Components\\Carousel\\Carousel.tsx",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAB0AAAAcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2025-04-26T04:23:21.793Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-26T05:38:12.805Z"
             },
             {
               "$type": "Document",
@@ -205,14 +198,14 @@
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Components\\MainContent.tsx",
               "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\MainContent.tsx",
               "RelativeToolTip": "PetTracker.UI\\src\\Components\\MainContent.tsx",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABcBAAAAAAAAAAAowCcBAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
               "WhenOpened": "2025-04-26T03:41:38.18Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "Blog.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Pages\\Blog.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Pages\\Blog.tsx",
@@ -220,12 +213,11 @@
               "RelativeToolTip": "PetTracker.UI\\src\\Pages\\Blog.tsx",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2025-04-23T21:23:48.637Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-23T21:23:48.637Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "Appointments.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Pages\\Appointments.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Pages\\Appointments.tsx",
@@ -233,12 +225,11 @@
               "RelativeToolTip": "PetTracker.UI\\src\\Pages\\Appointments.tsx",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2025-04-26T03:41:33.629Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-26T03:41:33.629Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "AuthorizeView.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\AuthorizeView.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Components\\AuthorizeView.tsx",
@@ -251,7 +242,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "SignIn.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Pages\\SignIn.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Pages\\SignIn.tsx",
@@ -259,12 +250,11 @@
               "RelativeToolTip": "PetTracker.UI\\src\\Pages\\SignIn.tsx",
               "ViewState": "AgIAALkAAAAAAAAAAAAQwKMAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2025-04-23T21:22:19.358Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-23T21:22:19.358Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "Owners.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Pages\\Owners.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Pages\\Owners.tsx",
@@ -272,12 +262,11 @@
               "RelativeToolTip": "PetTracker.UI\\src\\Pages\\Owners.tsx",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2025-04-23T21:22:55.111Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-23T21:22:55.111Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "Latest.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\Latest.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Components\\Latest.tsx",
@@ -285,12 +274,11 @@
               "RelativeToolTip": "PetTracker.UI\\src\\Components\\Latest.tsx",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2025-04-26T03:36:38.717Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-26T03:36:38.717Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "CarouselArrowButtons.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\Carousel\\CarouselArrowButtons.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Components\\Carousel\\CarouselArrowButtons.tsx",
@@ -302,7 +290,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "Microsoft.PackageDependencyResolution.targets",
               "DocumentMoniker": "C:\\Program Files\\dotnet\\sdk\\9.0.203\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.PackageDependencyResolution.targets",
               "RelativeDocumentMoniker": "..\\..\\Program Files\\dotnet\\sdk\\9.0.203\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.PackageDependencyResolution.targets",
@@ -310,12 +298,11 @@
               "RelativeToolTip": "..\\..\\Program Files\\dotnet\\sdk\\9.0.203\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.PackageDependencyResolution.targets",
               "ViewState": "AgIAAPQAAAAAAAAAAAAmwAABAABiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
-              "WhenOpened": "2025-04-24T03:46:50.224Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-24T03:46:50.224Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "Home.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Pages\\Home.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Pages\\Home.tsx",
@@ -327,7 +314,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "Pets.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Pages\\Pets.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Pages\\Pets.tsx",
@@ -335,12 +322,11 @@
               "RelativeToolTip": "PetTracker.UI\\src\\Pages\\Pets.tsx",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAABYAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2025-04-23T21:21:43.655Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-23T21:21:43.655Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "main.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\main.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\main.tsx",
@@ -352,7 +338,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "App.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\App.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\App.tsx",
@@ -364,7 +350,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "embla.css",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Styles\\embla.css",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Styles\\embla.css",
@@ -376,7 +362,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "PetController.cs",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.Server\\Controllers\\PetController.cs",
               "RelativeDocumentMoniker": "PetTracker.Server\\Controllers\\PetController.cs",
@@ -389,7 +375,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "WeatherForecastController.cs",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.Server\\Controllers\\WeatherForecastController.cs",
               "RelativeDocumentMoniker": "PetTracker.Server\\Controllers\\WeatherForecastController.cs",
@@ -401,7 +387,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.Server\\Program.cs",
               "RelativeDocumentMoniker": "PetTracker.Server\\Program.cs",
@@ -413,7 +399,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 23,
               "Title": "vite.config.ts",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\vite.config.ts",
               "RelativeDocumentMoniker": "PetTracker.UI\\vite.config.ts",
@@ -425,7 +411,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 24,
               "Title": "PetTrackerBaseController.cs",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.Server\\Controllers\\PetTrackerBaseController.cs",
               "RelativeDocumentMoniker": "PetTracker.Server\\Controllers\\PetTrackerBaseController.cs",
@@ -434,50 +420,6 @@
               "ViewState": "AgIAABUAAAAAAAAAAAAowBoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-23T20:18:02.278Z"
-            }
-          ]
-        },
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": -1,
-          "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{5a4e9529-b6a0-46b5-be4f-0f0b239bc0eb}"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "Orientation": 0,
-      "VerticalTabListWidth": 256,
-      "FloatingWindowState": {
-        "Id": "62dbea8c-2259-4b41-a9e3-358e03e05f16",
-        "Display": 0,
-        "X": 18,
-        "Y": 106,
-        "Width": 1907,
-        "Height": 1051,
-        "WindowState": 0
-      },
-      "DocumentGroups": [
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "FileUpload.tsx",
-              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\FileUpload.tsx",
-              "RelativeDocumentMoniker": "PetTracker.UI\\src\\Components\\FileUpload.tsx",
-              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\FileUpload.tsx",
-              "RelativeToolTip": "PetTracker.UI\\src\\Components\\FileUpload.tsx",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2025-04-25T20:09:54.875Z",
-              "EditorCaption": ""
             }
           ]
         }

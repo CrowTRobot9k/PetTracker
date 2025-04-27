@@ -9,6 +9,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import Container from '@mui/material/Container';
 import CardMedia from '@mui/material/CardMedia';
 
+import '../Styles/petTracker.css';
 
 interface FileUploadProps {
     label: string;
@@ -34,28 +35,44 @@ export default function ImageUpload({ label, selectedFiles, onChange }: FileUplo
         onChange(e.target.files);
 
         const files = [];
+        let idx = 0;
         Array.from(e.target.files).map((f) => {
             if (f) {
                 try {
                     const fileUrl = URL.createObjectURL(f)
-                    files.push({ fileName: f.name, src: fileUrl, })
+                    files.push({ id: idx, fileName: f.name, src: fileUrl, })
 
                 } catch (error) {
                     console.error("Error reading file:", error);
                 }
             }
+            idx++;
         })
 
-        setSlides(Array.from(files.map((f) => (
-                    <img src={ f.src} width="100" height="100" />
-        ))))
+        const slides = Array.from(files.map((f) => (
+            {
+                id: `${f.id}-${f.fileName}`,
+                slide: <img src={f.src} className="img-preview" />
+                //slide: <CardMedia
+                //    component="img"
+                //    alt={f.fileName}
+                //    image={f.src}
+                //    sx={{
+                //        aspectRatio: '16 / 9',
+                //        borderBottom: '1px solid',
+                //        borderColor: 'divider',
+                //    }}
+                ///>
+            }
+        )))
+
+        setSlides(slides);
     };
 
     return (
         <div>
             <Container
-                maxWidth="lg"
-                component="main"
+                maxWidth="xs"
                 sx={{ display: 'flex', flexDirection: 'column', my: 1, gap: 1 }}
             >
                 <Button
@@ -75,8 +92,7 @@ export default function ImageUpload({ label, selectedFiles, onChange }: FileUplo
             </Container>
             {selectedFiles?.length > 0 && (
                 <Container
-                    maxWidth="lg"
-                    component="main"
+                    maxWidth="md"
                     sx={{ display: 'flex', flexDirection: 'column', my: 1, gap: 1 }}
                 >
                     <Card variant="outlined">

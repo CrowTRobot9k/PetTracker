@@ -2,7 +2,6 @@ import React, { ChangeEvent } from 'react';
 import Button from '@mui/material/Button';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 
-
 interface FileUploadProps {
     label: string;
     selectedFiles: File[],
