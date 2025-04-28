@@ -4,33 +4,20 @@ import { IconButton } from "@mui/material";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Slide from "@mui/material/Slide";
+import { Fade } from '@mui/material';
 import Stack from "@mui/material/Stack";
 
-export default function Carousel({ slides }: React.ReactElement[]) {
-
-    const [cards, setCards] = useState<React.ReactElement[]>([]);
-    useEffect(() => {
-        setCards([]);
-        setCards(slides);
-        // eslint-disable-next-line
-    }, []);
-    // currentPage is the current page of the cards that is currently displayed
+export default function Carousel({ cards }) {
     const [currentPage, setCurrentPage] = useState(0);
-    // slideDirection is the direction that the cards will slide in
-    const [slideDirection, setSlideDirection] = useState<
-        "right" | "left" | undefined
-    >("left");
 
     const cardsPerPage = 1;
 
     // these two functions handle changing the pages
     const handleNextPage = () => {
-        setSlideDirection("left");
         setCurrentPage((prevPage) => prevPage + 1);
     };
 
     const handlePrevPage = () => {
-        setSlideDirection("right");
         setCurrentPage((prevPage) => prevPage - 1);
     };
 
@@ -75,7 +62,7 @@ export default function Carousel({ slides }: React.ReactElement[]) {
                         }}
                     >
                         {/* this is the slide animation that will be used to slide the cards in and out*/}
-                        <Slide direction={slideDirection} in={currentPage === index}>
+                        <Fade in={currentPage === index}>
                             <Stack
                                 spacing={2}
                                 direction="row"
@@ -83,13 +70,12 @@ export default function Carousel({ slides }: React.ReactElement[]) {
                                 justifyContent="center"
                                 sx={{ width: "100%", height: "100%" }}
                             >
-                                {/* this slices the cards array to only display the amount you have previously determined per page*/}
                                 {cards?.slice(
                                     index * cardsPerPage,
                                     index * cardsPerPage + cardsPerPage
                                 )}
                             </Stack>
-                        </Slide>
+                        </Fade>
                     </Box>
                 ))}
             </Box>

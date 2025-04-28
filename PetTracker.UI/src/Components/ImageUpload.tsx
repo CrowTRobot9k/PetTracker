@@ -19,12 +19,10 @@ interface FileUploadProps {
 }
 
 export default function ImageUpload({ label, selectedFiles, onChange }: FileUploadProps) {
-    const [slides, setSlides] = useState([]);
+    const [slides, setSlides] = useState<React.ReactElement[]>([]);
 
     const handleFileChange = (e) =>
     {
-        setSlides([]);
-
         onChange(e.target.files);
 
         const files = [];
@@ -43,17 +41,17 @@ export default function ImageUpload({ label, selectedFiles, onChange }: FileUplo
         })
 
         const updateSlides = Array.from(files.map((f) => (
-             <img key={`${f.id}_${f.fileName}`} src={f.src} className="img-preview" />   
+            <img key={`${f.id}_${f.fileName}`} src={f.src} className="img-preview" />  
         )))
 
         setSlides(updateSlides);
     };
 
     return (
-        <div>
+        <>
             <Container
                 maxWidth="xs"
-                sx={{ display: 'flex', flexDirection: 'column', my: 1, gap: 0 }}
+                sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', my: 1, gap: 0 }}
             >
                 <Button
                     variant="contained"
@@ -76,9 +74,9 @@ export default function ImageUpload({ label, selectedFiles, onChange }: FileUplo
             >
             {selectedFiles?.length > 0 && (
 
-                <Carousel slides={slides} />
+                <Carousel cards={slides} />
             )}  
             </Container>
-        </div>
+        </>
     );
 }
