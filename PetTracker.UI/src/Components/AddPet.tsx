@@ -70,14 +70,14 @@ export default function AddPet({ open, handleClose }: AddPetProps)
           <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', width: '100%', alignItems: 'center' }}
           >
-          <DialogTitle>Add Pet</DialogTitle>      
-          <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} />
+              <DialogTitle>Add Pet</DialogTitle>      
+              <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} />
           </DialogContent>
           <DialogContent
               sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width: '100%' }}
           >
               <DialogContent
-                        sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', flex:1 }}
+                        sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', flex:1 }}
               >
               <DialogContentText>
                Name
@@ -137,7 +137,7 @@ export default function AddPet({ open, handleClose }: AddPetProps)
               />
               </DialogContent>
               <DialogContent
-                        sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', flex:1 }}
+                        sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', flex:1 }}
               >
               <DialogContentText>
                   Birth Date

@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useState } from 'react';
 import Button from '@mui/material/Button';
-//import Carousel from '../Components/Carousel/Carousel'
 import { EmblaOptionsType } from 'embla-carousel'
 import '../Styles/embla.css';
 import Card from '@mui/material/Card';
@@ -8,7 +7,8 @@ import CardContent from '@mui/material/CardContent';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import Container from '@mui/material/Container';
 import CardMedia from '@mui/material/CardMedia';
-import Carousel from 'react-material-ui-carousel'
+import Carousel from '../Components/Carousel/Carousel';
+import { Paper } from '@mui/material'
 
 import '../Styles/petTracker.css';
 
@@ -18,25 +18,17 @@ interface FileUploadProps {
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-interface previewFile
-{
-    fileName: string,
-    src:string
-
-}
-
 export default function ImageUpload({ label, selectedFiles, onChange }: FileUploadProps) {
     const [slides, setSlides] = useState([]);
-    const OPTIONS: EmblaOptionsType = {}
-
-
 
     const handleFileChange = (e) =>
     {
+        setSlides([]);
+
         onChange(e.target.files);
 
         const files = [];
-        let idx = 0;
+        let idx = 1;
         Array.from(e.target.files).map((f) => {
             if (f) {
                 try {
@@ -50,31 +42,18 @@ export default function ImageUpload({ label, selectedFiles, onChange }: FileUplo
             idx++;
         })
 
-        const slides = Array.from(files.map((f) => (
-            {
-                id: `${f.id}-${f.fileName}`,
-                slide: <img src={f.src} className="img-preview" />
-                //slide: <CardMedia
-                //    component="img"
-                //    alt={f.fileName}
-                //    image={f.src}
-                //    sx={{
-                //        aspectRatio: '16 / 9',
-                //        borderBottom: '1px solid',
-                //        borderColor: 'divider',
-                //    }}
-                ///>
-            }
+        const updateSlides = Array.from(files.map((f) => (
+             <img key={`${f.id}_${f.fileName}`} src={f.src} className="img-preview" />   
         )))
 
-        setSlides(slides);
+        setSlides(updateSlides);
     };
 
     return (
         <div>
             <Container
                 maxWidth="xs"
-                sx={{ display: 'flex', flexDirection: 'column', my: 1, gap: 1 }}
+                sx={{ display: 'flex', flexDirection: 'column', my: 1, gap: 0 }}
             >
                 <Button
                     variant="contained"
@@ -89,19 +68,17 @@ export default function ImageUpload({ label, selectedFiles, onChange }: FileUplo
                         multiple
                         onChange={handleFileChange}
                     />
-            </Button>
+                </Button>
             </Container>
+            <Container
+                maxWidth="sm"
+                sx={{ display: 'flex', flexDirection: 'column', my: 1, gap: 0 }}
+            >
             {selectedFiles?.length > 0 && (
 
-                        <Carousel>
-                        {
-                            slides.map((s) => (
-                                s.slide
-                            ))
-                        }
-                        </Carousel>
-
+                <Carousel slides={slides} />
             )}  
+            </Container>
         </div>
     );
 }

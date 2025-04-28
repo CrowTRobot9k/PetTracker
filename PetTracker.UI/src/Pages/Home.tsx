@@ -3,13 +3,14 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import AppTheme from '../Theme/AppTheme';
 import AppAppBar from '../Components/AppAppBar';
-import MainContent from '../Components/MainContent';
-import Latest from '../Components/Latest';
 import PtFooter from '../Components/PtFooter';
 import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
-
+import { Paper, Button } from '@mui/material';
 
 export default function Blog(props: { disableCustomTheme?: boolean }) {
+
+
+    
     return (
         <AuthorizeView>
             <AppTheme {...props}>
