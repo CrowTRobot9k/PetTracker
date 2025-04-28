@@ -8,6 +8,15 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Alert from '@mui/material/Alert';
 import ImageUpload from './ImageUpload';
 import React, { useState } from 'react';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import Pet from '../Types/SharedTypes';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+import '../Styles/petTracker.css';
 
 interface AddPetProps {
     open: boolean;
@@ -18,10 +27,41 @@ export default function AddPet({ open, handleClose }: AddPetProps)
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const [addPet, setAddPet] = useState<Pet>({type:""});
+
+    const petTypes = [
+        { value: "Cat" },
+        { value: "Dog" },
+        { value: "Fish" }
+    ]
+
+    const petBreeds = [
+        { value: "Maincoone" },
+        { value: "Schnoodle" },
+        { value: "Dutch Shepherd" }
+    ]
+
+    const petGenders = [
+        { value: "Male" },
+        { value: "Female" },
+    ]
 
     const handleFileInputChange = (newValue:File[]) => {
         setSelectedFiles(newValue);
     };
+
+    const handleChangePetType = (e: SelectChangeEvent) => {
+        setAddPet({ ...addPet, type: e.target.value });
+    };
+
+    const handleChangePetBreed = (e: SelectChangeEvent) => {
+        setAddPet({ ...addPet, breed: e.target.value });
+    };
+
+    const handleChangePetBirthDate= (e) => {
+        setAddPet({ ...addPet, birthDate: e.value });
+    };
+
 
     const handleAddPetSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -96,31 +136,53 @@ export default function AddPet({ open, handleClose }: AddPetProps)
               <DialogContentText>
                   Pet Type
               </DialogContentText>
-              <OutlinedInput
-                  autoFocus
-                  //required
-                  margin="dense"
-                  id="petType"
-                  name="petType"
-                  label="Pet Type"
-                  placeholder="Pet Type"
-                  type="text"
-                  fullWidth
-              />
+              <FormControl fullWidth>
+                  <Select
+                      displayEmpty
+                      id="select-pet-type"
+                      name="petType"
+                      value={addPet.type}
+                      label="Pet Type"
+                      onChange={handleChangePetType}
+                      renderValue={(selected) => {
+                          if (!selected) {
+                              return <em>Select Type</em>;
+                          }
+
+                          return selected;
+                      }}
+                  >
+                  {petTypes?.length > 0 && (petTypes.map(m => 
+
+                      <MenuItem value={m.value}>{m.value}</MenuItem>
+                  ))}
+                  </Select>
+              </FormControl>
               <DialogContentText>
                   Breed
               </DialogContentText>
-              <OutlinedInput
-                  autoFocus
-                  //required
-                  margin="dense"
-                  id="petBreed"
-                  name="petBreed"
-                  label="Pet Breed"
-                  placeholder="Pet Breed"
-                  type="text"
-                  fullWidth
-              />
+              <FormControl fullWidth>
+                  <Select
+                      displayEmpty
+                      id="select-pet-type"
+                      name="petBreed"
+                      value={addPet.breed}
+                      label="Pet Breed"
+                      onChange={handleChangePetBreed}
+                      renderValue={(selected) => {
+                          if (!selected) {
+                              return <em>Select Breed</em>;
+                          }
+
+                          return selected;
+                      }}
+                  >
+                      {petBreeds?.length > 0 && (petBreeds.map(m =>
+
+                          <MenuItem value={m.value}>{m.value}</MenuItem>
+                      ))}
+                  </Select>
+              </FormControl>
               <DialogContentText>
                   Color
               </DialogContentText>
@@ -134,6 +196,7 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                   placeholder="Pet Color"
                   type="text"
                   fullWidth
+                  value={addPet.breed}
               />
               </DialogContent>
               <DialogContent
@@ -142,17 +205,13 @@ export default function AddPet({ open, handleClose }: AddPetProps)
               <DialogContentText>
                   Birth Date
               </DialogContentText>
-              <OutlinedInput
-                  autoFocus
-                  //required
-                  margin="dense"
-                  id="petBirthDate"
-                  name="petBirthDate"
-                  label="Pet Birth Date"
-                  placeholder="Pet Birth Date"
-                  type="text"
-                  fullWidth
-              />
+             <LocalizationProvider dateAdapter={AdapterDayjs}>
+                 <DatePicker
+                     value={addPet.birthDate}
+                                onChange={handleChangePetBirthDate}
+                                slotProps={{ textField: { size: 'small' } }}
+                 />
+             </LocalizationProvider>
               <DialogContentText>
                   Weight
               </DialogContentText>
@@ -170,17 +229,26 @@ export default function AddPet({ open, handleClose }: AddPetProps)
               <DialogContentText>
                   Sex
               </DialogContentText>
-              <OutlinedInput
-                  autoFocus
-                  //required
-                  margin="dense"
-                  id="petSex"
+              <Select
+                  displayEmpty
+                  id="select-pet-sex"
                   name="petSex"
+                  value={addPet.type}
                   label="Pet Sex"
-                  placeholder="Pet Sex"
-                  type="text"
-                  fullWidth
-              />
+                  onChange={handleChangePetType}
+                  renderValue={(selected) => {
+                      if (!selected) {
+                          return <em>Select Sex</em>;
+                      }
+
+                      return selected;
+                  }}
+              >
+                  {petGenders?.length > 0 && (petGenders.map(m =>
+
+                      <MenuItem value={m.value}>{m.value}</MenuItem>
+                  ))}
+              </Select>
               <DialogContentText>
                   Medical Problems
               </DialogContentText>
@@ -193,6 +261,8 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                   label="Pet Medical Problems"
                   placeholder="Pet Medical Problems"
                   type="textArea"
+                  multiline
+                  minRows="3"
                   fullWidth
               />
                         </DialogContent>

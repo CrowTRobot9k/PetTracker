@@ -17,6 +17,7 @@ namespace PetTracker.Domain.DTOs
         public double? Weight { get; set; }
         public string PetSex { get; set; } = string.Empty;
         public int PetTypeId { get; set; }
+        public string? PetType { get; set; }
         public string? PetMedicalProblems { get; set; }
     }
 }

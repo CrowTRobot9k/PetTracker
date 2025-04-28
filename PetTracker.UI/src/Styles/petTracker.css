@@ -4,12 +4,3 @@
     height:200px;
     object-fit: contain;
 }
-
-.embla__container {
-/*    display: grid;
-    grid-auto-flow: row;*/
-    grid-auto-rows: 100%;  
-    height: 200px;
-}
-
-

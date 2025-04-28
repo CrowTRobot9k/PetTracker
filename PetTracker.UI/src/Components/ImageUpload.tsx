@@ -1,14 +1,8 @@
 import React, { ChangeEvent, useState } from 'react';
 import Button from '@mui/material/Button';
-import { EmblaOptionsType } from 'embla-carousel'
-import '../Styles/embla.css';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import Container from '@mui/material/Container';
-import CardMedia from '@mui/material/CardMedia';
 import Carousel from '../Components/Carousel/Carousel';
-import { Paper } from '@mui/material'
 
 import '../Styles/petTracker.css';
 
