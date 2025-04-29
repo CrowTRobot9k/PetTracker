@@ -7,7 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Alert from '@mui/material/Alert';
 import ImageUpload from './ImageUpload';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -15,6 +15,7 @@ import Pet from '../Types/SharedTypes';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import useSharedStore from '../Stores/SharedStore';
 
 import '../Styles/petTracker.css';
 
@@ -27,13 +28,14 @@ export default function AddPet({ open, handleClose }: AddPetProps)
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-    const [addPet, setAddPet] = useState<Pet>({type:""});
+    const [addPet, setAddPet] = useState<Pet>({ type: "" });
 
-    const petTypes = [
-        { value: "Cat" },
-        { value: "Dog" },
-        { value: "Fish" }
-    ]
+    const getPetTypes = useSharedStore((state) => state.getPetTypes);
+    const petTypes = useSharedStore((state) => state.petTypes);
+
+    useEffect(() => {
+     getPetTypes();
+    },[]);
 
     const petBreeds = [
         { value: "Maincoone" },
@@ -45,6 +47,7 @@ export default function AddPet({ open, handleClose }: AddPetProps)
         { value: "Male" },
         { value: "Female" },
     ]
+
 
     const handleFileInputChange = (newValue:File[]) => {
         setSelectedFiles(newValue);
@@ -152,9 +155,9 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                           return selected;
                       }}
                   >
-                  {petTypes?.length > 0 && (petTypes.map(m => 
+                  {petTypes?.length > 0 && (petTypes?.map(m => 
 
-                      <MenuItem value={m.value}>{m.value}</MenuItem>
+                      <MenuItem value={m.type}>{m.type}</MenuItem>
                   ))}
                   </Select>
               </FormControl>

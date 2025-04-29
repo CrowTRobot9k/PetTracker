@@ -4,6 +4,8 @@ using PetTracker.SqlDb.Models;
 
 using PetTracker.Domain.DTOs;
 using PetTracker.Domain.Models;
+using System.ComponentModel;
+using Microsoft.EntityFrameworkCore;
 namespace PetTracker.Infrastucture
 {
     public class PetService : ServiceBase
@@ -34,6 +36,20 @@ namespace PetTracker.Infrastucture
             {
                 _logger.LogError(ex, "An error occurred while creating a pet.");
                 return false;
+            }
+        }
+
+        public async Task<List<PetTypeDto>> GetPetTypes()
+        {
+            try
+            {
+                var petTypes = await _dbContext.PetTypes.ToListAsync();
+                return petTypes.Select(s=>new PetTypeDto(s)).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting pet types.");
+                return new List<PetTypeDto>();
             }
         }
     }

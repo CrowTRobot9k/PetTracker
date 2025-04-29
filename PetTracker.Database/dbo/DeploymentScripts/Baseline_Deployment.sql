@@ -21,13 +21,13 @@ using (
 	 ,(3,'Fish')
 	 ,(4,'Bird')
 	 ,(5,'Reptile')
-) as S (Id,[Name])
+) as S (Id,[Type])
 on T.Id = S.Id
 when not matched then
-insert ([Name])
-	values (S.[Name])
+insert ([Id],[Type])
+	values (S.Id,S.[Type])
 when matched then update set
-	T.[Name] = S.[Name];
+	T.[Type] = S.[Type];
 
 --dog breed types
 merge BreedTypes as T

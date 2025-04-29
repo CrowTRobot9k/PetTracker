@@ -57,5 +57,19 @@ namespace PetTracker.Server.Controllers
 
             return true;
         }
+
+        [HttpGet("GetPetTypes")]
+        public async Task<List<PetTypeDto>> GetPetTypes()
+        {
+            try
+            {
+                return await _PetService.GetPetTypes();
+            }
+            catch (Exception ex)
+            {
+                HandleUIException(ex);
+            }
+            return new List<PetTypeDto>();
+        }
     }
 }
