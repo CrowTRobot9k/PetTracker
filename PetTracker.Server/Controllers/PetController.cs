@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetTracker.Domain.DTOs;
 using PetTracker.Domain.Models;
-using PetTracker.Infrastucture;
+using PetTracker.Infrastucture.Services;
 using PetTracker.Server.Models;
 using PetTracker.SqlDb.Models;
 
@@ -70,6 +70,20 @@ namespace PetTracker.Server.Controllers
                 HandleUIException(ex);
             }
             return new List<PetTypeDto>();
+        }
+
+        [HttpGet("GetPetBreeds")]
+        public async Task<List<BreedTypeDto>> GetPetBreeds(int petTypeId)
+        {
+            try
+            {
+                return await _PetService.GetPetBreeds(petTypeId);
+            }
+            catch (Exception ex)
+            {
+                HandleUIException(ex);
+            }
+            return new List<BreedTypeDto>();
         }
     }
 }

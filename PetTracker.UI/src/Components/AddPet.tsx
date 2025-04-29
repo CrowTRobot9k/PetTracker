@@ -15,6 +15,8 @@ import Pet from '../Types/SharedTypes';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 import useSharedStore from '../Stores/SharedStore';
 
 import '../Styles/petTracker.css';
@@ -28,20 +30,25 @@ export default function AddPet({ open, handleClose }: AddPetProps)
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-    const [addPet, setAddPet] = useState<Pet>({ type: "" });
+    const [addPet, setAddPet] = useState<Pet>({ type: "", breeds:[] });
+//    const [pb, setpb] = useState<string[]>([]);
 
     const getPetTypes = useSharedStore((state) => state.getPetTypes);
     const petTypes = useSharedStore((state) => state.petTypes);
 
+    const getPetBreeds = useSharedStore((state) => state.getPetBreeds);
+    const petBreeds = useSharedStore((state) => state.petBreeds);
+
     useEffect(() => {
      getPetTypes();
-    },[]);
+    }, []);
 
-    const petBreeds = [
-        { value: "Maincoone" },
-        { value: "Schnoodle" },
-        { value: "Dutch Shepherd" }
-    ]
+    useEffect(() =>
+    {
+        if (addPet.petTypeId) {
+            getPetBreeds(addPet.petTypeId);
+        }
+    }, [addPet.petTypeId]);
 
     const petGenders = [
         { value: "Male" },
@@ -53,12 +60,17 @@ export default function AddPet({ open, handleClose }: AddPetProps)
         setSelectedFiles(newValue);
     };
 
-    const handleChangePetType = (e: SelectChangeEvent) => {
-        setAddPet({ ...addPet, type: e.target.value });
+    const handleChangePetType = (e: SelectChangeEvent) =>
+    {
+        if (petTypes && petTypes?.length > 0) {
+            const petType = petTypes.find(f => f.type == e.target.value);
+            setAddPet({ ...addPet, petTypeId:petType.id, type: petType.type });
+        }
     };
 
-    const handleChangePetBreed = (e: SelectChangeEvent) => {
-        setAddPet({ ...addPet, breed: e.target.value });
+    const handleChangePetBreed = (e: SelectChangeEvent) =>
+    {
+       setAddPet({ ...addPet, breeds: e.target.value });
     };
 
     const handleChangePetBirthDate= (e) => {
@@ -149,16 +161,16 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                       onChange={handleChangePetType}
                       renderValue={(selected) => {
                           if (!selected) {
-                              return <em>Select Type</em>;
+                              return <em>Select</em>;
                           }
 
                           return selected;
                       }}
                   >
-                  {petTypes?.length > 0 && (petTypes?.map(m => 
+                        {petTypes?.length > 0 && (petTypes?.map(m =>
 
-                      <MenuItem value={m.type}>{m.type}</MenuItem>
-                  ))}
+                            <MenuItem key={ m.type } value={m.type}>{m.type}</MenuItem>
+                        ))}
                   </Select>
               </FormControl>
               <DialogContentText>
@@ -166,23 +178,33 @@ export default function AddPet({ open, handleClose }: AddPetProps)
               </DialogContentText>
               <FormControl fullWidth>
                   <Select
+                      multiple
                       displayEmpty
                       id="select-pet-type"
                       name="petBreed"
-                      value={addPet.breed}
+                      value={addPet.breeds}
                       label="Pet Breed"
                       onChange={handleChangePetBreed}
                       renderValue={(selected) => {
-                          if (!selected) {
-                              return <em>Select Breed</em>;
+                          if (petBreeds?.length < 1) {
+                              return <em>Select Pet Type To View Breeds</em>;
                           }
-
-                          return selected;
+                          if (petBreeds?.length > 0 && selected.length < 1) {
+                              return <em>Select</em>;
+                          }
+                          return (
+                              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                  {selected.map((value) => (
+                                      <Chip key={value} label={value} />
+                                  ))}
+                              </Box>)
                       }}
+                      
+                      disabled = { petBreeds?.length > 0? false : true }
                   >
                       {petBreeds?.length > 0 && (petBreeds.map(m =>
 
-                          <MenuItem value={m.value}>{m.value}</MenuItem>
+                          <MenuItem key={ m.name } value={m.name}>{m.name}</MenuItem>
                       ))}
                   </Select>
               </FormControl>
@@ -199,7 +221,7 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                   placeholder="Pet Color"
                   type="text"
                   fullWidth
-                  value={addPet.breed}
+                  value={addPet.color}
               />
               </DialogContent>
               <DialogContent
@@ -236,7 +258,7 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                   displayEmpty
                   id="select-pet-sex"
                   name="petSex"
-                  value={addPet.type}
+                  value={addPet.sex}
                   label="Pet Sex"
                   onChange={handleChangePetType}
                   renderValue={(selected) => {

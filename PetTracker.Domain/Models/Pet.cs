@@ -6,14 +6,16 @@ namespace PetTracker.Domain.Models;
 public partial class Pet
 {
     public int Id { get; set; }
-
     public int? OwnerId { get; set; }
-
     public string? Name { get; set; }
-
     public int PetTypeId { get; set; }
-
-    public string? Gender { get; set; }
+    public string? Color { get; set; }
+    public DateTime? BirthDate { get; set; }
+    public double? Weight { get; set; }
+    public string? Sex { get; set; }
+    public string? MedicalProblems { get; set; }
+    public DateTime? DateCreated { get; set; }
+    public DateTime? DateUpdated { get; set; }
 
     public virtual ICollection<FileUploadMapping> FileUploadMappings { get; set; } = new List<FileUploadMapping>();
 

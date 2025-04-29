@@ -16,11 +16,12 @@ when matched then update set
 
 merge PetTypes as T
 using (
-	 values (1,'Dog')
+	 values 
+	 (1,'Dog')
 	 ,(2,'Cat')
-	 ,(3,'Fish')
-	 ,(4,'Bird')
-	 ,(5,'Reptile')
+	 --,(3,'Fish')
+	 --,(4,'Bird')
+	 --,(5,'Reptile')
 ) as S (Id,[Type])
 on T.Id = S.Id
 when not matched then
@@ -207,10 +208,98 @@ using (
 ) as S (Id,[PetTypeId],[Name])
 on T.Id = S.Id
 when not matched then
-insert ([PetTypeId],[Name])
-	values (S.[PetTypeId],S.[Name])
+insert (Id,[PetTypeId],[Name])
+	values (S.Id,S.[PetTypeId],S.[Name])
 when matched then update set
 	T.[PetTypeId] = S.[PetTypeId]
 	,T.[Name] = S.[Name];
 
 --cat breed types
+merge BreedTypes as T
+using (
+	 values 
+		(172,2,'Abyssinian'),
+		(173,2,'Aegean'),
+		(174,2,'American Bobtail'),
+		(175,2,'American Curl'),
+		(176,2,'American Polydactyl'),
+		(177,2,'American Shorthair'),
+		(178,2,'American Wirehair'),
+		(179,2,'Arabian Mau'),
+		(180,2,'Asian cat'),
+		(181,2,'Asian Semi-longhair'),
+		(182,2,'Australian Mist'),
+		(183,2,'Balinese'),
+		(184,2,'Bambino'),
+		(185,2,'Bengal'),
+		(186,2,'Birman'),
+		(187,2,'Bombay'),
+		(188,2,'Brazilian Shorthair'),
+		(189,2,'British Longhair'),
+		(190,2,'British Shorthair'),
+		(191,2,'Burmese'),
+		(192,2,'Burmilla'),
+		(193,2,'California Spangled'),
+		(194,2,'Chantilly-Tiffany'),
+		(195,2,'Chartreux'),
+		(196,2,'Chausie'),
+		(197,2,'Cheetoh'),
+		(198,2,'Colorpoint Shorthair'),
+		(199,2,'Cornish Rex'),
+		(200,2,'Cymric'),
+		(201,2,'Cyprus'),
+		(202,2,'Devon Rex'),
+		(203,2,'Donskoy'),
+		(204,2,'Dwelf'),
+		(205,2,'Egyptian Mau'),
+		(206,2,'Elf cat'),
+		(207,2,'Exotic Shorthair'),
+		(208,2,'Havana Brown'),
+		(209,2,'Himalayan'),
+		(210,2,'Japanese Bobtail'),
+		(211,2,'Javanese'),
+		(212,2,'Khao Manee'),
+		(213,2,'Korat'),
+		(214,2,'LaPerm'),
+		(215,2,'Lykoi'),
+		(216,2,'Maine Coon'),
+		(217,2,'Manx'),
+		(218,2,'Minskin'),
+		(219,2,'Munchkin'),
+		(220,2,'Nebelung'),
+		(221,2,'Napoleon cat'),
+		(222,2,'Norwegian Forest Cat'),
+		(223,2,'Ocicat'),
+		(224,2,'Oriental'),
+		(225,2,'Persian'),
+		(226,2,'Peterbald'),
+		(227,2,'Pixie-bob'),
+		(228,2,'Ragdoll'),
+		(229,2,'Ragamuffin'),
+		(230,2,'Russian Blue'),
+		(231,2,'Savannah'),
+		(232,2,'Scottish Fold'),
+		(233,2,'Selkirk Rex'),
+		(234,2,'Serengeti cat'),
+		(235,2,'Siamese'),
+		(236,2,'Siberian'),
+		(237,2,'Singapura'),
+		(238,2,'Snowshoe'),
+		(239,2,'Sokoke'),
+		(240,2,'Somali'),
+		(241,2,'Sphynx'),
+		(242,2,'Thai cat'),
+		(243,2,'Tonkinese'),
+		(244,2,'Toyger'),
+		(245,2,'Turkish Angora'),
+		(246,2,'Turkish Van'),
+		(247,2,'Ukrainian Levkoy'),
+		(248,2,'York Chocolate')
+) as S (Id,[PetTypeId],[Name])
+on T.Id = S.Id
+when not matched then
+insert (Id,[PetTypeId],[Name])
+	values (S.Id,S.[PetTypeId],S.[Name])
+when matched then update set
+	T.[PetTypeId] = S.[PetTypeId]
+	,T.[Name] = S.[Name];

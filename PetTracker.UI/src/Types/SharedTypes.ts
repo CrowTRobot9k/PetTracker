@@ -4,9 +4,13 @@ export interface User {
 
 export interface Pet {
     name: string;
-    type: string;
-    breed: string;
+    petTypeId: number;
+    petType: string;
+    breedTypeIds: number[];
+    breeds: string[];
     color: string;
     birthDate: Date;
+    weight: string;
     sex: string;
+    medicalProblems: string;
 }

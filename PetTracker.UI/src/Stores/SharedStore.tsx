@@ -5,6 +5,7 @@ const useSharedStore = create((set) => ({
     loggedInUser: {},
     loadingPetTypes: false,
     petTypes: [],
+    petBreeds:[],
 
     error:null,
     getPetTypes: async () =>
@@ -28,11 +29,14 @@ const useSharedStore = create((set) => ({
     {
         set({ loadingPetBreeds: true });
         try {
-            const response = await fetch(`/api/Pet/GetPetBreeds?id${petTypeId}`);
-            set({
-                petBreeds: response,
-                loadingPetBreeds: false,
-            });
+            const response = await fetch(`/api/Pet/GetPetBreeds?petTypeId=${petTypeId}`);
+            if (response.status == 200) {
+                const data = await response.json();
+                set({
+                    petBreeds: data,
+                    loadingPetBreeds: false,
+                });
+            }
         } catch (error) {
             set({ error: "Failed to fetch Pet Types", loadingPetBreeds: false });
         }

@@ -92,6 +92,10 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            '^/api/Pet/GetPetBreeds': {
+                target,
+                secure: false
+            },
         },
         port: parseInt(env.DEV_SERVER_PORT || '50449'),
         https: {
