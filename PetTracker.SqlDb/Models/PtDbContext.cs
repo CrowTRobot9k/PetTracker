@@ -189,7 +189,7 @@ public partial class PtDbContext : DbContext, IPtDbContext
 
         modelBuilder.Entity<Pet>(entity =>
         {
-            entity.Property(e => e.Gender).HasMaxLength(50);
+            entity.Property(e => e.Sex).HasMaxLength(50);
             entity.Property(e => e.Name).HasMaxLength(500);
 
             entity.HasOne(d => d.Owner).WithMany(p => p.Pets)

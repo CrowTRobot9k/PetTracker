@@ -31,7 +31,6 @@ export default function AddPet({ open, handleClose }: AddPetProps)
     const [submitErrorMessage, setErrorMessage] = React.useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [addPet, setAddPet] = useState<Pet>({ type: "", breeds:[] });
-//    const [pb, setpb] = useState<string[]>([]);
 
     const getPetTypes = useSharedStore((state) => state.getPetTypes);
     const petTypes = useSharedStore((state) => state.petTypes);
@@ -73,35 +72,45 @@ export default function AddPet({ open, handleClose }: AddPetProps)
        setAddPet({ ...addPet, breeds: e.target.value });
     };
 
-    const handleChangePetBirthDate= (e) => {
-        setAddPet({ ...addPet, birthDate: e.value });
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setAddPet(prevState => ({
+            ...prevState,
+            [name]: value,
+        }));
     };
 
+    const handleChangePetSex = (e: SelectChangeEvent) => {
+        setAddPet({ ...addPet, sex: e.target.value });
+    };
 
     const handleAddPetSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSuccessMessage("");
         setErrorMessage("");
 
+        const addPetData = new FormData();
+        Array.from(selectedFiles).forEach((f,i) => {
+            addPetData.append(`PetPhotos[${i}]`, f);
+        });
 
+        addPetData.append("Name", addPet.name);
+        addPetData.append("PetTypeId", addPet.petTypeId);
+        addPetData.append("PetType", addPet.petType);
+        addPetData.append("BreedTypeIds", addPet.breedTypeIds);
+        addPetData.append("Breeds", addPet.breeds);
+        addPetData.append("Color", addPet.color);
+        addPetData.append("BirthDate", addPet.birthDate);
+        addPetData.append("Weight", addPet.weight);
+        addPetData.append("Sex", addPet.sex);
+        addPetData.append("MedicalProblems", addPet.medicalProblems);
 
-        const data = new FormData(event.currentTarget);
-
-        
-        const petName = data.get('petName');
-
-        const createPet = {
-            PetPhotos: Array.from(selectedFiles).map((f) => ({ FileName:f.name, FormFile: f})),
-            Name: petName,
-        };
         fetch("/api/Pet/CreatePet", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'multipart/form-data'
             },
-            body: JSON.stringify({
-               model: createPet
-            }),
+            body: addPetData,
         }).then((data) => {
             if (data.ok) {
                 setSuccessMessage("Pet Created")
@@ -114,6 +123,7 @@ export default function AddPet({ open, handleClose }: AddPetProps)
             setErrorMessage("Error Creating Pet");
         });
     }
+
     return (
         <Dialog
           open={open}
@@ -142,11 +152,12 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                   required
                   margin="dense"
                   id="petName"
-                  name="petName"
+                  name="name"
                   label="Pet Name"
                   placeholder="Pet Name"
                   type="text"
-              
+                  value={addPet.name}
+                  onChange={handleChange}
               />
               <DialogContentText>
                   Pet Type
@@ -155,7 +166,7 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                   <Select
                       displayEmpty
                       id="select-pet-type"
-                      name="petType"
+                      name="type"
                       value={addPet.type}
                       label="Pet Type"
                       onChange={handleChangePetType}
@@ -216,12 +227,13 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                   //required
                   margin="dense"
                   id="petColor"
-                  name="petColor"
+                  name="color"
                   label="Pet Color"
                   placeholder="Pet Color"
                   type="text"
                   fullWidth
                   value={addPet.color}
+                  onChange={handleChange}
               />
               </DialogContent>
               <DialogContent
@@ -232,24 +244,26 @@ export default function AddPet({ open, handleClose }: AddPetProps)
               </DialogContentText>
              <LocalizationProvider dateAdapter={AdapterDayjs}>
                  <DatePicker
+                     name="birthDate"
                      value={addPet.birthDate}
-                                onChange={handleChangePetBirthDate}
-                                slotProps={{ textField: { size: 'small' } }}
+                     onChange={handleChange}
+                     slotProps={{ textField: { size: 'small' } }}
                  />
              </LocalizationProvider>
               <DialogContentText>
                   Weight
               </DialogContentText>
               <OutlinedInput
-                  autoFocus
-                  //required
-                  margin="dense"
-                  id="petWeight"
-                  name="petWeight"
-                  label="Pet Weight"
-                  placeholder="Pet Weight"
-                  type="text"
-                  fullWidth
+                autoFocus
+                margin="dense"
+                id="petWeight"
+                name="weight"
+                label="Pet Weight"
+                placeholder="Pet Weight"
+                type="text"
+                fullWidth
+                value={addPet.weight}
+                onChange={handleChange}
               />
               <DialogContentText>
                   Sex
@@ -260,7 +274,7 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                   name="petSex"
                   value={addPet.sex}
                   label="Pet Sex"
-                  onChange={handleChangePetType}
+                  onChange={handleChangePetSex}
                   renderValue={(selected) => {
                       if (!selected) {
                           return <em>Select Sex</em>;
@@ -282,13 +296,15 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                   //required
                   margin="dense"
                   id="petMedicalProblems"
-                  name="petMedicalProblems"
+                  name="medicalProblems"
                   label="Pet Medical Problems"
                   placeholder="Pet Medical Problems"
                   type="textArea"
                   multiline
                   minRows="3"
                   fullWidth
+                  value={addPet.medicalProblems}
+                  onChange={handleChange}
               />
                         </DialogContent>
           </DialogContent>

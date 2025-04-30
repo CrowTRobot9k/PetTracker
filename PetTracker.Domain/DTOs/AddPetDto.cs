@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace PetTracker.Domain.DTOs
 {
     public class AddPetDto
     {
-        public List<FileModel> PetPhotos { get; set; } = new List<FileModel>();
+        public List<IFormFile> PetPhotos { get; set; } = new List<IFormFile>();
         public string? Name { get; set; }
         public int PetTypeId { get; set; }
         public string? PetType { get; set; }

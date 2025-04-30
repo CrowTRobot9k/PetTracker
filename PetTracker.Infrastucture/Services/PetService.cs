@@ -18,18 +18,18 @@ namespace PetTracker.Infrastucture.Services
         {
             try
             {
-                var addPet = new Pet
-                {
-                    Name = pet.Name,
-                    //PetColor = pet.PetColor,
-                    //BirthDate = pet.BirthDate,
-                    //Weight = pet.Weight,
-                    //PetSex = pet.PetSex,
-                    //PetMedicalProblems = pet.PetMedicalProblems,
-                    PetTypeId = pet.PetTypeId
-                };
-                await _dbContext.Pets.AddAsync(addPet);
-                await _dbContext.SaveChangesAsync();
+                //var addPet = new Pet
+                //{
+                //    Name = pet.Name,
+                //    //PetColor = pet.PetColor,
+                //    //BirthDate = pet.BirthDate,
+                //    //Weight = pet.Weight,
+                //    //PetSex = pet.PetSex,
+                //    //PetMedicalProblems = pet.PetMedicalProblems,
+                //    PetTypeId = pet.PetTypeId
+                //};
+                //await _dbContext.Pets.AddAsync(addPet);
+                //await _dbContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
