@@ -14,29 +14,25 @@ namespace PetTracker.Infrastucture.Services
         {
         }
 
-        public async Task<bool> CreatePet(AddPetDto pet)
+        public async Task<int> CreatePet(AddPetDto pet)
         {
-            try
+            var uploadIds = await new FileUploadService(_logger, _dbContext).CreateFileUploads(pet.PetPhotos);
+
+            var addPet = new Pet(pet);
+
+            await _dbContext.Pets.AddAsync(addPet);
+            await _dbContext.SaveChangesAsync();
+
+            var breedTypes = pet.BreedTypeIds.Select(s => new PetBreedType()
             {
-                //var addPet = new Pet
-                //{
-                //    Name = pet.Name,
-                //    //PetColor = pet.PetColor,
-                //    //BirthDate = pet.BirthDate,
-                //    //Weight = pet.Weight,
-                //    //PetSex = pet.PetSex,
-                //    //PetMedicalProblems = pet.PetMedicalProblems,
-                //    PetTypeId = pet.PetTypeId
-                //};
-                //await _dbContext.Pets.AddAsync(addPet);
-                //await _dbContext.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while creating a pet.");
-                return false;
-            }
+                PetId = addPet.Id,
+                BreedTypeId = s
+            });
+
+            await _dbContext.PetBreedTypes.AddRangeAsync(breedTypes);
+            await _dbContext.SaveChangesAsync();
+
+            return addPet.Id;
         }
 
         public async Task<List<PetTypeDto>> GetPetTypes()

@@ -9,7 +9,7 @@ namespace PetTracker.Infrastucture.Services
 {
     public interface IPetService
     {
-        Task<bool> CreatePet(AddPetDto pet);
+        Task<int> CreatePet(AddPetDto pet);
         Task<List<PetTypeDto>> GetPetTypes();
         Task<List<BreedTypeDto>> GetPetBreeds(int petTypeId);
     }

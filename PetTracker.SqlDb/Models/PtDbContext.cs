@@ -143,10 +143,8 @@ public partial class PtDbContext : DbContext, IPtDbContext
 
         modelBuilder.Entity<FileUpload>(entity =>
         {
-            entity.Property(e => e.FileDescription).HasMaxLength(500);
             entity.Property(e => e.FileName).HasMaxLength(500);
-            entity.Property(e => e.FilePath).HasMaxLength(500);
-            entity.Property(e => e.FileType).HasMaxLength(50);
+            entity.Property(e => e.FileExtension).HasMaxLength(50);
         });
 
         modelBuilder.Entity<FileUploadMapping>(entity =>

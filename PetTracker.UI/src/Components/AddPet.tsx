@@ -7,30 +7,32 @@ import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Alert from '@mui/material/Alert';
 import ImageUpload from './ImageUpload';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import Pet from '../Types/SharedTypes';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
+import Pet from '../Types/SharedTypes';
 import useSharedStore from '../Stores/SharedStore';
 
 import '../Styles/petTracker.css';
 
 interface AddPetProps {
     open: boolean;
+    setOpen: (arg:boolean) => void;
     handleClose: () => void;
 }
-export default function AddPet({ open, handleClose }: AddPetProps)
+export default function AddPet({ open, setOpen, handleClose }: AddPetProps)
 {
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-    const [addPet, setAddPet] = useState<Pet>({ type: "", breeds:[] });
+    const [addPet, setAddPet] = useState<Pet>({ type: "", breeds:[], weight:"" });
+    const [openBreeds, setOpenBreeds] = useState(false);
 
     const getPetTypes = useSharedStore((state) => state.getPetTypes);
     const petTypes = useSharedStore((state) => state.petTypes);
@@ -63,13 +65,17 @@ export default function AddPet({ open, handleClose }: AddPetProps)
     {
         if (petTypes && petTypes?.length > 0) {
             const petType = petTypes.find(f => f.type == e.target.value);
-            setAddPet({ ...addPet, petTypeId:petType.id, type: petType.type });
+            setAddPet({ ...addPet, petTypeId: petType.id, petType: petType.type });
         }
     };
 
     const handleChangePetBreed = (e: SelectChangeEvent) =>
     {
-       setAddPet({ ...addPet, breeds: e.target.value });
+        if (petBreeds && petBreeds?.length > 0) {
+            const petBreed = petBreeds.filter(f => e.target.value.indexOf(f.name) > -1);
+            setAddPet({ ...addPet, breedTypeIds: petBreed.map(m=>m.id), breeds: petBreed.map(m => m.name) });
+        }
+        setOpenBreeds(false);
     };
 
     const handleChange = (e) => {
@@ -78,6 +84,10 @@ export default function AddPet({ open, handleClose }: AddPetProps)
             ...prevState,
             [name]: value,
         }));
+    };
+
+    const handleChangeDate = (e) => {
+        setAddPet({ ...addPet, birthDate: e });
     };
 
     const handleChangePetSex = (e: SelectChangeEvent) => {
@@ -91,29 +101,27 @@ export default function AddPet({ open, handleClose }: AddPetProps)
 
         const addPetData = new FormData();
         Array.from(selectedFiles).forEach((f,i) => {
-            addPetData.append(`PetPhotos[${i}]`, f);
+            addPetData.append(`model.PetPhotos`, f);
         });
 
-        addPetData.append("Name", addPet.name);
-        addPetData.append("PetTypeId", addPet.petTypeId);
-        addPetData.append("PetType", addPet.petType);
-        addPetData.append("BreedTypeIds", addPet.breedTypeIds);
-        addPetData.append("Breeds", addPet.breeds);
-        addPetData.append("Color", addPet.color);
-        addPetData.append("BirthDate", addPet.birthDate);
-        addPetData.append("Weight", addPet.weight);
-        addPetData.append("Sex", addPet.sex);
-        addPetData.append("MedicalProblems", addPet.medicalProblems);
+        addPetData.append("model.Name", addPet.name);
+        addPetData.append("model.PetTypeId", addPet.petTypeId);
+        addPetData.append("model.PetType", addPet.petType);
+        addPetData.append("model.BreedTypeIds", addPet.breedTypeIds);
+        addPetData.append("model.Breeds", addPet.breeds);
+        addPetData.append("model.Color", addPet.color);
+        addPetData.append("model.BirthDate", addPet.birthDate);
+        addPetData.append("model.Weight", addPet.weight);
+        addPetData.append("model.Sex", addPet.sex);
+        addPetData.append("model.MedicalProblems", addPet.medicalProblems);
 
         fetch("/api/Pet/CreatePet", {
             method: "POST",
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            },
             body: addPetData,
         }).then((data) => {
             if (data.ok) {
                 setSuccessMessage("Pet Created")
+                setOpen(false);
             }
             else {
                 setErrorMessage("Error Creating Pet");
@@ -166,8 +174,8 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                   <Select
                       displayEmpty
                       id="select-pet-type"
-                      name="type"
-                      value={addPet.type}
+                      name="petType"
+                      value={addPet.petType}
                       label="Pet Type"
                       onChange={handleChangePetType}
                       renderValue={(selected) => {
@@ -192,9 +200,12 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                       multiple
                       displayEmpty
                       id="select-pet-type"
-                      name="petBreed"
+                      name="breeds"
                       value={addPet.breeds}
                       label="Pet Breed"
+                      open={openBreeds}
+                      onOpen={() => setOpenBreeds(true)}
+                      onClose={() => setOpenBreeds(false)}
                       onChange={handleChangePetBreed}
                       renderValue={(selected) => {
                           if (petBreeds?.length < 1) {
@@ -246,7 +257,7 @@ export default function AddPet({ open, handleClose }: AddPetProps)
                  <DatePicker
                      name="birthDate"
                      value={addPet.birthDate}
-                     onChange={handleChange}
+                     onChange={handleChangeDate}
                      slotProps={{ textField: { size: 'small' } }}
                  />
              </LocalizationProvider>
@@ -271,7 +282,7 @@ export default function AddPet({ open, handleClose }: AddPetProps)
               <Select
                   displayEmpty
                   id="select-pet-sex"
-                  name="petSex"
+                  name="sex"
                   value={addPet.sex}
                   label="Pet Sex"
                   onChange={handleChangePetSex}

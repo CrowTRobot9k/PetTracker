@@ -1,10 +1,25 @@
-﻿using System;
+﻿using PetTracker.Domain.DTOs;
+using System;
 using System.Collections.Generic;
 
 namespace PetTracker.Domain.Models;
 
 public partial class Pet
 {
+    public Pet()
+    {
+    }
+    public Pet(AddPetDto pet)
+    {
+        Name = pet.Name;
+        PetTypeId = pet.PetTypeId;
+
+        Color = pet.Color;
+        BirthDate = pet.BirthDate;
+        Weight = pet.Weight;
+        Sex = pet.Sex;
+        MedicalProblems = pet.MedicalProblems;
+    }
     public int Id { get; set; }
     public int? OwnerId { get; set; }
     public string? Name { get; set; }

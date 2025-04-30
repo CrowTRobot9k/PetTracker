@@ -9,7 +9,7 @@
 	[Weight] float NULL,
 	[Sex] NVARCHAR(50) NULL,
 	[MedicalProblems] NVARCHAR(2000) NULL,
-	[DateCreated] DateTime NOT NULL DEFAULT (getdate()),
+	[DateCreated] DateTime NULL DEFAULT (getdate()),
 	[DateUpdated] DateTime NULL,
 	CONSTRAINT [PK_Pets] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Pets_Owners] FOREIGN KEY ([OwnerId]) REFERENCES [dbo].[Owners] ([Id]),
