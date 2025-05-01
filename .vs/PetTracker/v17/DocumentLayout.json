@@ -7,16 +7,48 @@
       "RelativeMoniker": "D:0:0:{60F49846-ACE5-4C76-AABD-B4A76241035C}|PetTracker.Server\\PetTracker.Server.csproj|solutionrelative:pettracker.server\\controllers\\petcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{41482349-D9E0-468A-B079-4F04C89ABFF9}|PetTracker.Infrastucture\\PetTracker.Infrastucture.csproj|c:\\repositories\\pettracker\\pettracker.infrastucture\\services\\fileuploadservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41482349-D9E0-468A-B079-4F04C89ABFF9}|PetTracker.Infrastucture\\PetTracker.Infrastucture.csproj|solutionrelative:pettracker.infrastucture\\services\\fileuploadservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41482349-D9E0-468A-B079-4F04C89ABFF9}|PetTracker.Infrastucture\\PetTracker.Infrastucture.csproj|c:\\repositories\\pettracker\\pettracker.infrastucture\\services\\petservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41482349-D9E0-468A-B079-4F04C89ABFF9}|PetTracker.Infrastucture\\PetTracker.Infrastucture.csproj|solutionrelative:pettracker.infrastucture\\services\\petservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCAB915E-0EDE-4459-A6BA-3A4517C1C5F8}|PetTracker.Domain\\PetTracker.Domain.csproj|c:\\repositories\\pettracker\\pettracker.domain\\dtos\\fileuploaddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCAB915E-0EDE-4459-A6BA-3A4517C1C5F8}|PetTracker.Domain\\PetTracker.Domain.csproj|solutionrelative:pettracker.domain\\dtos\\fileuploaddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCAB915E-0EDE-4459-A6BA-3A4517C1C5F8}|PetTracker.Domain\\PetTracker.Domain.csproj|c:\\repositories\\pettracker\\pettracker.domain\\dtos\\pettypedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCAB915E-0EDE-4459-A6BA-3A4517C1C5F8}|PetTracker.Domain\\PetTracker.Domain.csproj|solutionrelative:pettracker.domain\\dtos\\pettypedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCAB915E-0EDE-4459-A6BA-3A4517C1C5F8}|PetTracker.Domain\\PetTracker.Domain.csproj|c:\\repositories\\pettracker\\pettracker.domain\\dtos\\getpetdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCAB915E-0EDE-4459-A6BA-3A4517C1C5F8}|PetTracker.Domain\\PetTracker.Domain.csproj|solutionrelative:pettracker.domain\\dtos\\getpetdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCAB915E-0EDE-4459-A6BA-3A4517C1C5F8}|PetTracker.Domain\\PetTracker.Domain.csproj|c:\\repositories\\pettracker\\pettracker.domain\\models\\fileupload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCAB915E-0EDE-4459-A6BA-3A4517C1C5F8}|PetTracker.Domain\\PetTracker.Domain.csproj|solutionrelative:pettracker.domain\\models\\fileupload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCAB915E-0EDE-4459-A6BA-3A4517C1C5F8}|PetTracker.Domain\\PetTracker.Domain.csproj|c:\\repositories\\pettracker\\pettracker.domain\\dtos\\petdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCAB915E-0EDE-4459-A6BA-3A4517C1C5F8}|PetTracker.Domain\\PetTracker.Domain.csproj|solutionrelative:pettracker.domain\\dtos\\petdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCAB915E-0EDE-4459-A6BA-3A4517C1C5F8}|PetTracker.Domain\\PetTracker.Domain.csproj|c:\\repositories\\pettracker\\pettracker.domain\\models\\pet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BCAB915E-0EDE-4459-A6BA-3A4517C1C5F8}|PetTracker.Domain\\PetTracker.Domain.csproj|solutionrelative:pettracker.domain\\models\\pet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{BCAB915E-0EDE-4459-A6BA-3A4517C1C5F8}|PetTracker.Domain\\PetTracker.Domain.csproj|c:\\repositories\\pettracker\\pettracker.domain\\dtos\\addpetdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BCAB915E-0EDE-4459-A6BA-3A4517C1C5F8}|PetTracker.Domain\\PetTracker.Domain.csproj|solutionrelative:pettracker.domain\\dtos\\addpetdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|c:\\repositories\\pettracker\\pettracker.ui\\src\\components\\addpet.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
-      "RelativeMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|solutionrelative:pettracker.ui\\src\\components\\addpet.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|c:\\repositories\\pettracker\\pettracker.ui\\src\\types\\sharedtypes.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
       "RelativeMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|solutionrelative:pettracker.ui\\src\\types\\sharedtypes.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|c:\\repositories\\pettracker\\pettracker.ui\\src\\components\\addpet.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{DEE6682D-86C4-C7E3-76FD-F379A822973E}|PetTracker.UI\\PetTracker.UI.esproj|solutionrelative:pettracker.ui\\src\\components\\addpet.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|c:\\Repositories\\PetTracker\\PetTracker.UI\\node_modules\\react-dom\\cjs\\react-dom-client.development.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}|",
@@ -37,10 +69,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{2894885A-BA35-41BC-B435-D24DAD143896}|PetTracker.SqlDb\\PetTracker.SqlDb.csproj|c:\\repositories\\pettracker\\pettracker.sqldb\\models\\ptdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2894885A-BA35-41BC-B435-D24DAD143896}|PetTracker.SqlDb\\PetTracker.SqlDb.csproj|solutionrelative:pettracker.sqldb\\models\\ptdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{41482349-D9E0-468A-B079-4F04C89ABFF9}|PetTracker.Infrastucture\\PetTracker.Infrastucture.csproj|c:\\repositories\\pettracker\\pettracker.infrastucture\\services\\petservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{41482349-D9E0-468A-B079-4F04C89ABFF9}|PetTracker.Infrastucture\\PetTracker.Infrastucture.csproj|solutionrelative:pettracker.infrastucture\\services\\petservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -60,7 +88,7 @@
               "RelativeDocumentMoniker": "PetTracker.Server\\Controllers\\PetController.cs",
               "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.Server\\Controllers\\PetController.cs",
               "RelativeToolTip": "PetTracker.Server\\Controllers\\PetController.cs",
-              "ViewState": "AgIAACEAAAAAAAAAAAAQwC8AAAAsAAAAAAAAAA==",
+              "ViewState": "AgIAABkAAAAAAAAAAAAAACUAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-29T03:39:18.045Z",
               "IsPinned": true,
@@ -104,7 +132,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
+              "Title": "FileUpload.cs",
+              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\Models\\FileUpload.cs",
+              "RelativeDocumentMoniker": "PetTracker.Domain\\Models\\FileUpload.cs",
+              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\Models\\FileUpload.cs",
+              "RelativeToolTip": "PetTracker.Domain\\Models\\FileUpload.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAACAAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-01T03:07:56.397Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "FileUploadDto.cs",
+              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\DTOs\\FileUploadDto.cs",
+              "RelativeDocumentMoniker": "PetTracker.Domain\\DTOs\\FileUploadDto.cs",
+              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\DTOs\\FileUploadDto.cs",
+              "RelativeToolTip": "PetTracker.Domain\\DTOs\\FileUploadDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-01T03:07:53.193Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "AddPet.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\AddPet.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Components\\AddPet.tsx",
@@ -112,25 +166,23 @@
               "RelativeToolTip": "PetTracker.UI\\src\\Components\\AddPet.tsx",
               "ViewState": "AgIAAF4AAAAAAAAAAAAIwGgAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2025-04-29T03:16:10.496Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-29T03:16:10.496Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 12,
               "Title": "react-dom-client.development.js",
-              "DocumentMoniker": "c:\\Repositories\\PetTracker\\PetTracker.UI\\node_modules\\react-dom\\cjs\\react-dom-client.development.js",
+              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\node_modules\\react-dom\\cjs\\react-dom-client.development.js",
               "RelativeDocumentMoniker": "PetTracker.UI\\node_modules\\react-dom\\cjs\\react-dom-client.development.js",
-              "ToolTip": "c:\\Repositories\\PetTracker\\PetTracker.UI\\node_modules\\react-dom\\cjs\\react-dom-client.development.js",
+              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.UI\\node_modules\\react-dom\\cjs\\react-dom-client.development.js",
               "RelativeToolTip": "PetTracker.UI\\node_modules\\react-dom\\cjs\\react-dom-client.development.js",
               "ViewState": "AgIAAFw+AAAAAAAAAAASwO8+AAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-04-30T20:36:06.765Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-30T20:36:06.765Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 14,
               "Title": "FileUpload.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Components\\FileUpload.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Components\\FileUpload.tsx",
@@ -138,12 +190,11 @@
               "RelativeToolTip": "PetTracker.UI\\src\\Components\\FileUpload.tsx",
               "ViewState": "AgIAAAUAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2025-04-30T19:48:23.093Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-30T19:48:23.093Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 13,
               "Title": "FileModelDto.cs",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\DTOs\\FileModelDto.cs",
               "RelativeDocumentMoniker": "PetTracker.Domain\\DTOs\\FileModelDto.cs",
@@ -151,12 +202,11 @@
               "RelativeToolTip": "PetTracker.Domain\\DTOs\\FileModelDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAqwAkAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-30T04:17:28.118Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-30T04:17:28.118Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 15,
               "Title": "SignIn.tsx",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Pages\\SignIn.tsx",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Pages\\SignIn.tsx",
@@ -168,7 +218,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 16,
               "Title": "PtDbContext.cs",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.SqlDb\\Models\\PtDbContext.cs",
               "RelativeDocumentMoniker": "PetTracker.SqlDb\\Models\\PtDbContext.cs",
@@ -177,19 +227,6 @@
               "ViewState": "AgIAALsAAAAAAAAAAAAkwL4AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-30T04:26:23.738Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "PetService.cs",
-              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.Infrastucture\\Services\\PetService.cs",
-              "RelativeDocumentMoniker": "PetTracker.Infrastucture\\Services\\PetService.cs",
-              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.Infrastucture\\Services\\PetService.cs",
-              "RelativeToolTip": "PetTracker.Infrastucture\\Services\\PetService.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAQwBAAAAAgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-30T04:12:08.145Z",
-              "EditorCaption": ""
             }
           ]
         },
@@ -200,40 +237,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{5a4e9529-b6a0-46b5-be4f-0f0b239bc0eb}"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "Orientation": 0,
-      "VerticalTabListWidth": 256,
-      "FloatingWindowState": {
-        "Id": "750160c9-d3a8-495c-a5db-365e15e62c25",
-        "Display": 0,
-        "X": 212,
-        "Y": 0,
-        "Width": 1396,
-        "Height": 1075,
-        "WindowState": 0
-      },
-      "DocumentGroups": [
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 0,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AddPetDto.cs",
-              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\DTOs\\AddPetDto.cs",
-              "RelativeDocumentMoniker": "PetTracker.Domain\\DTOs\\AddPetDto.cs",
-              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\DTOs\\AddPetDto.cs",
-              "RelativeToolTip": "PetTracker.Domain\\DTOs\\AddPetDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwBcAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-30T04:12:36.285Z",
-              "EditorCaption": ""
             }
           ]
         }
@@ -258,7 +261,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 10,
               "Title": "SharedTypes.ts",
               "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.UI\\src\\Types\\SharedTypes.ts",
               "RelativeDocumentMoniker": "PetTracker.UI\\src\\Types\\SharedTypes.ts",
@@ -267,6 +270,202 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAqwAcAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
               "WhenOpened": "2025-04-29T18:52:52.72Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "750160c9-d3a8-495c-a5db-365e15e62c25",
+        "Display": 0,
+        "X": 212,
+        "Y": 0,
+        "Width": 1396,
+        "Height": 1075,
+        "WindowState": 0
+      },
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AddPetDto.cs",
+              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\DTOs\\AddPetDto.cs",
+              "RelativeDocumentMoniker": "PetTracker.Domain\\DTOs\\AddPetDto.cs",
+              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\DTOs\\AddPetDto.cs",
+              "RelativeToolTip": "PetTracker.Domain\\DTOs\\AddPetDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAsAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-30T04:12:36.285Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "851f799f-272b-49dd-8516-5d20fe3f9ffa",
+        "Display": 0,
+        "X": 1920,
+        "Y": 1056,
+        "Width": 1920,
+        "Height": 1056,
+        "WindowState": 0
+      },
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FileUploadService.cs",
+              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.Infrastucture\\Services\\FileUploadService.cs",
+              "RelativeDocumentMoniker": "PetTracker.Infrastucture\\Services\\FileUploadService.cs",
+              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.Infrastucture\\Services\\FileUploadService.cs",
+              "RelativeToolTip": "PetTracker.Infrastucture\\Services\\FileUploadService.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAWwCUAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-01T03:28:36.766Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PetService.cs",
+              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.Infrastucture\\Services\\PetService.cs",
+              "RelativeDocumentMoniker": "PetTracker.Infrastucture\\Services\\PetService.cs",
+              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.Infrastucture\\Services\\PetService.cs",
+              "RelativeToolTip": "PetTracker.Infrastucture\\Services\\PetService.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABIAAABRAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-30T04:12:08.145Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "41416faf-48fd-4a38-b735-d583f1dde717",
+        "Display": 0,
+        "X": 901,
+        "Y": 39,
+        "Width": 1396,
+        "Height": 974,
+        "WindowState": 0
+      },
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PetDto.cs",
+              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\DTOs\\PetDto.cs",
+              "RelativeDocumentMoniker": "PetTracker.Domain\\DTOs\\PetDto.cs",
+              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\DTOs\\PetDto.cs",
+              "RelativeToolTip": "PetTracker.Domain\\DTOs\\PetDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-01T03:03:35.341Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "6bfcee46-21ca-4461-a44e-16d7a4a639ac",
+        "Display": 0,
+        "X": 1840,
+        "Y": 88,
+        "Width": 1396,
+        "Height": 974,
+        "WindowState": 0
+      },
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Pet.cs",
+              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\Models\\Pet.cs",
+              "RelativeDocumentMoniker": "PetTracker.Domain\\Models\\Pet.cs",
+              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\Models\\Pet.cs",
+              "RelativeToolTip": "PetTracker.Domain\\Models\\Pet.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAowBQAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-01T03:03:45.292Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "89b1a83f-18ff-4c4d-922a-99d5bbe45b9c",
+        "Display": 0,
+        "X": 2059,
+        "Y": 1042,
+        "Width": 1396,
+        "Height": 974,
+        "WindowState": 0
+      },
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "PetTypeDto.cs",
+              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\DTOs\\PetTypeDto.cs",
+              "RelativeDocumentMoniker": "PetTracker.Domain\\DTOs\\PetTypeDto.cs",
+              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\DTOs\\PetTypeDto.cs",
+              "RelativeToolTip": "PetTracker.Domain\\DTOs\\PetTypeDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-01T03:08:25.498Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "GetPetDto.cs",
+              "DocumentMoniker": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\DTOs\\GetPetDto.cs",
+              "RelativeDocumentMoniker": "PetTracker.Domain\\DTOs\\GetPetDto.cs",
+              "ToolTip": "C:\\Repositories\\PetTracker\\PetTracker.Domain\\DTOs\\GetPetDto.cs",
+              "RelativeToolTip": "PetTracker.Domain\\DTOs\\GetPetDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-01T03:06:22.481Z",
               "EditorCaption": ""
             }
           ]

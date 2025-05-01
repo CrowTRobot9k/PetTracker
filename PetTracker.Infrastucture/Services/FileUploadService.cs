@@ -28,7 +28,11 @@ namespace PetTracker.Infrastucture.Services
         {
             var fileUploads = files.Select(f => new FileUpload(f));
 
-            await _dbContext.FileUploads.AddRangeAsync(fileUploads);
+            foreach (var file in fileUploads)
+            {
+                file.CreatedDate = DateTime.UtcNow;
+            }
+            _dbContext.FileUploads.AddRange(fileUploads);
             await _dbContext.SaveChangesAsync();
 
             return fileUploads.Select(s => s.Id).ToList();

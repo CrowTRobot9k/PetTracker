@@ -9,6 +9,9 @@ namespace PetTracker.Domain.DTOs
 {
     public class PetTypeDto
     {
+        public PetTypeDto()
+        { 
+        }
         public PetTypeDto(PetType pt)
         {
             Id = pt.Id;

@@ -44,6 +44,38 @@
 				</Entry>
 			</Relationship>
 		</Element>
+		<Element Type="SqlDefaultConstraint">
+			<Property Name="DefaultExpressionScript">
+				<Value><![CDATA[(GetDate())]]></Value>
+			</Property>
+			<Relationship Name="DefiningTable">
+				<Entry>
+					<References Name="[dbo].[FileUploads]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="ForColumn">
+				<Entry>
+					<References Name="[dbo].[FileUploads].[CreatedDate]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="3" />
+		</Element>
+		<Element Type="SqlDefaultConstraint">
+			<Property Name="DefaultExpressionScript">
+				<Value><![CDATA[(getdate())]]></Value>
+			</Property>
+			<Relationship Name="DefiningTable">
+				<Entry>
+					<References Name="[dbo].[Pets]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="ForColumn">
+				<Entry>
+					<References Name="[dbo].[Pets].[DateCreated]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="4" />
+		</Element>
 		<Element Type="SqlPrimaryKeyConstraint">
 			<Relationship Name="ColumnSpecifications">
 				<Entry>
@@ -61,7 +93,7 @@
 					<References Name="[dbo].[PetTypes]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="3" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="5" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint">
 			<Relationship Name="ColumnSpecifications">
@@ -80,7 +112,7 @@
 					<References Name="[dbo].[UserClaims]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="4" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="6" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[__EFMigrationsHistory]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -125,7 +157,7 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="5" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="7" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[AspNetRoleClaims]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -202,8 +234,8 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="6" />
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="7" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="8" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="9" />
 		</Element>
 		<Element Type="SqlIndex" Name="[dbo].[AspNetRoleClaims].[IX_AspNetRoleClaims_RoleId]">
 			<Relationship Name="ColumnSpecifications">
@@ -297,7 +329,7 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="8" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="10" />
 		</Element>
 		<Element Type="SqlIndex" Name="[dbo].[AspNetRoles].[RoleNameIndex]">
 			<Property Name="IsUnique" Value="True" />
@@ -401,8 +433,8 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="9" />
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="10" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="11" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="12" />
 		</Element>
 		<Element Type="SqlIndex" Name="[dbo].[AspNetUserClaims].[IX_AspNetUserClaims_UserId]">
 			<Relationship Name="ColumnSpecifications">
@@ -498,8 +530,8 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="11" />
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="12" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="13" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="14" />
 		</Element>
 		<Element Type="SqlIndex" Name="[dbo].[AspNetUserLogins].[IX_AspNetUserLogins_UserId]">
 			<Relationship Name="ColumnSpecifications">
@@ -562,9 +594,9 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="13" />
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="14" />
 			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="15" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="16" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="17" />
 		</Element>
 		<Element Type="SqlIndex" Name="[dbo].[AspNetUserRoles].[IX_AspNetUserRoles_RoleId]">
 			<Relationship Name="ColumnSpecifications">
@@ -881,8 +913,8 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="16" />
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="17" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="18" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="19" />
 		</Element>
 		<Element Type="SqlIndex" Name="[dbo].[AspNetUsers].[EmailIndex]">
 			<Relationship Name="ColumnSpecifications">
@@ -1005,8 +1037,8 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="18" />
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="19" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="20" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="21" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[BreedTypes]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -1065,8 +1097,8 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="20" />
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="21" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="22" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="23" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[Companies]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -1126,7 +1158,7 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="22" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="24" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[FileUploadMappings]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -1230,12 +1262,12 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="23" />
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="24" />
 			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="25" />
 			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="26" />
 			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="27" />
 			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="28" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="29" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="30" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[FileUploads]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -1290,7 +1322,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSimpleColumn" Name="[dbo].[FileUploads].[FileType]">
+					<Element Type="SqlSimpleColumn" Name="[dbo].[FileUploads].[FileExtension]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -1321,13 +1353,46 @@
 						</Relationship>
 					</Element>
 				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[FileUploads].[FileData]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="IsMax" Value="True" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[varbinary]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[FileUploads].[CreatedDate]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Scale" Value="7" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[datetime2]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+						<AttachedAnnotation Disambiguator="3" />
+					</Element>
+				</Entry>
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="29" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="31" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_AspNetRoleClaims_AspNetRoles_RoleId]">
 			<Property Name="OnDeleteAction" Value="1" />
@@ -1351,7 +1416,7 @@
 					<References Name="[dbo].[AspNetRoles]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="7" />
+			<AttachedAnnotation Disambiguator="9" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_AspNetUserClaims_AspNetUsers_UserId]">
 			<Property Name="OnDeleteAction" Value="1" />
@@ -1375,7 +1440,7 @@
 					<References Name="[dbo].[AspNetUsers]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="10" />
+			<AttachedAnnotation Disambiguator="12" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_AspNetUserLogins_AspNetUsers_UserId]">
 			<Property Name="OnDeleteAction" Value="1" />
@@ -1399,7 +1464,7 @@
 					<References Name="[dbo].[AspNetUsers]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="12" />
+			<AttachedAnnotation Disambiguator="14" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_AspNetUserRoles_AspNetRoles_RoleId]">
 			<Property Name="OnDeleteAction" Value="1" />
@@ -1423,7 +1488,7 @@
 					<References Name="[dbo].[AspNetRoles]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="14" />
+			<AttachedAnnotation Disambiguator="16" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_AspNetUserRoles_AspNetUsers_UserId]">
 			<Property Name="OnDeleteAction" Value="1" />
@@ -1447,7 +1512,7 @@
 					<References Name="[dbo].[AspNetUsers]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="15" />
+			<AttachedAnnotation Disambiguator="17" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_AspNetUsers_Company]">
 			<Relationship Name="Columns">
@@ -1470,7 +1535,7 @@
 					<References Name="[dbo].[Companies]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="17" />
+			<AttachedAnnotation Disambiguator="19" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_AspNetUserTokens_AspNetUsers_UserId]">
 			<Property Name="OnDeleteAction" Value="1" />
@@ -1494,7 +1559,7 @@
 					<References Name="[dbo].[AspNetUsers]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="19" />
+			<AttachedAnnotation Disambiguator="21" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_BreedTypes_PetTypes]">
 			<Relationship Name="Columns">
@@ -1517,7 +1582,7 @@
 					<References Name="[dbo].[PetTypes]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="21" />
+			<AttachedAnnotation Disambiguator="23" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_FileUploadMappings_AspNetUsers]">
 			<Relationship Name="Columns">
@@ -1540,7 +1605,7 @@
 					<References Name="[dbo].[AspNetUsers]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="24" />
+			<AttachedAnnotation Disambiguator="26" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_FileUploadMappings_Companies]">
 			<Relationship Name="Columns">
@@ -1563,7 +1628,7 @@
 					<References Name="[dbo].[Companies]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="26" />
+			<AttachedAnnotation Disambiguator="28" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_FileUploadMappings_FileUpload]">
 			<Relationship Name="Columns">
@@ -1586,7 +1651,7 @@
 					<References Name="[dbo].[FileUploads]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="28" />
+			<AttachedAnnotation Disambiguator="30" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_FileUploadMappings_Owners]">
 			<Relationship Name="Columns">
@@ -1609,7 +1674,7 @@
 					<References Name="[dbo].[Owners]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="25" />
+			<AttachedAnnotation Disambiguator="27" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_FileUploadMappings_Pets]">
 			<Relationship Name="Columns">
@@ -1632,7 +1697,7 @@
 					<References Name="[dbo].[Pets]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="27" />
+			<AttachedAnnotation Disambiguator="29" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_Owners_Users]">
 			<Relationship Name="Columns">
@@ -1655,7 +1720,7 @@
 					<References Name="[dbo].[AspNetUsers]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="30" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="32" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_PetBreedTypes_BreedTypes]">
 			<Relationship Name="Columns">
@@ -1678,7 +1743,7 @@
 					<References Name="[dbo].[BreedTypes]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="31" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="33" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_PetBreedTypes_Pets]">
 			<Relationship Name="Columns">
@@ -1701,7 +1766,7 @@
 					<References Name="[dbo].[Pets]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="32" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="34" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_Pets_Owners]">
 			<Relationship Name="Columns">
@@ -1724,7 +1789,7 @@
 					<References Name="[dbo].[Owners]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="33" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="35" />
 		</Element>
 		<Element Type="SqlForeignKeyConstraint" Name="[dbo].[FK_Pets_PetTypes]">
 			<Relationship Name="Columns">
@@ -1747,7 +1812,7 @@
 					<References Name="[dbo].[PetTypes]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="34" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="36" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[Owners]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -1859,8 +1924,8 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="35" />
-			<AttachedAnnotation Disambiguator="30" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="37" />
+			<AttachedAnnotation Disambiguator="32" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[PetBreedTypes]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -1920,9 +1985,9 @@
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="36" />
-			<AttachedAnnotation Disambiguator="32" />
-			<AttachedAnnotation Disambiguator="31" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="38" />
+			<AttachedAnnotation Disambiguator="34" />
+			<AttachedAnnotation Disambiguator="33" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[Pets]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -1992,7 +2057,7 @@
 					</Element>
 				</Entry>
 				<Entry>
-					<Element Type="SqlSimpleColumn" Name="[dbo].[Pets].[Gender]">
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Pets].[Color]">
 						<Relationship Name="TypeSpecifier">
 							<Entry>
 								<Element Type="SqlTypeSpecifier">
@@ -2007,15 +2072,109 @@
 						</Relationship>
 					</Element>
 				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Pets].[BirthDate]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[datetime]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Pets].[Weight]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Precision" Value="53" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[float]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Pets].[Sex]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="50" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Pets].[MedicalProblems]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="2000" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Pets].[DateCreated]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[datetime]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+						<AttachedAnnotation Disambiguator="4" />
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[Pets].[DateUpdated]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[datetime]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
 					<References ExternalSource="BuiltIns" Name="[dbo]" />
 				</Entry>
 			</Relationship>
-			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="37" />
-			<AttachedAnnotation Disambiguator="33" />
-			<AttachedAnnotation Disambiguator="34" />
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="39" />
+			<AttachedAnnotation Disambiguator="35" />
+			<AttachedAnnotation Disambiguator="36" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[PetTypes]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -2034,7 +2193,7 @@
 								</Element>
 							</Entry>
 						</Relationship>
-						<AttachedAnnotation Disambiguator="3" />
+						<AttachedAnnotation Disambiguator="5" />
 					</Element>
 				</Entry>
 				<Entry>
@@ -2078,7 +2237,7 @@
 					<References Name="[dbo].[__EFMigrationsHistory]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="5" />
+			<AttachedAnnotation Disambiguator="7" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_AspNetRoleClaims]">
 			<Relationship Name="ColumnSpecifications">
@@ -2097,7 +2256,7 @@
 					<References Name="[dbo].[AspNetRoleClaims]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="6" />
+			<AttachedAnnotation Disambiguator="8" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_AspNetRoles]">
 			<Relationship Name="ColumnSpecifications">
@@ -2116,7 +2275,7 @@
 					<References Name="[dbo].[AspNetRoles]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="8" />
+			<AttachedAnnotation Disambiguator="10" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_AspNetUserClaims]">
 			<Relationship Name="ColumnSpecifications">
@@ -2135,7 +2294,7 @@
 					<References Name="[dbo].[AspNetUserClaims]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="9" />
+			<AttachedAnnotation Disambiguator="11" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_AspNetUserLogins]">
 			<Relationship Name="ColumnSpecifications">
@@ -2163,7 +2322,7 @@
 					<References Name="[dbo].[AspNetUserLogins]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="11" />
+			<AttachedAnnotation Disambiguator="13" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_AspNetUserRoles]">
 			<Relationship Name="ColumnSpecifications">
@@ -2191,7 +2350,7 @@
 					<References Name="[dbo].[AspNetUserRoles]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="13" />
+			<AttachedAnnotation Disambiguator="15" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_AspNetUsers]">
 			<Relationship Name="ColumnSpecifications">
@@ -2210,7 +2369,7 @@
 					<References Name="[dbo].[AspNetUsers]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="16" />
+			<AttachedAnnotation Disambiguator="18" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_AspNetUserTokens]">
 			<Relationship Name="ColumnSpecifications">
@@ -2247,7 +2406,7 @@
 					<References Name="[dbo].[AspNetUserTokens]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="18" />
+			<AttachedAnnotation Disambiguator="20" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_BreedTypes]">
 			<Relationship Name="ColumnSpecifications">
@@ -2266,7 +2425,7 @@
 					<References Name="[dbo].[BreedTypes]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="20" />
+			<AttachedAnnotation Disambiguator="22" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_Companies]">
 			<Relationship Name="ColumnSpecifications">
@@ -2285,7 +2444,7 @@
 					<References Name="[dbo].[Companies]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="22" />
+			<AttachedAnnotation Disambiguator="24" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_FileUploadMappings]">
 			<Relationship Name="ColumnSpecifications">
@@ -2304,7 +2463,7 @@
 					<References Name="[dbo].[FileUploadMappings]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="23" />
+			<AttachedAnnotation Disambiguator="25" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_FileUploads]">
 			<Relationship Name="ColumnSpecifications">
@@ -2323,7 +2482,7 @@
 					<References Name="[dbo].[FileUploads]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="29" />
+			<AttachedAnnotation Disambiguator="31" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_Owners]">
 			<Relationship Name="ColumnSpecifications">
@@ -2342,7 +2501,7 @@
 					<References Name="[dbo].[Owners]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="35" />
+			<AttachedAnnotation Disambiguator="37" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_PetBreedTypes]">
 			<Relationship Name="ColumnSpecifications">
@@ -2361,7 +2520,7 @@
 					<References Name="[dbo].[PetBreedTypes]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="36" />
+			<AttachedAnnotation Disambiguator="38" />
 		</Element>
 		<Element Type="SqlPrimaryKeyConstraint" Name="[dbo].[PK_Pets]">
 			<Relationship Name="ColumnSpecifications">
@@ -2380,7 +2539,7 @@
 					<References Name="[dbo].[Pets]" />
 				</Entry>
 			</Relationship>
-			<AttachedAnnotation Disambiguator="37" />
+			<AttachedAnnotation Disambiguator="39" />
 		</Element>
 		<Element Type="SqlTable" Name="[dbo].[UserClaims]">
 			<Property Name="IsAnsiNullsOn" Value="True" />
@@ -2399,7 +2558,7 @@
 								</Element>
 							</Entry>
 						</Relationship>
-						<AttachedAnnotation Disambiguator="4" />
+						<AttachedAnnotation Disambiguator="6" />
 					</Element>
 				</Entry>
 				<Entry>

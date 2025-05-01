@@ -13,7 +13,6 @@ public partial class Pet
     {
         Name = pet.Name;
         PetTypeId = pet.PetTypeId;
-
         Color = pet.Color;
         BirthDate = pet.BirthDate;
         Weight = pet.Weight;

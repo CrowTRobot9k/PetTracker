@@ -23,13 +23,19 @@ namespace PetTracker.Infrastucture.Services
             await _dbContext.Pets.AddAsync(addPet);
             await _dbContext.SaveChangesAsync();
 
+            var fileMappings = uploadIds.Select(s => new FileUploadMapping()
+            { 
+                PetId = addPet.Id,
+                FileUploadId = s
+            });
+
             var breedTypes = pet.BreedTypeIds.Select(s => new PetBreedType()
             {
                 PetId = addPet.Id,
                 BreedTypeId = s
             });
 
-            await _dbContext.PetBreedTypes.AddRangeAsync(breedTypes);
+            await Task.WhenAll(_dbContext.FileUploadMappings.AddRangeAsync(fileMappings), _dbContext.PetBreedTypes.AddRangeAsync(breedTypes));
             await _dbContext.SaveChangesAsync();
 
             return addPet.Id;
