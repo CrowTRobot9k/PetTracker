@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PetTracker.Domain;
 using PetTracker.Domain.Models;
 
 namespace PetTracker.SqlDb.Models;
@@ -32,8 +33,6 @@ public partial class PtDbContext : DbContext, IPtDbContext
 
     public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
 
-    public virtual DbSet<IdentityUserClaim<string>> UserClaims { get; set; }
-
     public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
 
     public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
@@ -55,7 +54,11 @@ public partial class PtDbContext : DbContext, IPtDbContext
     public virtual DbSet<PetBreedType> PetBreedTypes { get; set; }
 
     public virtual DbSet<PetType> PetTypes { get; set; }
+
+    public virtual DbSet<AspNetUserClaim> UserClaims { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=PetTrackerDb;Integrated Security=True;Trust Server Certificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -134,17 +137,24 @@ public partial class PtDbContext : DbContext, IPtDbContext
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Name).HasMaxLength(200);
+
+            entity.HasOne(d => d.PetType).WithMany(p => p.BreedTypes)
+                .HasForeignKey(d => d.PetTypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_BreedTypes_PetTypes");
         });
 
         modelBuilder.Entity<Company>(entity =>
         {
+            entity.Property(e => e.CompanyCode).HasMaxLength(50);
             entity.Property(e => e.Name).HasMaxLength(500);
         });
 
         modelBuilder.Entity<FileUpload>(entity =>
         {
-            entity.Property(e => e.FileName).HasMaxLength(500);
+            entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.FileExtension).HasMaxLength(50);
+            entity.Property(e => e.FileName).HasMaxLength(500);
         });
 
         modelBuilder.Entity<FileUploadMapping>(entity =>
@@ -187,8 +197,15 @@ public partial class PtDbContext : DbContext, IPtDbContext
 
         modelBuilder.Entity<Pet>(entity =>
         {
-            entity.Property(e => e.Sex).HasMaxLength(50);
+            entity.Property(e => e.BirthDate).HasColumnType("datetime");
+            entity.Property(e => e.Color).HasMaxLength(50);
+            entity.Property(e => e.DateCreated)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.DateUpdated).HasColumnType("datetime");
+            entity.Property(e => e.MedicalProblems).HasMaxLength(2000);
             entity.Property(e => e.Name).HasMaxLength(500);
+            entity.Property(e => e.Sex).HasMaxLength(50);
 
             entity.HasOne(d => d.Owner).WithMany(p => p.Pets)
                 .HasForeignKey(d => d.OwnerId)
@@ -215,10 +232,17 @@ public partial class PtDbContext : DbContext, IPtDbContext
 
         modelBuilder.Entity<PetType>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PetTypes__3214EC07664C7AB3");
+            entity.HasKey(e => e.Id).HasName("PK__PetTypes__3214EC076E14B268");
 
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Type).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<AspNetUserClaim>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__UserClai__3214EC0758D5016E");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
         });
 
         OnModelCreatingPartial(modelBuilder);

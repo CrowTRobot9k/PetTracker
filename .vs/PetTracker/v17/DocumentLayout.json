@@ -123,14 +123,6 @@
               "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{68487888-204a-11d3-87eb-00c04f7971a5}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{a80febb4-e7e0-4147-b476-21aaf2453969}"
-            },
-            {
               "$type": "Document",
               "DocumentIndex": 6,
               "Title": "FileUpload.cs",
@@ -140,8 +132,7 @@
               "RelativeToolTip": "PetTracker.Domain\\Models\\FileUpload.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAACAAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-01T03:07:56.397Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-01T03:07:56.397Z"
             },
             {
               "$type": "Document",
@@ -153,8 +144,7 @@
               "RelativeToolTip": "PetTracker.Domain\\DTOs\\FileUploadDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-01T03:07:53.193Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-01T03:07:53.193Z"
             },
             {
               "$type": "Document",
@@ -227,16 +217,10 @@
               "ViewState": "AgIAALsAAAAAAAAAAAAkwL4AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-30T04:26:23.738Z"
-            }
-          ]
-        },
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": -1,
-          "Children": [
+            },
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{5a4e9529-b6a0-46b5-be4f-0f0b239bc0eb}"
+              "Name": "ST:0:0:{68487888-204a-11d3-87eb-00c04f7971a5}"
             }
           ]
         }
@@ -350,8 +334,7 @@
               "RelativeToolTip": "PetTracker.Infrastucture\\Services\\PetService.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAABIAAABRAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-30T04:12:08.145Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-30T04:12:08.145Z"
             }
           ]
         }
@@ -465,8 +448,7 @@
               "RelativeToolTip": "PetTracker.Domain\\DTOs\\GetPetDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-01T03:06:22.481Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-01T03:06:22.481Z"
             }
           ]
         }

@@ -9,4 +9,5 @@ public partial class BreedType
     public int PetTypeId { get; set; }
     public string? Name { get; set; }
     public virtual ICollection<PetBreedType> PetBreedTypes { get; set; } = new List<PetBreedType>();
+    public virtual PetType PetType { get; set; } = null!;
 }

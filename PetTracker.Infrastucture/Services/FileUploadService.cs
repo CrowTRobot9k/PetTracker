@@ -30,9 +30,10 @@ namespace PetTracker.Infrastucture.Services
 
             foreach (var file in fileUploads)
             {
+                _dbContext.FileUploads.Add(file);
                 file.CreatedDate = DateTime.UtcNow;
             }
-            _dbContext.FileUploads.AddRange(fileUploads);
+            //_dbContext.FileUploads.AddRange(fileUploads);
             await _dbContext.SaveChangesAsync();
 
             return fileUploads.Select(s => s.Id).ToList();
