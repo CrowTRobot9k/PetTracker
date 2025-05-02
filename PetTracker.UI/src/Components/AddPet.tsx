@@ -7,7 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Alert from '@mui/material/Alert';
 import ImageUpload from './ImageUpload';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -31,7 +31,10 @@ export default function AddPet({ open, setOpen, handleClose }: AddPetProps)
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-    const [addPet, setAddPet] = useState<Pet>({ type: "", breeds:[], weight:"" });
+    const [addPet, setAddPet] = useState<Pet>(
+        {
+            breeds: []
+        });
     const [openBreeds, setOpenBreeds] = useState(false);
 
     const getPetTypes = useSharedStore((state) => state.getPetTypes);
@@ -120,6 +123,10 @@ export default function AddPet({ open, setOpen, handleClose }: AddPetProps)
             body: addPetData,
         }).then((data) => {
             if (data.ok) {
+                setSelectedFiles([]);
+                setAddPet({
+                    breeds: []
+                });
                 setSuccessMessage("Pet Created")
                 setOpen(false);
             }
@@ -211,7 +218,7 @@ export default function AddPet({ open, setOpen, handleClose }: AddPetProps)
                           if (petBreeds?.length < 1) {
                               return <em>Select Pet Type To View Breeds</em>;
                           }
-                          if (petBreeds?.length > 0 && selected.length < 1) {
+                          if (petBreeds?.length > 0 && selected?.length < 1) {
                               return <em>Select</em>;
                           }
                           return (
@@ -321,7 +328,7 @@ export default function AddPet({ open, setOpen, handleClose }: AddPetProps)
           </DialogContent>
           <DialogActions sx={{ pb: 3, px: 3 }}>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button variant="contained" color="info" type="submit">Continue</Button>
+            <Button variant="contained" color="info" type="submit">Create</Button>
           </DialogActions>
           {submitSuccessMessage?.length > 0 && (
               <Alert variant="filled" severity="success">

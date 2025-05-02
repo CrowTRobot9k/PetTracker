@@ -3,11 +3,29 @@ import { create } from "zustand";
 //TODO: put in specific stores.
 const useSharedStore = create((set) => ({
     loggedInUser: {},
+    loadingPets: false,
     loadingPetTypes: false,
+    loadingPetBreeds: false,
+    pets: [],
     petTypes: [],
     petBreeds:[],
 
     error:null,
+    getPets: async () => {
+        set({ loadingPets: true });
+        try {
+            const response = await fetch("/api/Pet/GetPets");
+            if (response.status == 200) {
+                const data = await response.json();
+                set({
+                    pets: data,
+                    loadingPets: false,
+                });
+            }
+        } catch (error) {
+            set({ error: "Failed to fetch Pet Types", loadingPets: false });
+        }
+    },
     getPetTypes: async () =>
     {
         set({ loadingPetTypes: true });

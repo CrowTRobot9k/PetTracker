@@ -16,17 +16,18 @@ namespace PetTracker.Server.Controllers
             _PetService = new PetService(logger, dbContext);
         }
         [HttpGet("GetPets")]
-        public async Task<string> GetPets()
+        public async Task<List<GetPetDto>> GetPets()
         {
             try
             {
-                return "Test";
+                var result = await _PetService.GetPets();
+                return result;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting the weather forecast.");
-                throw;
+                HandleUIException(ex);
             }
+            return new List<GetPetDto>();
         }
 
         [HttpGet("GetPet")]

@@ -12,5 +12,5 @@ export interface Pet {
     birthDate: Date;
     weight: string;
     sex: string;
-    medicalProblems: string;
+    medicalProblems?: string;
 }

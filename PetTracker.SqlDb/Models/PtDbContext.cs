@@ -59,7 +59,7 @@ public partial class PtDbContext : DbContext, IPtDbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=PetTrackerDb;Integrated Security=True;Trust Server Certificate=True;");
+        => optionsBuilder.UseLazyLoadingProxies().UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=PetTrackerDb;Integrated Security=True;Trust Server Certificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -152,6 +152,8 @@ public partial class PtDbContext : DbContext, IPtDbContext
 
         modelBuilder.Entity<FileUpload>(entity =>
         {
+            entity.HasKey(e => e.Id).HasName("PK_FileUploadMappings");
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.FileExtension).HasMaxLength(50);
             entity.Property(e => e.FileName).HasMaxLength(500);

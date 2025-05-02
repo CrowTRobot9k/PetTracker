@@ -179,3 +179,5 @@ C:\Repositories\PetTracker\PetTracker.Server\bin\Debug\net9.0\Scalar.AspNetCore.
 C:\Repositories\PetTracker\PetTracker.Server\bin\Debug\net9.0\Newtonsoft.Json.dll
 C:\Repositories\PetTracker\PetTracker.Server\bin\Debug\net9.0\PetTracker.Infrastucture.dll
 C:\Repositories\PetTracker\PetTracker.Server\bin\Debug\net9.0\PetTracker.Infrastucture.pdb
+C:\Repositories\PetTracker\PetTracker.Server\bin\Debug\net9.0\Castle.Core.dll
+C:\Repositories\PetTracker\PetTracker.Server\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Proxies.dll

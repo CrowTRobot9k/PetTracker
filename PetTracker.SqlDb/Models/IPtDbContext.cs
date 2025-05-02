@@ -38,6 +38,7 @@ namespace PetTracker.SqlDb.Models
         DbSet<PetBreedType> PetBreedTypes { get; set; }
 
         DbSet<PetType> PetTypes { get; set; }
+        int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

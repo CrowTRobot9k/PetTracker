@@ -6,6 +6,7 @@ using PetTracker.Domain.DTOs;
 using PetTracker.Domain.Models;
 using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 namespace PetTracker.Infrastucture.Services
 {
     public class PetService : ServiceBase, IPetService
@@ -24,7 +25,7 @@ namespace PetTracker.Infrastucture.Services
             await _dbContext.SaveChangesAsync();
 
             var fileMappings = uploadIds.Select(s => new FileUploadMapping()
-            { 
+            {
                 PetId = addPet.Id,
                 FileUploadId = s
             });
@@ -39,6 +40,12 @@ namespace PetTracker.Infrastucture.Services
             await _dbContext.SaveChangesAsync();
 
             return addPet.Id;
+        }
+
+        public async Task<List<GetPetDto>> GetPets(int? ownerId = null)
+        {
+            var results = await _dbContext.Pets.Where(w => ownerId == null || w.OwnerId == ownerId).ToListAsync();
+            return results.Select(s => new GetPetDto(s)).ToList();
         }
 
         public async Task<List<PetTypeDto>> GetPetTypes()

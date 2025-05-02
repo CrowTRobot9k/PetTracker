@@ -80,6 +80,10 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            '^/api/Pet/GetPets': {
+                target,
+                secure: false
+            },
             '^/api/Pet/GetPet': {
                 target,
                 secure: false
