@@ -44,6 +44,7 @@ export default function Carousel({ cards }) {
                 onClick={handlePrevPage}
                 sx={{ margin: 5 }}
                 disabled={currentPage === 0}
+                className="btn-carousel"
             >
                 {/* this is the button that will go to the previous page you can change these icons to whatever you wish*/}
             <NavigateBeforeIcon />
@@ -84,6 +85,7 @@ export default function Carousel({ cards }) {
                 disabled={
                     currentPage >= Math.ceil((cards?.length || 0) / cardsPerPage) - 1
                 }
+                className="btn-carousel"
             >
                 <NavigateNextIcon />
             </IconButton>

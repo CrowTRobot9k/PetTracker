@@ -18,6 +18,10 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import { styled } from '@mui/material/styles';
 import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
 import Carousel from '../Components/Carousel/Carousel';
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
+import Chip from '@mui/material/Chip';
+import Fab from '@mui/material/Fab';
 
 import useSharedStore from '../Stores/SharedStore';
 import '../Styles/petTracker.css';
@@ -30,7 +34,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
 
     useEffect(() => {
         getPets();
-    }, [open]);
+    }, []);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -52,6 +56,13 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
         )))
     }
 
+    const onClickPet = () =>
+    {
+        setOpen(true);
+    }
+
+
+
     const SyledCard = styled(Card)(({ theme }) => ({
         display: 'flex',
         flexDirection: 'column',
@@ -72,11 +83,11 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
     const SyledCardContent = styled(CardContent)({
         display: 'flex',
         flexDirection: 'column',
-        gap: 4,
-        padding: 16,
+        gap: 1,
+        padding: 2,
         flexGrow: 1,
         '&:last-child': {
-            paddingBottom: 16,
+            paddingBottom: 2,
         },
     });
 
@@ -163,23 +174,34 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                                     variant="outlined"
                                     sx={{ height: '100%' }}
                                 >
-                                    {/*<CardMedia*/}
-                                    {/*    component="img"*/}
-                                    {/*    alt={m.petPhotos[0].fileName}*/}
-                                    {/*    image={getImageUrlFromBlob(m.petPhotos[0].fileDataBase64)}*/}
-                                    {/*    sx={{*/}
-                                    {/*        height: { sm: 'auto', md: '50%' },*/}
-                                    {/*        aspectRatio: { sm: '16 / 9', md: '' },*/}
-                                    {/*    }}*/}
-                                    {/*/>*/}
-                                    <Carousel cards={getPetSlides(m.petPhotos)} />
+                                    <Carousel cards={getPetSlides(m.petPhotos)}/>
                                     <SyledCardContent>
                                         <Typography gutterBottom variant="h6" component="div">
                                             {m.name}
                                         </Typography>
                                         <StyledTypography variant="body2" color="text.secondary" gutterBottom>
-                                            {m.name}
+                                            {m.petType?.type}
                                         </StyledTypography>
+                                    </SyledCardContent>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            bgcolor: 'background.paper',
+                                            borderRadius: 1,
+                                            mx: 'auto'
+                                        }}
+                                    >
+                                        {m.breedTypes?.length > 0 && (m.breedTypes?.map(b =>
+                                            <Chip sx={{
+                                                m: 1,
+                                            }} label={b.name} />
+                                        ))}
+                                    </Box>
+                                    <SyledCardContent>
+                                        <Fab color="primary" sx={{ alignSelf: 'center' }} onClick={onClickPet} aria-label="add">
+                                            <EditIcon />
+                                        </Fab>
                                     </SyledCardContent>
                                    {/* <Author authors={m.name} />*/}
                                 </SyledCard>

@@ -4,3 +4,15 @@
     height:200px;
     object-fit: contain;
 }
+
+.btn-carousel {
+    margin:0 !important;
+}
+
+.MuiIconButton-colorBlue {
+    background-color: rgb(2, 136, 209) !important;
+    color:white !important;
+}
+.MuiIconButton-colorBlue:hover {
+    background-color:var(--template-palette-info-dark) !important;
+}
