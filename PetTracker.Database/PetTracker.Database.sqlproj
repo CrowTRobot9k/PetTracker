@@ -84,5 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="dbo\DeploymentScripts\Baseline_Deployment.sql" />
+    <None Include="dbo\StoredProcedures\DeletePet.sql" />
   </ItemGroup>
 </Project>

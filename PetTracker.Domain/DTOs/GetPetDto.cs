@@ -14,10 +14,10 @@ namespace PetTracker.Domain.DTOs
             
             PetType = new PetTypeDto(pet.PetType);
             BreedTypes = pet.PetBreedTypes.Select(s => new BreedTypeDto(s.BreedType)).ToList();
-            PetPhotos = pet.FileUploadMappings.Select(s => new FileUploadDto(s.FileUpload)).ToList();
+            PetPhotos = pet.FileUploadMappings.Select(s => new FileDownloadDto(s.FileUpload)).ToList();
         }
         public PetTypeDto PetType { get; set; } = new PetTypeDto();
         public List<BreedTypeDto> BreedTypes { get; set; } = new List<BreedTypeDto>();
-        public List<FileUploadDto> PetPhotos { get; set; } = new List<FileUploadDto>();
+        public List<FileDownloadDto> PetPhotos { get; set; } = new List<FileDownloadDto>();
     }
 }

@@ -46,12 +46,9 @@ export default function Carousel({ cards }) {
                 disabled={currentPage === 0}
             >
                 {/* this is the button that will go to the previous page you can change these icons to whatever you wish*/}
-                <NavigateBeforeIcon />
+            <NavigateBeforeIcon />
             </IconButton>
             <Box sx={{ width: `${containerWidth}px`, height: "100%" }}>
-                {/* this is the box that holds the cards and the slide animation,
-        in this implementation the card is already constructed but in later versions you will see how the
-        items you wish to use will be dynamically created with the map method*/}
                 {cards?.map((card, index) => (
                     <Box
                         key={`card-${index}`}

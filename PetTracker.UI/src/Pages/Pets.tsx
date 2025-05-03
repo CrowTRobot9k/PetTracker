@@ -17,7 +17,10 @@ import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import { styled } from '@mui/material/styles';
 import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
+import Carousel from '../Components/Carousel/Carousel';
+
 import useSharedStore from '../Stores/SharedStore';
+import '../Styles/petTracker.css';
 
 
 export default function Pets(props: { disableCustomTheme?: boolean }) {
@@ -27,7 +30,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
 
     useEffect(() => {
         getPets();
-    }, []);
+    }, [open]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -36,6 +39,18 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
     const handleClose = () => {
         setOpen(false);
     };
+
+    const getImageUrlFromBlob = (base64String) =>
+    {
+       return `data:image/png;base64,${base64String}`;
+    }
+
+    const getPetSlides = (images) =>
+    {
+       return Array.from(images.map((f,index) => (
+           <img key={`${index}_${f.fileName}`} src={getImageUrlFromBlob(f.fileDataBase64)}/>
+        )))
+    }
 
     const SyledCard = styled(Card)(({ theme }) => ({
         display: 'flex',
@@ -116,10 +131,10 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
             <Container
                 maxWidth="lg"
                 component="main"
-                sx={{ display: 'flex', flexDirection: 'column', my: 16, gap: 4 }}
+                sx={{ display: 'flex', flexDirection: 'row', my: 3, gap: 1 }}
             >
                 <Box
-                    sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
                 >
                     <div>
                         <Button onClick={handleClickOpen} variant="contained" color="info" endIcon={<AddIcon />}>
@@ -132,7 +147,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
             <Container
                 maxWidth="lg"
                 component="main"
-                sx={{ display: 'flex', flexDirection: 'column', my: 16, gap: 4 }}
+                sx={{ display: 'flex', flexDirection: 'column', my: 3, gap: 4 }}
             >
                 <Box
                     sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}
@@ -148,20 +163,17 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                                     variant="outlined"
                                     sx={{ height: '100%' }}
                                 >
-                                    <CardMedia
-                                        component="img"
-                                        alt={m.petPhotos[0].fileName}
-                                        image="https://picsum.photos/800/450?random=1"
-                                       /// image={m.petPhotos[0].fileData}
-                                        sx={{
-                                            height: { sm: 'auto', md: '50%' },
-                                            aspectRatio: { sm: '16 / 9', md: '' },
-                                        }}
-                                    />
+                                    {/*<CardMedia*/}
+                                    {/*    component="img"*/}
+                                    {/*    alt={m.petPhotos[0].fileName}*/}
+                                    {/*    image={getImageUrlFromBlob(m.petPhotos[0].fileDataBase64)}*/}
+                                    {/*    sx={{*/}
+                                    {/*        height: { sm: 'auto', md: '50%' },*/}
+                                    {/*        aspectRatio: { sm: '16 / 9', md: '' },*/}
+                                    {/*    }}*/}
+                                    {/*/>*/}
+                                    <Carousel cards={getPetSlides(m.petPhotos)} />
                                     <SyledCardContent>
-                                        <Typography gutterBottom variant="caption" component="div">
-                                            {m.name}
-                                        </Typography>
                                         <Typography gutterBottom variant="h6" component="div">
                                             {m.name}
                                         </Typography>

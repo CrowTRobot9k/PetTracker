@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import Container from '@mui/material/Container';
 import Carousel from '../Components/Carousel/Carousel';
+import Alert from '@mui/material/Alert';
 
 import '../Styles/petTracker.css';
 
@@ -14,31 +15,39 @@ interface FileUploadProps {
 
 export default function ImageUpload({ label, selectedFiles, onChange }: FileUploadProps) {
     const [slides, setSlides] = useState<React.ReactElement[]>([]);
+    const [errorMessage, setErrorMessage] = React.useState('');
 
     const handleFileChange = (e) =>
     {
-        onChange(e.target.files);
+        setErrorMessage("");
 
-        const files = [];
-        let idx = 1;
-        Array.from(e.target.files).map((f) => {
-            if (f) {
-                try {
-                    const fileUrl = URL.createObjectURL(f)
-                    files.push({ id: idx, fileName: f.name, src: fileUrl, })
+        if (Array.from(e.target.files).some(s => s.size > 10000000)) {
+            setErrorMessage("Files cannot be larger than 10MB");
+        }
+        else {
+            onChange(e.target.files);
 
-                } catch (error) {
-                    console.error("Error reading file:", error);
+            const files = [];
+            let idx = 1;
+            Array.from(e.target.files).map((f) => {
+                if (f) {
+                    try {
+                        const fileUrl = URL.createObjectURL(f)
+                        files.push({ id: idx, fileName: f.name, src: fileUrl, })
+
+                    } catch (error) {
+                        setErrorMessage("Error reading file");
+                    }
                 }
-            }
-            idx++;
-        })
+                idx++;
+            })
 
-        const updateSlides = Array.from(files.map((f) => (
-            <img key={`${f.id}_${f.fileName}`} src={f.src} className="img-preview" />  
-        )))
+            const updateSlides = Array.from(files.map((f) => (
+                <img key={`${f.id}_${f.fileName}`} src={f.src} className="img-preview" />
+            )))
 
-        setSlides(updateSlides);
+            setSlides(updateSlides);
+        }
     };
 
     return (
@@ -69,7 +78,13 @@ export default function ImageUpload({ label, selectedFiles, onChange }: FileUplo
             {selectedFiles?.length > 0 && (
 
                 <Carousel cards={slides} />
-            )}  
+                )
+            }
+            {errorMessage?.length > 0 && (
+                <Alert variant="filled" severity="error">
+                    {errorMessage}
+                </Alert>
+            )}
             </Container>
         </>
     );

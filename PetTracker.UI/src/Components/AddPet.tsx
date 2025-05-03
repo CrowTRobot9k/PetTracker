@@ -110,7 +110,9 @@ export default function AddPet({ open, setOpen, handleClose }: AddPetProps)
         addPetData.append("model.Name", addPet.name);
         addPetData.append("model.PetTypeId", addPet.petTypeId);
         addPetData.append("model.PetType", addPet.petType);
-        addPetData.append("model.BreedTypeIds", addPet.breedTypeIds);
+        addPet.breedTypeIds.forEach(f => {
+            addPetData.append("model.BreedTypeIds", f);
+        });
         addPetData.append("model.Breeds", addPet.breeds);
         addPetData.append("model.Color", addPet.color);
         addPetData.append("model.BirthDate", addPet.birthDate);
@@ -330,11 +332,11 @@ export default function AddPet({ open, setOpen, handleClose }: AddPetProps)
             <Button onClick={handleClose}>Cancel</Button>
             <Button variant="contained" color="info" type="submit">Create</Button>
           </DialogActions>
-          {submitSuccessMessage?.length > 0 && (
-              <Alert variant="filled" severity="success">
-                  {submitSuccessMessage}
-              </Alert>
-          )}
+          {/*{submitSuccessMessage?.length > 0 && (*/}
+          {/*    <Alert variant="filled" severity="success">*/}
+          {/*        {submitSuccessMessage}*/}
+          {/*    </Alert>*/}
+          {/*)}*/}
           {submitErrorMessage?.length > 0 && (
               <Alert variant="filled" severity="error">
                   {submitErrorMessage}
