@@ -13,8 +13,8 @@ import App from './App.tsx'
 createRoot(document.getElementById('root')!).render(
     <React.Fragment>
         <CssBaseline />
-        <StrictMode>
+        {/*<StrictMode>*/}
         <App />
-        </StrictMode>
+    {/*    </StrictMode>*/}
     </React.Fragment >,
 )

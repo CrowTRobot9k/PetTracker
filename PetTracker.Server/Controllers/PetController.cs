@@ -60,6 +60,23 @@ namespace PetTracker.Server.Controllers
             return true;
         }
 
+
+        [HttpPost("UpdatePet")]
+        public async Task<bool> UpdatePet([FromForm] AddPetDto model)
+
+        {
+            try
+            {
+                //var result = await _PetService.UpdatePet(model);
+            }
+            catch (Exception ex)
+            {
+                HandleUIException(ex, model);
+            }
+
+            return true;
+        }
+
         [HttpGet("GetPetTypes")]
         public async Task<List<PetTypeDto>> GetPetTypes()
         {

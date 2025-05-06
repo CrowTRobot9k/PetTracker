@@ -19,6 +19,17 @@ public partial class Pet
         Sex = pet.Sex;
         MedicalProblems = pet.MedicalProblems;
     }
+    public void UpdatePet(AddPetDto pet)
+    {
+        Name = pet.Name;
+        PetTypeId = pet.PetTypeId;
+        Color = pet.Color;
+        BirthDate = pet.BirthDate;
+        Weight = pet.Weight;
+        Sex = pet.Sex;
+        MedicalProblems = pet.MedicalProblems;
+    }
+
     public int Id { get; set; }
     public int? OwnerId { get; set; }
     public string? Name { get; set; }

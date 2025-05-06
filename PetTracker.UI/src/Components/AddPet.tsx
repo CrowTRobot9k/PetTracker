@@ -37,15 +37,15 @@ export default function AddPet({ open, setOpen, handleClose }: AddPetProps)
         });
     const [openBreeds, setOpenBreeds] = useState(false);
 
-    const getPetTypes = useSharedStore((state) => state.getPetTypes);
+    //const getPetTypes = useSharedStore((state) => state.getPetTypes);
     const petTypes = useSharedStore((state) => state.petTypes);
 
     const getPetBreeds = useSharedStore((state) => state.getPetBreeds);
     const petBreeds = useSharedStore((state) => state.petBreeds);
 
-    useEffect(() => {
-     getPetTypes();
-    }, []);
+    //useEffect(() => {
+    // getPetTypes();
+    //}, []);
 
     useEffect(() =>
     {

@@ -8,6 +8,8 @@ import AppTheme from '../Theme/AppTheme';
 import AppAppBar from '../Components/AppAppBar';
 import AddIcon from '@mui/icons-material/Add';
 import AddPet from '../Components/AddPet';
+import ViewPet from '../Components/ViewPet';
+import Pet from '../Types/SharedTypes';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import Card from '@mui/material/Card';
@@ -29,11 +31,20 @@ import '../Styles/petTracker.css';
 
 export default function Pets(props: { disableCustomTheme?: boolean }) {
     const getPets = useSharedStore((state) => state.getPets);
+    const getPetTypes = useSharedStore((state) => state.getPetTypes);
     const { pets, loadingPets } = useSharedStore();
     const [open, setOpen] = React.useState(false);
+    const [openViewPet, setOpenViewPet] = React.useState(false);
+    const [selectedPet, setSelectedPet] = useState<Pet>(
+        {
+        });
 
     useEffect(() => {
         getPets();
+    }, []);
+
+    useEffect(() => {
+        getPetTypes();
     }, []);
 
     const handleClickOpen = () => {
@@ -42,6 +53,15 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
 
     const handleClose = () => {
         setOpen(false);
+    };
+
+    const handleOpenPet = (pet:Pet) => {
+       // setSelectedPet(pet);
+        setOpenViewPet(true);
+    };
+
+    const handleClosePet = () => {
+        setOpenViewPet(false);
     };
 
     const getImageUrlFromBlob = (base64String) =>
@@ -55,13 +75,6 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
            <img key={`${index}_${f.fileName}`} src={getImageUrlFromBlob(f.fileDataBase64)}/>
         )))
     }
-
-    const onClickPet = () =>
-    {
-        setOpen(true);
-    }
-
-
 
     const SyledCard = styled(Card)(({ theme }) => ({
         display: 'flex',
@@ -99,41 +112,6 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
         textOverflow: 'ellipsis',
     });
 
-    function Author({ authors }: { authors: { name: string; avatar: string }[] }) {
-        return (
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    gap: 2,
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '16px',
-                }}
-            >
-                <Box
-                    sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }}
-                >
-                    <AvatarGroup max={3}>
-                        {authors.map((author, index) => (
-                            <Avatar
-                                key={index}
-                                alt={author.name}
-                                src={author.avatar}
-                                sx={{ width: 24, height: 24 }}
-                            />
-                        ))}
-                    </AvatarGroup>
-                    <Typography variant="caption">
-                        {authors.map((author) => author.name).join(', ')}
-                    </Typography>
-                </Box>
-                <Typography variant="caption">July 14, 2021</Typography>
-            </Box>
-        );
-    }
-
-
     return (
        /* <AuthorizeView>*/
         <AppTheme {...props}>
@@ -153,7 +131,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                         </Button>
                     </div>
                 </Box>
-                <AddPet open={open} setOpen={ setOpen } handleClose={handleClose} />
+                <AddPet open={open} setOpen={setOpen} handleClose={handleClose} />
             </Container>
             <Container
                 maxWidth="lg"
@@ -199,7 +177,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                                         ))}
                                     </Box>
                                     <SyledCardContent>
-                                        <Fab color="primary" sx={{ alignSelf: 'center' }} onClick={onClickPet} aria-label="add">
+                                        <Fab color="primary" sx={{ alignSelf: 'center' }} aria-label="add">
                                             <EditIcon />
                                         </Fab>
                                     </SyledCardContent>
@@ -209,6 +187,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                         ))}
                     </Grid>
                 </Box>
+            {/*    <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} />*/}
             </Container>
             </AppTheme>
        /* </AuthorizeView>*/
