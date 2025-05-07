@@ -17,7 +17,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Pet from '../Types/SharedTypes';
-import useSharedStore from '../Stores/SharedStore';
+import usePetStore from '../Stores/PetStore';
 
 import '../Styles/petTracker.css';
 
@@ -25,8 +25,10 @@ interface AddPetProps {
     open: boolean;
     setOpen: (arg:boolean) => void;
     handleClose: () => void;
+    petTypes: [];
 }
-export default function AddPet({ open, setOpen, handleClose }: AddPetProps)
+
+export default function AddPet({ open, setOpen, handleClose, petTypes }: AddPetProps)
 {
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
@@ -37,20 +39,21 @@ export default function AddPet({ open, setOpen, handleClose }: AddPetProps)
         });
     const [openBreeds, setOpenBreeds] = useState(false);
 
-    const getPetTypes = useSharedStore((state) => state.getPetTypes);
-    const petTypes = useSharedStore((state) => state.petTypes);
+    //const getPetTypes = usePetStore((state) => state.getPetTypes);
+    //const petTypes = usePetStore((state) => state.petTypes);
 
-    const getPetBreeds = useSharedStore((state) => state.getPetBreeds);
-    const petBreeds = useSharedStore((state) => state.petBreeds);
+    const getPetBreeds = usePetStore((state) => state.getPetBreeds);
+    const petBreeds = usePetStore((state) => state.petBreeds);
 
-    useEffect(() => {
-     getPetTypes();
-    }, []);
+    //useEffect(() => {
+    // getPetTypes();
+    //}, []);
 
     useEffect(() =>
     {
         if (addPet.petTypeId) {
             getPetBreeds(addPet.petTypeId);
+
         }
     }, [addPet.petTypeId]);
 

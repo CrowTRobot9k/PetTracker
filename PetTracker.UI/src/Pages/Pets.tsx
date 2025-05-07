@@ -22,18 +22,24 @@ import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import Chip from '@mui/material/Chip';
 import Fab from '@mui/material/Fab';
+import usePetsStore from '../Stores/PetsStore.tsx';
 
-import useSharedStore from '../Stores/SharedStore';
 import '../Styles/petTracker.css';
 
 
 export default function Pets(props: { disableCustomTheme?: boolean }) {
-    const getPets = useSharedStore((state) => state.getPets);
-    const { pets, loadingPets } = useSharedStore();
+    const getPets = usePetsStore((state) => state.getPets);
+    const getPetTypes = usePetsStore((state) => state.getPetTypes);
+    const petTypes = usePetsStore((state) => state.petTypes);
+    const { pets, loadingPets } = usePetsStore();
     const [open, setOpen] = React.useState(false);
 
     useEffect(() => {
         getPets();
+    }, []);
+
+    useEffect(() => {
+        getPetTypes();
     }, []);
 
     const handleClickOpen = () => {
@@ -153,7 +159,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                         </Button>
                     </div>
                 </Box>
-                <AddPet open={open} setOpen={ setOpen } handleClose={handleClose} />
+                <AddPet open={open} setOpen={setOpen} handleClose={handleClose} petTypes={petTypes} />
             </Container>
             <Container
                 maxWidth="lg"
