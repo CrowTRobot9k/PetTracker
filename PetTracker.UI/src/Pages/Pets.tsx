@@ -108,73 +108,93 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
             <Container
                 maxWidth="lg"
                 component="main"
-                sx={{ display: 'flex', flexDirection: 'row', my: 3, gap: 1 }}
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    my: 3,
+                    gap: 1
+                }}
             >
                 <Box
-                    sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 4,
+                    }}
                 >
-                    <div>
-                        <Button onClick={handleClickOpen} variant="contained" color="info" endIcon={<AddIcon />}>
-                            Add Pet
-                        </Button>
-                    </div>
-                </Box>
-                <AddPet open={open} setOpen={setOpen} handleClose={handleClose} petTypes={petTypes} />
-            </Container>
-            <Container
-                maxWidth="lg"
-                component="main"
-                sx={{ display: 'flex', flexDirection: 'column', my: 3, gap: 4 }}
-            >
-                <Box
-                    sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}
-                >
-                    <Grid container spacing={2} columns={12}>
-
-                        {loadingPets && (
-                            <CircularProgress />
-                        )}  
-                        {pets?.length > 0 && (pets?.map(m =>
+                    {loadingPets && (
+                        <CircularProgress />
+                    )}
+                    {pets?.length > 0 && !loadingPets && (
+                        <Grid container spacing={2} columns={12}>
                             <Grid size={{ xs: 12, md: 4 }}>
                                 <SyledCard
                                     variant="outlined"
-                                    sx={{ height: '100%' }}
+                                    sx={{
+                                        height: '100%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
                                 >
-                                    <Carousel cards={getPetSlides(m.petPhotos)}/>
-                                    <SyledCardContent>
-                                        <Typography gutterBottom variant="h6" component="div">
-                                            {m.name}
-                                        </Typography>
-                                        <StyledTypography variant="body2" color="text.secondary" gutterBottom>
-                                            {m.petType?.type}
-                                        </StyledTypography>
-                                    </SyledCardContent>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            bgcolor: 'background.paper',
-                                            borderRadius: 1,
-                                            mx: 'auto'
-                                        }}
+                                    <Box sx={{
+                                        bgcolor: 'background.paper',
+                                        borderRadius: 1,
+                                        mx: 'auto'
+                                    }}
                                     >
-                                        {m.breedTypes?.length > 0 && (m.breedTypes?.map(b =>
-                                            <Chip sx={{
-                                                m: 1,
-                                            }} label={b.name} />
-                                        ))}
+                                        <div>
+                                            <Button onClick={handleClickOpen} variant="contained" color="info" endIcon={<AddIcon />}>
+                                                Add Pet
+                                            </Button>
+                                        </div>
                                     </Box>
-                                    <SyledCardContent>
-                                        <Fab color="primary" sx={{ alignSelf: 'center' }} onClick={onClickPet} aria-label="add">
-                                            <EditIcon />
-                                        </Fab>
-                                    </SyledCardContent>
-                                   {/* <Author authors={m.name} />*/}
+                                    <AddPet open={open} setOpen={setOpen} handleClose={handleClose} petTypes={petTypes} />
                                 </SyledCard>
                             </Grid>
-                        ))}
-                    </Grid>
-                </Box>
+                            {pets?.map(m =>
+                                <Grid size={{ xs: 12, md: 4 }}>
+                                    <SyledCard
+                                        variant="outlined"
+                                        sx={{ height: '100%' }}
+                                    >
+                                        <Carousel cards={getPetSlides(m.petPhotos)} />
+                                        <SyledCardContent>
+                                            <Typography gutterBottom variant="h6" component="div">
+                                                {m.name}
+                                            </Typography>
+                                            {/*<StyledTypography variant="body2" color="text.secondary" gutterBottom>*/}
+                                            {/*    {m.petType?.type}*/}
+                                            {/*</StyledTypography>*/}
+                                        </SyledCardContent>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                bgcolor: 'background.paper',
+                                                borderRadius: 1,
+                                                mx: 'auto'
+                                            }}
+                                        >
+                                            {m.breedTypes?.length > 0 && (m.breedTypes?.map(b =>
+                                                <Chip sx={{
+                                                    m: 1,
+                                                }} label={b.name} />
+                                            ))}
+                                        </Box>
+                                        <SyledCardContent sx={{ my: 1 }}>
+                                            <Fab color="primary" sx={{ alignSelf: 'center' }} aria-label="add">
+                                                <EditIcon />
+                                            </Fab>
+                                        </SyledCardContent>
+                                    </SyledCard>
+                                </Grid>
+                            )}
+                        </Grid>
+                    )}
+                    </Box>
             </Container>
             </AppTheme>
        /* </AuthorizeView>*/

@@ -244,7 +244,6 @@ export default function AddPet({ open, setOpen, handleClose, petTypes }: AddPetP
                   Color
               </DialogContentText>
               <OutlinedInput
-                  autoFocus
                   //required
                   margin="dense"
                   id="petColor"
@@ -275,7 +274,6 @@ export default function AddPet({ open, setOpen, handleClose, petTypes }: AddPetP
                   Weight
               </DialogContentText>
               <OutlinedInput
-                autoFocus
                 margin="dense"
                 id="petWeight"
                 name="weight"
@@ -313,7 +311,6 @@ export default function AddPet({ open, setOpen, handleClose, petTypes }: AddPetP
                   Medical Problems
               </DialogContentText>
               <OutlinedInput
-                  autoFocus
                   //required
                   margin="dense"
                   id="petMedicalProblems"
