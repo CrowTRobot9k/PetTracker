@@ -21,12 +21,11 @@ import usePetStore from '../Stores/PetStore';
 
 interface AddPetProps {
     open: boolean;
-    setOpen: (arg:boolean) => void;
     handleClose: () => void;
     petTypes: [];
 }
 
-export default function AddPet({ open, setOpen, handleClose, petTypes }: AddPetProps)
+export default function AddPet({ open, handleClose, petTypes }: AddPetProps)
 {
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
@@ -37,15 +36,8 @@ export default function AddPet({ open, setOpen, handleClose, petTypes }: AddPetP
         });
     const [openBreeds, setOpenBreeds] = useState(false);
 
-    //const getPetTypes = usePetStore((state) => state.getPetTypes);
-    //const petTypes = usePetStore((state) => state.petTypes);
-
     const getPetBreeds = usePetStore((state) => state.getPetBreeds);
     const petBreeds = usePetStore((state) => state.petBreeds);
-
-    //useEffect(() => {
-    // getPetTypes();
-    //}, []);
 
     useEffect(() =>
     {
@@ -131,7 +123,7 @@ export default function AddPet({ open, setOpen, handleClose, petTypes }: AddPetP
                     breeds: []
                 });
                 setSuccessMessage("Pet Created")
-                setOpen(false);
+                handleClose();
             }
             else {
                 setErrorMessage("Error Creating Pet");

@@ -17,27 +17,23 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Pet from '../Types/SharedTypes';
-import useSharedStore from '../Stores/SharedStore';
-
-import '../Styles/petTracker.css';
+import usePetStore from '../Stores/PetStore';
 
 interface ViewPetProps {
     open: boolean;
     viewPet: Pet;
-    //setOpen: (arg: boolean) => void;
     handleClose: () => void;
+    petTypes: [];
 }
 
-export default function ViewPet({ open, viewPet, handleClose }: ViewPetProps) {
+export default function ViewPet({ open, viewPet, handleClose, petTypes }: ViewPetProps) {
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [openBreeds, setOpenBreeds] = useState(false);
 
-    const petTypes = useSharedStore((state) => state.petTypes);
-
-    const getPetBreeds = useSharedStore((state) => state.getPetBreeds);
-    const petBreeds = useSharedStore((state) => state.petBreeds);
+    const getPetBreeds = usePetStore((state) => state.getPetBreeds);
+    const petBreeds = usePetStore((state) => state.petBreeds);
 
     useEffect(() => {
         if (viewPet.petTypeId) {
@@ -118,7 +114,7 @@ export default function ViewPet({ open, viewPet, handleClose }: ViewPetProps) {
                 setSelectedFiles([]);
                 
                 setSuccessMessage("Pet Saved")
-                //setOpen(false);
+                handleClose();
             }
             else {
                 setErrorMessage("Error Saving Pet");
@@ -140,7 +136,7 @@ export default function ViewPet({ open, viewPet, handleClose }: ViewPetProps) {
                 <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', width: '100%', alignItems: 'center' }}
                 >
-                    <DialogTitle>Add Pet</DialogTitle>
+                    <DialogTitle>View Pet</DialogTitle>
                     <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} />
                 </DialogContent>
                 <DialogContent
@@ -167,28 +163,28 @@ export default function ViewPet({ open, viewPet, handleClose }: ViewPetProps) {
                         <DialogContentText>
                             Pet Type
                         </DialogContentText>
-                        <FormControl fullWidth>
-                            <Select
-                                displayEmpty
-                                id="select-pet-type"
-                                name="petType"
-                                value={viewPet.petType}
-                                label="Pet Type"
-                                onChange={handleChangePetType}
-                                renderValue={(selected) => {
-                                    if (!selected) {
-                                        return <em>Select</em>;
-                                    }
+                        {/*<FormControl fullWidth>*/}
+                        {/*    <Select*/}
+                        {/*        displayEmpty*/}
+                        {/*        id="select-pet-type"*/}
+                        {/*        name="petType"*/}
+                        {/*        value={viewPet.petType}*/}
+                        {/*        label="Pet Type"*/}
+                        {/*        onChange={handleChangePetType}*/}
+                        {/*        renderValue={(selected) => {*/}
+                        {/*            if (!selected) {*/}
+                        {/*                return <em>Select</em>;*/}
+                        {/*            }*/}
 
-                                    return selected;
-                                }}
-                            >
-                                {petTypes?.length > 0 && (petTypes?.map(m =>
+                        {/*            return selected;*/}
+                        {/*        }}*/}
+                        {/*    >*/}
+                        {/*        {petTypes?.length > 0 && (petTypes?.map(m =>*/}
 
-                                    <MenuItem key={m.type} value={m.type}>{m.type}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                        {/*            <MenuItem key={m.type} value={m.type}>{m.type}</MenuItem>*/}
+                        {/*        ))}*/}
+                        {/*    </Select>*/}
+                        {/*</FormControl>*/}
                         <DialogContentText>
                             Breed
                         </DialogContentText>
@@ -250,14 +246,14 @@ export default function ViewPet({ open, viewPet, handleClose }: ViewPetProps) {
                         <DialogContentText>
                             Birth Date
                         </DialogContentText>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                                name="birthDate"
-                                value={viewPet.birthDate}
-                                onChange={handleChangeDate}
-                                slotProps={{ textField: { size: 'small' } }}
-                            />
-                        </LocalizationProvider>
+                        {/*<LocalizationProvider dateAdapter={AdapterDayjs}>*/}
+                        {/*    <DatePicker*/}
+                        {/*        name="birthDate"*/}
+                        {/*        value={viewPet.birthDate}*/}
+                        {/*        onChange={handleChangeDate}*/}
+                        {/*        slotProps={{ textField: { size: 'small' } }}*/}
+                        {/*    />*/}
+                        {/*</LocalizationProvider>*/}
                         <DialogContentText>
                             Weight
                         </DialogContentText>

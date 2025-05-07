@@ -8,6 +8,7 @@ import AppTheme from '../Theme/AppTheme';
 import AppAppBar from '../Components/AppAppBar';
 import AddIcon from '@mui/icons-material/Add';
 import AddPet from '../Components/AddPet';
+import ViewPet from '../Components/ViewPet.tsx';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import Card from '@mui/material/Card';
@@ -30,6 +31,10 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
     const petTypes = usePetsStore((state) => state.petTypes);
     const { pets, loadingPets } = usePetsStore();
     const [open, setOpen] = React.useState(false);
+    const [openViewPet, setOpenViewPet] = React.useState(false);
+    const [selectedPet, setSelectedPet] = useState<Pet>(
+        {
+        });
 
     useEffect(() => {
         getPets();
@@ -59,10 +64,14 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
         )))
     }
 
-    const onClickPet = () =>
-    {
-        setOpen(true);
+    const handleOpenPet = (pet) => {
+        setSelectedPet(pet);
+        setOpenViewPet(true);
     }
+
+    const handleClosePet = () => {
+        setOpenViewPet(false);
+    };
 
     const SyledCard = styled(Card)(({ theme }) => ({
         display: 'flex',
@@ -151,7 +160,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                                             </Button>
                                         </div>
                                     </Box>
-                                    <AddPet open={open} setOpen={setOpen} handleClose={handleClose} petTypes={petTypes} />
+                                    <AddPet open={open} handleClose={handleClose} petTypes={petTypes} />
                                 </SyledCard>
                             </Grid>
                             {pets?.map(m =>
@@ -185,7 +194,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                                             ))}
                                         </Box>
                                         <SyledCardContent sx={{ my: 1 }}>
-                                            <Fab color="primary" sx={{ alignSelf: 'center' }} aria-label="add">
+                                            <Fab color="primary" sx={{ alignSelf: 'center' }} onClick={() => handleOpenPet(m)} aria-label="add">
                                                 <EditIcon />
                                             </Fab>
                                         </SyledCardContent>
@@ -194,7 +203,8 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                             )}
                         </Grid>
                     )}
-                    </Box>
+                </Box>
+                <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} />
             </Container>
             </AppTheme>
        /* </AuthorizeView>*/
