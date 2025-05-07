@@ -19,8 +19,6 @@ import Chip from '@mui/material/Chip';
 import Pet from '../Types/SharedTypes';
 import usePetStore from '../Stores/PetStore';
 
-import '../Styles/petTracker.css';
-
 interface AddPetProps {
     open: boolean;
     setOpen: (arg:boolean) => void;

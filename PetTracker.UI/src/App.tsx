@@ -6,6 +6,7 @@ import SignIn from './Pages/SignIn.tsx';
 import Pets from './Pages/Pets.tsx';
 import Owners from './Pages/Owners.tsx';
 import Appointments from './Pages/Appointments.tsx';
+import '../src/Styles/petTracker.css';
 
 function App() {
     return (

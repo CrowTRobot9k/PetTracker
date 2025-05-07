@@ -24,9 +24,6 @@ import Chip from '@mui/material/Chip';
 import Fab from '@mui/material/Fab';
 import usePetsStore from '../Stores/PetsStore.tsx';
 
-import '../Styles/petTracker.css';
-
-
 export default function Pets(props: { disableCustomTheme?: boolean }) {
     const getPets = usePetsStore((state) => state.getPets);
     const getPetTypes = usePetsStore((state) => state.getPetTypes);
@@ -67,8 +64,6 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
         setOpen(true);
     }
 
-
-
     const SyledCard = styled(Card)(({ theme }) => ({
         display: 'flex',
         flexDirection: 'column',
@@ -104,41 +99,6 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
         overflow: 'hidden',
         textOverflow: 'ellipsis',
     });
-
-    function Author({ authors }: { authors: { name: string; avatar: string }[] }) {
-        return (
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    gap: 2,
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '16px',
-                }}
-            >
-                <Box
-                    sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }}
-                >
-                    <AvatarGroup max={3}>
-                        {authors.map((author, index) => (
-                            <Avatar
-                                key={index}
-                                alt={author.name}
-                                src={author.avatar}
-                                sx={{ width: 24, height: 24 }}
-                            />
-                        ))}
-                    </AvatarGroup>
-                    <Typography variant="caption">
-                        {authors.map((author) => author.name).join(', ')}
-                    </Typography>
-                </Box>
-                <Typography variant="caption">July 14, 2021</Typography>
-            </Box>
-        );
-    }
-
 
     return (
        /* <AuthorizeView>*/

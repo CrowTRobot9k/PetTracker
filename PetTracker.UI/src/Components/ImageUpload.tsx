@@ -5,8 +5,6 @@ import Container from '@mui/material/Container';
 import Carousel from '../Components/Carousel/Carousel';
 import Alert from '@mui/material/Alert';
 
-import '../Styles/petTracker.css';
-
 interface FileUploadProps {
     label: string;
     selectedFiles: File[],
