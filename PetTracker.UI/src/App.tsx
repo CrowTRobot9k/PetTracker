@@ -8,7 +8,6 @@ import Owners from './Pages/Owners.tsx';
 import Appointments from './Pages/Appointments.tsx';
 import '../src/Styles/petTracker.css';
 
-
 function App() {
     return (
             <BrowserRouter>

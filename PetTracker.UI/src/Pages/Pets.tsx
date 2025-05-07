@@ -8,8 +8,6 @@ import AppTheme from '../Theme/AppTheme';
 import AppAppBar from '../Components/AppAppBar';
 import AddIcon from '@mui/icons-material/Add';
 import AddPet from '../Components/AddPet';
-import ViewPet from '../Components/ViewPet';
-import Pet from '../Types/SharedTypes';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import Card from '@mui/material/Card';
@@ -24,20 +22,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import Chip from '@mui/material/Chip';
 import Fab from '@mui/material/Fab';
-
-import useSharedStore from '../Stores/SharedStore';
-import '../Styles/petTracker.css';
-
+import usePetsStore from '../Stores/PetsStore.tsx';
 
 export default function Pets(props: { disableCustomTheme?: boolean }) {
-    const getPets = useSharedStore((state) => state.getPets);
-    const getPetTypes = useSharedStore((state) => state.getPetTypes);
-    const { pets, loadingPets } = useSharedStore();
+    const getPets = usePetsStore((state) => state.getPets);
+    const getPetTypes = usePetsStore((state) => state.getPetTypes);
+    const petTypes = usePetsStore((state) => state.petTypes);
+    const { pets, loadingPets } = usePetsStore();
     const [open, setOpen] = React.useState(false);
-    const [openViewPet, setOpenViewPet] = React.useState(false);
-    const [selectedPet, setSelectedPet] = useState<Pet>(
-        {
-        });
 
     useEffect(() => {
         getPets();
@@ -55,15 +47,6 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
         setOpen(false);
     };
 
-    const handleOpenPet = (pet:Pet) => {
-       // setSelectedPet(pet);
-        setOpenViewPet(true);
-    };
-
-    const handleClosePet = () => {
-        setOpenViewPet(false);
-    };
-
     const getImageUrlFromBlob = (base64String) =>
     {
        return `data:image/png;base64,${base64String}`;
@@ -74,6 +57,11 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
        return Array.from(images.map((f,index) => (
            <img key={`${index}_${f.fileName}`} src={getImageUrlFromBlob(f.fileDataBase64)}/>
         )))
+    }
+
+    const onClickPet = () =>
+    {
+        setOpen(true);
     }
 
     const SyledCard = styled(Card)(({ theme }) => ({
@@ -131,7 +119,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                         </Button>
                     </div>
                 </Box>
-                <AddPet open={open} setOpen={setOpen} handleClose={handleClose} />
+                <AddPet open={open} setOpen={setOpen} handleClose={handleClose} petTypes={petTypes} />
             </Container>
             <Container
                 maxWidth="lg"
@@ -177,7 +165,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                                         ))}
                                     </Box>
                                     <SyledCardContent>
-                                        <Fab color="primary" sx={{ alignSelf: 'center' }} aria-label="add">
+                                        <Fab color="primary" sx={{ alignSelf: 'center' }} onClick={onClickPet} aria-label="add">
                                             <EditIcon />
                                         </Fab>
                                     </SyledCardContent>
@@ -187,7 +175,6 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                         ))}
                     </Grid>
                 </Box>
-            {/*    <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} />*/}
             </Container>
             </AppTheme>
        /* </AuthorizeView>*/
