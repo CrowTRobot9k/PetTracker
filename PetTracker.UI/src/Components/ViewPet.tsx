@@ -18,34 +18,55 @@ import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Pet from '../Types/SharedTypes';
 import usePetStore from '../Stores/PetStore';
+import dayjs, { Dayjs } from 'dayjs';
 
-interface ViewPetProps {
+interface viewPetProps {
     open: boolean;
     viewPet: Pet;
     handleClose: () => void;
     petTypes: [];
 }
 
-export default function ViewPet({ open, viewPet, handleClose, petTypes }: ViewPetProps) {
+export default function ViewPet({ open, viewPet, handleClose, petTypes }: viewPetProps) {
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [openBreeds, setOpenBreeds] = useState(false);
+    const [editPet, setEditPet] = useState<Pet>({});
+
+    useEffect(() => {
+        const copy = {
+            id: viewPet.id,
+            name: viewPet.name,
+            petTypeId: viewPet.petType?.id,
+            petType: viewPet.petType?.type,
+            breeds: viewPet.breedTypes?.map(m => m.name),
+            color: viewPet.color,
+            birthDate: dayjs(viewPet.birthDate),
+            weight:viewPet.weight,
+            sex: viewPet.sex,
+            medicalProblems: viewPet.medicalProblems
+        };
+
+
+        //const copiedData = { ...viewPet };
+
+        setEditPet(copy);
+    }, [viewPet]);
 
     const getPetBreeds = usePetStore((state) => state.getPetBreeds);
     const petBreeds = usePetStore((state) => state.petBreeds);
 
     useEffect(() => {
-        if (viewPet.petTypeId) {
-            getPetBreeds(viewPet.petTypeId);
+        if (editPet.petTypeId) {
+            getPetBreeds(editPet.petTypeId);
         }
-    }, [viewPet.petTypeId]);
+    }, [editPet.petTypeId]);
 
     const petGenders = [
         { value: "Male" },
         { value: "Female" },
     ]
-
 
     const handleFileInputChange = (newValue: File[]) => {
         setSelectedFiles(newValue);
@@ -54,8 +75,8 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: ViewPe
     const handleChangePetType = (e: SelectChangeEvent) => {
         if (petTypes && petTypes?.length > 0) {
             const petType = petTypes.find(f => f.type == e.target.value);
-            viewPet.petTypeId = petType.id;
-            viewPet.petType = petType.type;
+            editPet.petTypeId = petType.id;
+            editPet.petType = petType.type;
         }
     };
 
@@ -63,23 +84,28 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: ViewPe
     const handleChangePetBreed = (e: SelectChangeEvent) => {
         if (petBreeds && petBreeds?.length > 0) {
             const petBreed = petBreeds.filter(f => e.target.value.indexOf(f.name) > -1);
-            viewPet.breedTypeIds = petBreed.map(m => m.id);
-            viewPet.breed = petBreed.map(m => m.name);
+            editPet.breedTypeIds = petBreed.map(m => m.id);
+            editPet.breed = petBreed.map(m => m.name);
         }
         setOpenBreeds(false);
     };
 
     const handleChange = (e) => {
+        //const { name, value } = e.target;
+        //editPet[name]= value;
         const { name, value } = e.target;
-        viewPet[name]= value;
+        setEditPet(prevData => ({
+            ...prevData,
+            [name]: value
+        }));
     };
 
     const handleChangeDate = (e) => {
-        viewPet.birthDate= e;
+        editPet.birthDate= e;
     };
 
     const handleChangePetSex = (e: SelectChangeEvent) => {
-        viewPet.sex = e.target.value;
+        editPet.sex = e.target.value;
     };
 
     const handleSavePetSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -92,19 +118,19 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: ViewPe
             editPetData.append(`model.PetPhotos`, f);
         });
 
-        editPetData.append("model.Id", viewPet.id);
-        editPetData.append("model.Name", viewPet.name);
-        editPetData.append("model.PetTypeId", viewPet.petTypeId);
-        editPetData.append("model.PetType", viewPet.petType);
-        viewPet.breedTypeIds.forEach(f => {
+        editPetData.append("model.Id", editPet.id);
+        editPetData.append("model.Name", editPet.name);
+        editPetData.append("model.PetTypeId", editPet.petTypeId);
+        editPetData.append("model.PetType", editPet.petType);
+        editPet.breedTypeIds.forEach(f => {
             editPetData.append("model.BreedTypeIds", f);
         });
-        editPetData.append("model.Breeds", viewPet.breeds);
-        editPetData.append("model.Color", viewPet.color);
-        editPetData.append("model.BirthDate", viewPet.birthDate);
-        editPetData.append("model.Weight", viewPet.weight);
-        editPetData.append("model.Sex", viewPet.sex);
-        editPetData.append("model.MedicalProblems", viewPet.medicalProblems);
+        editPetData.append("model.Breeds", editPet.breeds);
+        editPetData.append("model.Color", editPet.color);
+        editPetData.append("model.BirthDate", editPet.birthDate);
+        editPetData.append("model.Weight", editPet.weight);
+        editPetData.append("model.Sex", editPet.sex);
+        editPetData.append("model.MedicalProblems", editPet.medicalProblems);
 
         fetch("/api/Pet/UpdatePet", {
             method: "POST",
@@ -157,34 +183,34 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: ViewPe
                             label="Pet Name"
                             placeholder="Pet Name"
                             type="text"
-                            value={viewPet.name}
+                            value={editPet.name}
                             onChange={handleChange}
                         />
                         <DialogContentText>
                             Pet Type
                         </DialogContentText>
-                        {/*<FormControl fullWidth>*/}
-                        {/*    <Select*/}
-                        {/*        displayEmpty*/}
-                        {/*        id="select-pet-type"*/}
-                        {/*        name="petType"*/}
-                        {/*        value={viewPet.petType}*/}
-                        {/*        label="Pet Type"*/}
-                        {/*        onChange={handleChangePetType}*/}
-                        {/*        renderValue={(selected) => {*/}
-                        {/*            if (!selected) {*/}
-                        {/*                return <em>Select</em>;*/}
-                        {/*            }*/}
+                        <FormControl fullWidth>
+                            <Select
+                                displayEmpty
+                                id="select-pet-type"
+                                name="petType"
+                                value={editPet.petType}
+                                label="Pet Type"
+                                onChange={handleChangePetType}
+                                renderValue={(selected) => {
+                                    if (!selected) {
+                                        return <em>Select</em>;
+                                    }
 
-                        {/*            return selected;*/}
-                        {/*        }}*/}
-                        {/*    >*/}
-                        {/*        {petTypes?.length > 0 && (petTypes?.map(m =>*/}
+                                    return selected;
+                                }}
+                            >
+                                {petTypes?.length > 0 && (petTypes?.map((m,index) => (
 
-                        {/*            <MenuItem key={m.type} value={m.type}>{m.type}</MenuItem>*/}
-                        {/*        ))}*/}
-                        {/*    </Select>*/}
-                        {/*</FormControl>*/}
+                                    <MenuItem key={index} value={m.type}>{m.type}</MenuItem>
+                                )))}
+                            </Select>
+                        </FormControl>
                         <DialogContentText>
                             Breed
                         </DialogContentText>
@@ -194,7 +220,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: ViewPe
                                 displayEmpty
                                 id="select-pet-type"
                                 name="breeds"
-                                value={viewPet.breeds}
+                                value={editPet.breeds}
                                 label="Pet Breed"
                                 open={openBreeds}
                                 onOpen={() => setOpenBreeds(true)}
@@ -209,7 +235,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: ViewPe
                                     }
                                     return (
                                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                            {selected.map((value) => (
+                                            {selected?.map((value) => (
                                                 <Chip key={value} label={value} />
                                             ))}
                                         </Box>)
@@ -236,7 +262,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: ViewPe
                             placeholder="Pet Color"
                             type="text"
                             fullWidth
-                            value={viewPet.color}
+                            value={editPet.color}
                             onChange={handleChange}
                         />
                     </DialogContent>
@@ -246,14 +272,14 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: ViewPe
                         <DialogContentText>
                             Birth Date
                         </DialogContentText>
-                        {/*<LocalizationProvider dateAdapter={AdapterDayjs}>*/}
-                        {/*    <DatePicker*/}
-                        {/*        name="birthDate"*/}
-                        {/*        value={viewPet.birthDate}*/}
-                        {/*        onChange={handleChangeDate}*/}
-                        {/*        slotProps={{ textField: { size: 'small' } }}*/}
-                        {/*    />*/}
-                        {/*</LocalizationProvider>*/}
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                name="birthDate"
+                                value={editPet.birthDate}
+                                onChange={handleChangeDate}
+                                slotProps={{ textField: { size: 'small' } }}
+                            />
+                        </LocalizationProvider>
                         <DialogContentText>
                             Weight
                         </DialogContentText>
@@ -266,7 +292,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: ViewPe
                             placeholder="Pet Weight"
                             type="text"
                             fullWidth
-                            value={viewPet.weight}
+                            value={editPet.weight}
                             onChange={handleChange}
                         />
                         <DialogContentText>
@@ -276,7 +302,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: ViewPe
                             displayEmpty
                             id="select-pet-sex"
                             name="sex"
-                            value={viewPet.sex}
+                            value={editPet.sex}
                             label="Pet Sex"
                             onChange={handleChangePetSex}
                             renderValue={(selected) => {
@@ -287,10 +313,10 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: ViewPe
                                 return selected;
                             }}
                         >
-                            {petGenders?.length > 0 && (petGenders.map(m =>
+                            {petGenders?.length > 0 && (petGenders.map((m,index) =>(
 
-                                <MenuItem value={m.value}>{m.value}</MenuItem>
-                            ))}
+                                <MenuItem key={ index} value={m.value}>{m.value}</MenuItem>
+                            )))}
                         </Select>
                         <DialogContentText>
                             Medical Problems
@@ -307,7 +333,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: ViewPe
                             multiline
                             minRows="3"
                             fullWidth
-                            value={viewPet.medicalProblems}
+                            value={editPet.medicalProblems}
                             onChange={handleChange}
                         />
                     </DialogContent>

@@ -65,7 +65,8 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
     }
 
     const handleOpenPet = (pet) => {
-        setSelectedPet(pet);
+        const copiedPet = JSON.parse(JSON.stringify(pet));
+        setSelectedPet(copiedPet);
         setOpenViewPet(true);
     }
 
@@ -204,7 +205,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                         </Grid>
                     )}
                 </Box>
-                <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} />
+                <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} petTypes={petTypes} />
             </Container>
             </AppTheme>
        /* </AuthorizeView>*/
