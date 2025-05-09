@@ -2,6 +2,22 @@ export interface User {
     email: string;
 }
 
+export interface Owner {
+    id: number;
+    userId: number;
+    firstName: string;
+    lastName: string;
+    address: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    email: string;
+    phone: string;
+    refferedBy: string;
+    vet: string;
+    vetPhone: string;
+}
+
 export interface Pet {
     name: string;
     petTypeId: number;
