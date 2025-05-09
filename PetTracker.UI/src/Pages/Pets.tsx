@@ -35,10 +35,12 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
     const [selectedPet, setSelectedPet] = useState<Pet>(
         {
         });
+    const [reloadPets, setReloadPets] = React.useState(false);
+
 
     useEffect(() => {
         getPets();
-    }, []);
+    }, [reloadPets]);
 
     useEffect(() => {
         getPetTypes();
@@ -205,7 +207,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                         </Grid>
                     )}
                 </Box>
-                <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} petTypes={petTypes} />
+                <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} />
             </Container>
             </AppTheme>
        /* </AuthorizeView>*/

@@ -23,9 +23,11 @@ interface AddPetProps {
     open: boolean;
     handleClose: () => void;
     petTypes: [];
+    reloadPets: boolean,
+    setReloadPets: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function AddPet({ open, handleClose, petTypes }: AddPetProps)
+export default function AddPet({ open, handleClose, petTypes, reloadPets, setReloadPets }: AddPetProps)
 {
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
@@ -119,6 +121,7 @@ export default function AddPet({ open, handleClose, petTypes }: AddPetProps)
         }).then((data) => {
             if (data.ok) {
                 setSelectedFiles([]);
+                setReloadPets(!reloadPets);
                 setAddPet({
                     breeds: []
                 });

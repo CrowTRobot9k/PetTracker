@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import Container from '@mui/material/Container';
@@ -14,6 +14,35 @@ interface FileUploadProps {
 export default function ImageUpload({ label, selectedFiles, onChange }: FileUploadProps) {
     const [slides, setSlides] = useState<React.ReactElement[]>([]);
     const [errorMessage, setErrorMessage] = React.useState('');
+
+    const getImageUrlFromBlob = (base64String) => {
+        return `data:image/png;base64,${base64String}`;
+    }
+
+    useEffect(() =>
+    {
+        if (selectedFiles.length > 0)
+        {
+            const files = [];
+            Array.from(selectedFiles).map((f) => {
+                if (f) {
+                    try {
+                        const fileUrl = getImageUrlFromBlob(f.fileDataBase64);
+                        files.push({ id: f.id, fileName: f.fileName, src: fileUrl, });
+
+                    } catch (error) {
+                        setErrorMessage("Error reading file");
+                    }
+                }
+            });
+
+            const updateSlides = Array.from(files.map((f) => (
+                <img key={`${f.id}_${f.fileName}`} src={f.src} className="img-preview" />
+            )))
+
+            setSlides(updateSlides);
+        }
+    }, []);
 
     const handleFileChange = (e) =>
     {

@@ -67,7 +67,7 @@ namespace PetTracker.Server.Controllers
         {
             try
             {
-                //var result = await _PetService.UpdatePet(model);
+                var result = await _PetService.UpdatePet(model);
             }
             catch (Exception ex)
             {

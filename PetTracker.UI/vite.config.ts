@@ -92,6 +92,10 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            '^/api/Pet/UpdatePet': {
+                target,
+                secure: false
+            },
             '^/api/Pet/GetPetTypes': {
                 target,
                 secure: false

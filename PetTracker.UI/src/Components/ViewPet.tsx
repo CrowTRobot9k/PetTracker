@@ -25,9 +25,11 @@ interface viewPetProps {
     viewPet: Pet;
     handleClose: () => void;
     petTypes: [];
+    reloadPets: boolean,
+    setReloadPets: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function ViewPet({ open, viewPet, handleClose, petTypes }: viewPetProps) {
+export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPets, setReloadPets }: viewPetProps) {
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -40,6 +42,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: viewPe
             name: viewPet.name,
             petTypeId: viewPet.petType?.id,
             petType: viewPet.petType?.type,
+            breedTypeIds: viewPet.breedTypes?.map(m => m.id),
             breeds: viewPet.breedTypes?.map(m => m.name),
             color: viewPet.color,
             birthDate: dayjs(viewPet.birthDate),
@@ -48,10 +51,20 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: viewPe
             medicalProblems: viewPet.medicalProblems
         };
 
-
-        //const copiedData = { ...viewPet };
-
         setEditPet(copy);
+    }, [viewPet]);
+
+    useEffect(() => {
+        const petPhotos = viewPet.petPhotos?.map(m =>
+        (
+            {
+                id: m.id,
+                fileName: m.fileName,
+                fileDataBase64: m.fileDataBase64
+            }
+        ));
+
+        setSelectedFiles(petPhotos);
     }, [viewPet]);
 
     const getPetBreeds = usePetStore((state) => state.getPetBreeds);
@@ -73,19 +86,17 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: viewPe
     };
 
     const handleChangePetType = (e: SelectChangeEvent) => {
-        if (petTypes && petTypes?.length > 0) {
+        if (petTypes && petTypes?.length > 0 && e.target.value) {
             const petType = petTypes.find(f => f.type == e.target.value);
-            editPet.petTypeId = petType.id;
-            editPet.petType = petType.type;
+            setEditPet({ ...editPet, petTypeId: petType.id, petType: petType.type });
         }
     };
 
 
     const handleChangePetBreed = (e: SelectChangeEvent) => {
-        if (petBreeds && petBreeds?.length > 0) {
+        if (petBreeds && petBreeds?.length > 0 && e.target.value) {
             const petBreed = petBreeds.filter(f => e.target.value.indexOf(f.name) > -1);
-            editPet.breedTypeIds = petBreed.map(m => m.id);
-            editPet.breed = petBreed.map(m => m.name);
+            setEditPet({ ...editPet, breedTypeIds: petBreed.map(m=>m.id), breeds: petBreed.map(m => m.name) });
         }
         setOpenBreeds(false);
     };
@@ -101,11 +112,11 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: viewPe
     };
 
     const handleChangeDate = (e) => {
-        editPet.birthDate= e;
+        setEditPet({ ...editPet, birthDate: e });
     };
 
     const handleChangePetSex = (e: SelectChangeEvent) => {
-        editPet.sex = e.target.value;
+        setEditPet({ ...editPet, sex: e.target.value });
     };
 
     const handleSavePetSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -138,7 +149,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: viewPe
         }).then((data) => {
             if (data.ok) {
                 setSelectedFiles([]);
-                
+                setReloadPets(!reloadPets);
                 setSuccessMessage("Pet Saved")
                 handleClose();
             }
@@ -340,7 +351,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes }: viewPe
                 </DialogContent>
                 <DialogActions sx={{ pb: 3, px: 3 }}>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button variant="contained" color="info" type="submit">Create</Button>
+                    <Button variant="contained" color="info" type="submit">Save</Button>
                 </DialogActions>
                 {/*{submitSuccessMessage?.length > 0 && (*/}
                 {/*    <Alert variant="filled" severity="success">*/}
