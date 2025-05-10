@@ -23,7 +23,7 @@ interface AddOwnerProps {
     handleClose: () => void;
     ownerStates: [];
     reloadOwners: boolean,
-    setReloadOwnerss: React.Dispatch<React.SetStateAction<boolean>>;
+    setReloadOwners: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function AddOwner({ open, handleClose, ownerStates, reloadOwners, setReloadOwners }: AddOwnerProps) {
@@ -41,8 +41,10 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
 
     const handleChangeState = (e: SelectChangeEvent) => {
         if (ownerStates && ownerStates?.length > 0) {
-            const ownerState = ownerStates.find(f => f == e.target.value);
-            setAddOwner({ ...addOwner, state: ownerState });
+            const ownerState = ownerStates.find(f => f.abbr == e.target.value);
+            if (ownerState) {
+                setAddOwner({ ...addOwner, state: ownerState.abbr });
+            }
         }
     };
 
@@ -71,7 +73,8 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
         addOwnerData.append("model.State", addOwner.state);
         addOwnerData.append("model.ZipCode", addOwner.zipCode);
         addOwnerData.append("model.Email", addOwner.email);
-        addOwnerData.append("model.Phone", addOwner.phone);
+        addOwnerData.append("model.PrimaryPhone", addOwner.primaryPhone);
+        addOwnerData.append("model.SecondaryPhone", addOwner.secondaryPhone);
         addOwnerData.append("model.ReferredBy", addOwner.referredBy);
         addOwnerData.append("model.Vet", addOwner.vet);
         addOwnerData.append("model.VetPhone", addOwner.vetPhone);
@@ -83,7 +86,7 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
             if (data.ok) {
                 setSelectedFiles([]);
                 setReloadOwners(!reloadOwners);
-                addOwner({
+                setAddOwner({
                 });
                 setSuccessMessage("Owner Created")
                 handleClose();
@@ -125,7 +128,7 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
                             required
                             margin="dense"
                             id="firstName"
-                            name="firstNamw"
+                            name="firstName"
                             label="First Name"
                             placeholder="First Name"
                             type="text"
@@ -133,16 +136,31 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
                             onChange={handleChange}
                         />
                         <DialogContentText>
-                            Pet Type
+                            Address
+                        </DialogContentText>
+                        <OutlinedInput
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="address"
+                            name="address"
+                            label="Address"
+                            placeholder="Address"
+                            type="text"
+                            value={addOwner.address}
+                            onChange={handleChange}
+                        />
+                        <DialogContentText>
+                            State
                         </DialogContentText>
                         <FormControl fullWidth>
                             <Select
                                 displayEmpty
-                                id="select-pet-type"
-                                name="petType"
-                                value={addPet.petType}
+                                id="select-owner-state"
+                                name="ownerState"
+                                value={addOwner.state}
                                 label="Pet Type"
-                                onChange={handleChangePetType}
+                                onChange={handleChangeState}
                                 renderValue={(selected) => {
                                     if (!selected) {
                                         return <em>Select</em>;
@@ -151,63 +169,52 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
                                     return selected;
                                 }}
                             >
-                                {petTypes?.length > 0 && (petTypes?.map(m =>
+                                {ownerStates?.length > 0 && (ownerStates?.map(m =>
 
-                                    <MenuItem key={m.type} value={m.type}>{m.type}</MenuItem>
+                                    <MenuItem key={m} value={m.abbr}>{m.name}</MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
                         <DialogContentText>
-                            Breed
-                        </DialogContentText>
-                        <FormControl fullWidth>
-                            <Select
-                                multiple
-                                displayEmpty
-                                id="select-pet-type"
-                                name="breeds"
-                                value={addPet.breeds}
-                                label="Pet Breed"
-                                open={openBreeds}
-                                onOpen={() => setOpenBreeds(true)}
-                                onClose={() => setOpenBreeds(false)}
-                                onChange={handleChangePetBreed}
-                                renderValue={(selected) => {
-                                    if (petBreeds?.length < 1) {
-                                        return <em>Select Pet Type To View Breeds</em>;
-                                    }
-                                    if (petBreeds?.length > 0 && selected?.length < 1) {
-                                        return <em>Select</em>;
-                                    }
-                                    return (
-                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                            {selected.map((value) => (
-                                                <Chip key={value} label={value} />
-                                            ))}
-                                        </Box>)
-                                }}
-
-                                disabled={petBreeds?.length > 0 ? false : true}
-                            >
-                                {petBreeds?.length > 0 && (petBreeds.map(m =>
-
-                                    <MenuItem key={m.name} value={m.name}>{m.name}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <DialogContentText>
-                            Color
+                            Email
                         </DialogContentText>
                         <OutlinedInput
-                            //required
                             margin="dense"
-                            id="petColor"
-                            name="color"
-                            label="Pet Color"
-                            placeholder="Pet Color"
+                            id="ownerEmail"
+                            name="email"
+                            label="Owner Email"
+                            placeholder="Email"
                             type="text"
                             fullWidth
-                            value={addPet.color}
+                            value={addOwner.email}
+                            onChange={handleChange}
+                        />
+                        <DialogContentText>
+                            Primary Phone
+                        </DialogContentText>
+                        <OutlinedInput
+                            margin="dense"
+                            id="primaryPhone"
+                            name="primaryPhone"
+                            label="Primary Phone"
+                            placeholder="Primary Phone"
+                            type="text"
+                            fullWidth
+                            value={addOwner.primaryPhone}
+                            onChange={handleChange}
+                        />
+                        <DialogContentText>
+                            Veterinarian
+                        </DialogContentText>
+                        <OutlinedInput
+                            margin="dense"
+                            id="vet"
+                            name="vet"
+                            label="Veterinarian"
+                            placeholder="Veterinarian"
+                            type="text"
+                            fullWidth
+                            value={addOwner.vet}
                             onChange={handleChange}
                         />
                     </DialogContent>
@@ -215,70 +222,92 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
                         sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', flex: 1 }}
                     >
                         <DialogContentText>
-                            Birth Date
+                            Last Name
                         </DialogContentText>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                                name="birthDate"
-                                value={addPet.birthDate}
-                                onChange={handleChangeDate}
-                                slotProps={{ textField: { size: 'small' } }}
-                            />
-                        </LocalizationProvider>
+                        <OutlinedInput
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="lastName"
+                            name="lastName"
+                            label="Last Name"
+                            placeholder="Last Name"
+                            type="text"
+                            value={addOwner.lastName}
+                            onChange={handleChange}
+                        />
                         <DialogContentText>
-                            Weight
+                            City
+                        </DialogContentText>
+                        <OutlinedInput
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="city"
+                            name="city"
+                            label="city"
+                            placeholder="City"
+                            type="text"
+                            value={addOwner.city}
+                            onChange={handleChange}
+                        />
+                        <DialogContentText>
+                            Zip Code
                         </DialogContentText>
                         <OutlinedInput
                             margin="dense"
-                            id="petWeight"
-                            name="weight"
-                            label="Pet Weight"
-                            placeholder="Pet Weight"
+                            id="zipCode"
+                            name="zipCode"
+                            label="Owner Zip"
+                            placeholder="Zip Code"
                             type="text"
                             fullWidth
-                            value={addPet.weight}
+                            value={addOwner.zipCode}
                             onChange={handleChange}
                         />
                         <DialogContentText>
-                            Sex
-                        </DialogContentText>
-                        <Select
-                            displayEmpty
-                            id="select-pet-sex"
-                            name="sex"
-                            value={addPet.sex}
-                            label="Pet Sex"
-                            onChange={handleChangePetSex}
-                            renderValue={(selected) => {
-                                if (!selected) {
-                                    return <em>Select Sex</em>;
-                                }
-
-                                return selected;
-                            }}
-                        >
-                            {petGenders?.length > 0 && (petGenders.map(m =>
-
-                                <MenuItem value={m.value}>{m.value}</MenuItem>
-                            ))}
-                        </Select>
-                        <DialogContentText>
-                            Medical Problems
+                            Referred By
                         </DialogContentText>
                         <OutlinedInput
-                            //required
                             margin="dense"
-                            id="petMedicalProblems"
-                            name="medicalProblems"
-                            label="Pet Medical Problems"
-                            placeholder="Pet Medical Problems"
-                            type="textArea"
-                            multiline
-                            minRows="3"
+                            id="referredBy"
+                            name="referredBy"
+                            label="Referred By"
+                            placeholder="Referred By"
+                            type="text"
                             fullWidth
-                            value={addPet.medicalProblems}
+                            value={addOwner.referredBy}
                             onChange={handleChange}
                         />
+                        <DialogContentText>
+                            Secondary Phone
+                        </DialogContentText>
+                        <OutlinedInput
+                            margin="dense"
+                            id="secondaryPhone"
+                            name="secondaryPhone"
+                            label="Secondary Phone"
+                            placeholder="Secondary Phone"
+                            type="text"
+                            fullWidth
+                            value={addOwner.secondaryPhone}
+                            onChange={handleChange}
+                        />
+                        <DialogContentText>
+                            Veterinarian Phone
+                        </DialogContentText>
+                        <OutlinedInput
+                            margin="dense"
+                            id="vetPhone"
+                            name="vetPhone"
+                            label="Veterinarian Phone"
+                            placeholder="Veterinarian Phone"
+                            type="text"
+                            fullWidth
+                            value={addOwner.vetPhone}
+                            onChange={handleChange}
+                        />
+                        
                     </DialogContent>
                 </DialogContent>
                 <DialogActions sx={{ pb: 3, px: 3 }}>

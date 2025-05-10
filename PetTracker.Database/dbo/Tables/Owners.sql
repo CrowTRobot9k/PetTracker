@@ -9,9 +9,11 @@
 	[State]  NVARCHAR(2) NOT NULL,
 	[ZipCode]  NVARCHAR(9) NOT NULL,
 	[Email]		NVARCHAR(500) NOT NULL,
-	[Phone]		NVARCHAR(500) NOT NULL,
+	[PrimaryPhone]		NVARCHAR(15) NOT NULL,
+	[SecondaryPhone]		NVARCHAR(15) NOT NULL,
+	[ReferredBy]		NVARCHAR(500) NOT NULL,
 	[Vet]  NVARCHAR(500) NOT NULL,
-	[VetPhone]  NVARCHAR(500) NOT NULL,
+	[VetPhone]  NVARCHAR(15) NOT NULL,
 	 CONSTRAINT [PK_Owners] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Owners_Users] FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id])
 )

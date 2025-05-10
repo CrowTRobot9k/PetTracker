@@ -20,3 +20,7 @@
 .MuiIconButton-colorBlue:hover {
     background-color:var(--template-palette-info-dark) !important;
 }
+
+.full-width {
+    width:100% !important;
+}

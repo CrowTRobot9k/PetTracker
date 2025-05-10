@@ -20,8 +20,8 @@ namespace PetTracker.Server.Controllers
         {
             try
             {
-                var result = await _PetService.GetPets();
-                return result;
+               var result = await _PetService.GetPets();
+               return result;
             }
             catch (Exception ex)
             {

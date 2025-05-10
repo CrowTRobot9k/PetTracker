@@ -25,6 +25,8 @@ import Chip from '@mui/material/Chip';
 import Fab from '@mui/material/Fab';
 import usePetsStore from '../Stores/PetsStore.tsx';
 
+import { Pet } from '../Types/SharedTypes.ts';
+
 export default function Pets(props: { disableCustomTheme?: boolean }) {
     const getPets = usePetsStore((state) => state.getPets);
     const getPetTypes = usePetsStore((state) => state.getPetTypes);
@@ -125,47 +127,57 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    my: 3,
+                    my: 1,
                     gap: 1
                 }}
             >
-                <Box
+                <SyledCard
+                    variant="outlined"
                     sx={{
+                        height: '100%',
                         display: 'flex',
-                        flexDirection: 'column',
-                        gap: 4,
+                        alignItems: 'center',
+                        justifyContent: 'center',
                     }}
                 >
+                    <Box sx={{
+                        bgcolor: 'background.paper',
+                        borderRadius: 1,
+                        mx: 'auto'
+                    }}
+                    >
+                        <div>
+                            <Button onClick={handleClickOpen} variant="contained" color="info" endIcon={<AddIcon />}>
+                                Add Pet
+                            </Button>
+                        </div>
+                    </Box>
+                    <AddPet open={open} handleClose={handleClose} petTypes={petTypes} />
+                </SyledCard>
+            </Container>
+            <Container
+                maxWidth="lg"
+                component="main"
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    my: 1,
+                    gap: 1
+                }}
+            >
+
                     {loadingPets && (
                         <CircularProgress />
                     )}
-                    {pets?.length > 0 && !loadingPets && (
-                        <Grid container spacing={2} columns={12}>
-                            <Grid size={{ xs: 12, md: 4 }}>
-                                <SyledCard
-                                    variant="outlined"
-                                    sx={{
-                                        height: '100%',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                    }}
-                                >
-                                    <Box sx={{
-                                        bgcolor: 'background.paper',
-                                        borderRadius: 1,
-                                        mx: 'auto'
-                                    }}
-                                    >
-                                        <div>
-                                            <Button onClick={handleClickOpen} variant="contained" color="info" endIcon={<AddIcon />}>
-                                                Add Pet
-                                            </Button>
-                                        </div>
-                                    </Box>
-                                    <AddPet open={open} handleClose={handleClose} petTypes={petTypes} />
-                                </SyledCard>
-                            </Grid>
+                    {(!loadingPets || loadingPets)&& (
+                        <Grid container spacing={2} size={12} sx={{
+                            //height: '100%',
+                            //display: 'flex',
+                            //alignItems: 'center',
+                            //justifyContent: 'center',
+                        }}>
                             {pets?.map(m =>
                                 <Grid size={{ xs: 12, md: 4 }}>
                                     <SyledCard
@@ -206,7 +218,6 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                             )}
                         </Grid>
                     )}
-                </Box>
                 <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} />
             </Container>
             </AppTheme>

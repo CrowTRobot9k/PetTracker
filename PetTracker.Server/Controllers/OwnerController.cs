@@ -5,8 +5,6 @@ using PetTracker.SqlDb.Models;
 
 namespace PetTracker.Server.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
     public class OwnerController : PetTrackerBaseController
     {
         private readonly OwnerService _OwnerService;
@@ -15,13 +13,28 @@ namespace PetTracker.Server.Controllers
             _OwnerService = new OwnerService(logger, dbContext);
         }
 
-        [HttpPost("CreatePet")]
-        public async Task<bool> CreatePet([FromForm] AddPetDto model)
+        [HttpGet("GetOwners")]
+        public async Task<List<GetOwnerDto>> GetOwners()
+        {
+            try
+            {
+                var result = await _OwnerService.GetOwners();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                HandleUIException(ex);
+            }
+            return new List<GetOwnerDto>();
+        }
+
+        [HttpPost("CreateOwner")]
+        public async Task<bool> CreateOwner([FromForm] AddOwnerDto model)
 
         {
             try
             {
-                //var result = await _OwnerService.CreatePet(model);
+                var result = await _OwnerService.CreateOwner(model);
             }
             catch (Exception ex)
             {
@@ -29,6 +42,22 @@ namespace PetTracker.Server.Controllers
             }
 
             return true;
+        }
+
+        [HttpGet("GetStates")]
+        public async Task<List<USState>> GetStates()
+        {
+            var ret = new List<USState>();
+            try
+            {
+               ret = USState.GetStates();
+            }
+            catch (Exception ex)
+            {
+                HandleUIException(ex);
+            }
+
+            return ret;
         }
     }
 }

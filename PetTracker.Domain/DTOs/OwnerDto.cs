@@ -21,7 +21,8 @@ namespace PetTracker.Domain.DTOs
             State = owner.State;
             ZipCode = owner.ZipCode;
             Email = owner.Email;
-            Phone = owner.Phone;
+            PrimaryPhone = owner.PrimaryPhone;
+            SecondaryPhone = owner.SecondaryPhone;
             ReferredBy = owner.ReferredBy;
             Vet = owner.Vet;
             VetPhone = owner.VetPhone;
@@ -36,7 +37,8 @@ namespace PetTracker.Domain.DTOs
         public string State { get; set; } = null!;
         public string ZipCode { get; set; } = null!;
         public string Email { get; set; } = null!;
-        public string Phone { get; set; } = null!;
+        public string PrimaryPhone { get; set; } = null!;
+        public string SecondaryPhone { get; set; } = null!;
         public string ReferredBy { get; set; } = null!;
         public string Vet { get; set; } = null!;
         public string VetPhone { get; set; } = null!;

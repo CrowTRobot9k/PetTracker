@@ -186,11 +186,19 @@ public partial class PtDbContext : DbContext, IPtDbContext
 
         modelBuilder.Entity<Owner>(entity =>
         {
-            entity.Property(e => e.Email).HasMaxLength(500);
+            entity.Property(e => e.UserId).HasMaxLength(450);
             entity.Property(e => e.FirstName).HasMaxLength(500);
             entity.Property(e => e.LastName).HasMaxLength(500);
-            entity.Property(e => e.Phone).HasMaxLength(500);
-            entity.Property(e => e.UserId).HasMaxLength(450);
+            entity.Property(e => e.Address).HasMaxLength(500);
+            entity.Property(e => e.City).HasMaxLength(500);
+            entity.Property(e => e.State).HasMaxLength(2);
+            entity.Property(e => e.ZipCode).HasMaxLength(9);
+            entity.Property(e => e.Email).HasMaxLength(500);
+            entity.Property(e => e.PrimaryPhone).HasMaxLength(15);
+            entity.Property(e => e.SecondaryPhone).HasMaxLength(15);
+            entity.Property(e => e.ReferredBy).HasMaxLength(500);
+            entity.Property(e => e.Vet).HasMaxLength(500);
+            entity.Property(e => e.VetPhone).HasMaxLength(15);
 
             entity.HasOne(d => d.User).WithMany(p => p.Owners)
                 .HasForeignKey(d => d.UserId)

@@ -7,8 +7,7 @@ import Typography from '@mui/material/Typography';
 import AppTheme from '../Theme/AppTheme';
 import AppAppBar from '../Components/AppAppBar';
 import AddIcon from '@mui/icons-material/Add';
-import AddPet from '../Components/AddPet';
-import ViewPet from '../Components/ViewPet.tsx';
+import AddOwner from '../Components/AddOwner';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import Card from '@mui/material/Card';
@@ -19,27 +18,30 @@ import Carousel from '../Components/Carousel/Carousel';
 import EditIcon from '@mui/icons-material/Edit';
 import Chip from '@mui/material/Chip';
 import Fab from '@mui/material/Fab';
-import usePetsStore from '../Stores/PetsStore.tsx';
+import useOwnersStore from '../Stores/OwnersStore';
+
+import { Owner } from '../Types/SharedTypes.ts';
+
 
 export default function Owners(props: { disableCustomTheme?: boolean }) {
-    const getPets = usePetsStore((state) => state.getPets);
-    const getPetTypes = usePetsStore((state) => state.getPetTypes);
-    const petTypes = usePetsStore((state) => state.petTypes);
-    const { pets, loadingPets } = usePetsStore();
+    const getOwners = useOwnersStore((state) => state.getOwners);
+    const getStates = useOwnersStore((state) => state.getStates);
+    const states = useOwnersStore((state) => state.states);
+    const { owners, loadingOwners } = useOwnersStore();
     const [open, setOpen] = React.useState(false);
-    const [openViewPet, setOpenViewPet] = React.useState(false);
-    const [selectedPet, setSelectedPet] = useState<Pet>(
+    const [openViewOwner, setOpenViewOwner] = React.useState(false);
+    const [selectedOwner, setSelectedOwner] = useState<Owner>(
         {
         });
-    const [reloadPets, setReloadPets] = React.useState(false);
+    const [reloadOwners, setReloadOwners] = React.useState(false);
 
 
     useEffect(() => {
-        getPets();
-    }, [reloadPets]);
+        getOwners();
+    }, [reloadOwners]);
 
     useEffect(() => {
-        getPetTypes();
+        getStates();
     }, []);
 
     const handleClickOpen = () => {
@@ -54,20 +56,20 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
         return `data:image/png;base64,${base64String}`;
     }
 
-    const getPetSlides = (images) => {
+    const getOwnerSlides = (images) => {
         return Array.from(images.map((f, index) => (
             <img key={`${index}_${f.fileName}`} src={getImageUrlFromBlob(f.fileDataBase64)} />
         )))
     }
 
-    const handleOpenPet = (pet) => {
-        const copiedPet = JSON.parse(JSON.stringify(pet));
-        setSelectedPet(copiedPet);
-        setOpenViewPet(true);
+    const handleOpenOwner = (owner) => {
+        const copiedOwner = JSON.parse(JSON.stringify(owner));
+        setSelectedOwner(copiedOwner);
+        setOpenViewOwner(true);
     }
 
-    const handleClosePet = () => {
-        setOpenViewPet(false);
+    const handleCloseOwner = () => {
+        setOpenViewOwner(false);
     };
 
     const SyledCard = styled(Card)(({ theme }) => ({
@@ -76,10 +78,10 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
         padding: 0,
         height: '100%',
         backgroundColor: (theme.vars || theme).palette.background.paper,
-        '&:hover': {
-            backgroundColor: 'transparent',
-            cursor: 'pointer',
-        },
+        //'&:hover': {
+        //    backgroundColor: 'transparent',
+        //    cursor: 'pointer',
+        //},
         '&:focus-visible': {
             outline: '3px solid',
             outlineColor: 'hsla(210, 98%, 48%, 0.5)',
@@ -123,85 +125,84 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
                     gap: 1
                 }}
             >
-                <Box
+                <SyledCard
+                    variant="outlined"
                     sx={{
+                        height: '100%',
                         display: 'flex',
-                        flexDirection: 'column',
-                        gap: 4,
+                        alignItems: 'center',
+                        justifyContent: 'center',
                     }}
                 >
-                    {loadingPets && (
+                    <Box sx={{
+                        bgcolor: 'background.paper',
+                        borderRadius: 1,
+                        mx: 'auto'
+                    }}
+                    >
+                        <div>
+                            <Button onClick={handleClickOpen} variant="contained" color="info" endIcon={<AddIcon />}>
+                                Add Owner
+                            </Button>
+                        </div>
+                    </Box>
+                    <AddOwner open={open} handleClose={handleClose} ownerStates={states} reloadOwners={reloadOwners} setReloadOwners={setReloadOwners} />
+                </SyledCard>
+            </Container>
+            <Container
+                maxWidth="lg"
+                component="main"
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    my: 1,
+                    gap: 1
+                }}
+            >
+                    {loadingOwners && (
                         <CircularProgress />
                     )}
-                    {pets?.length > 0 && !loadingPets && (
-                        <Grid container spacing={2} columns={12}>
-                            <Grid size={{ xs: 12, md: 4 }}>
-                                <SyledCard
-                                    variant="outlined"
-                                    sx={{
-                                        height: '100%',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                    }}
-                                >
-                                    <Box sx={{
-                                        bgcolor: 'background.paper',
-                                        borderRadius: 1,
-                                        mx: 'auto'
-                                    }}
-                                    >
-                                        <div>
-                                            <Button onClick={handleClickOpen} variant="contained" color="info" endIcon={<AddIcon />}>
-                                                Add Pet
-                                            </Button>
-                                        </div>
-                                    </Box>
-                                    <AddPet open={open} handleClose={handleClose} petTypes={petTypes} />
-                                </SyledCard>
-                            </Grid>
-                            {pets?.map(m =>
-                                <Grid size={{ xs: 12, md: 4 }}>
-                                    <SyledCard
+                    {!loadingOwners && (
+                    <Grid container spacing={2} sx={{
+                        height: '100%',
+                        //width:'100%',
+                        //display: 'flex',
+                        //alignItems: 'center',
+                        //justifyContent: 'center',
+
+                    }}>
+                            {owners?.map(m =>
+                                <Grid size={{ xs: 12, md: 4 }} >
+                                        <SyledCard
                                         variant="outlined"
                                         sx={{ height: '100%' }}
-                                    >
-                                        <Carousel cards={getPetSlides(m.petPhotos)} />
-                                        <SyledCardContent>
-                                            <Typography gutterBottom variant="h6" component="div">
-                                                {m.name}
-                                            </Typography>
-                                            {/*<StyledTypography variant="body2" color="text.secondary" gutterBottom>*/}
-                                            {/*    {m.petType?.type}*/}
-                                            {/*</StyledTypography>*/}
-                                        </SyledCardContent>
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                bgcolor: 'background.paper',
-                                                borderRadius: 1,
-                                                mx: 'auto'
-                                            }}
+                                        className="full-width"
                                         >
-                                            {m.breedTypes?.length > 0 && (m.breedTypes?.map(b =>
-                                                <Chip sx={{
-                                                    m: 1,
-                                                }} label={b.name} />
-                                            ))}
-                                        </Box>
-                                        <SyledCardContent sx={{ my: 1 }}>
-                                            <Fab color="primary" sx={{ alignSelf: 'center' }} onClick={() => handleOpenPet(m)} aria-label="add">
-                                                <EditIcon />
-                                            </Fab>
-                                        </SyledCardContent>
-                                    </SyledCard>
+                                        <Carousel cards={getOwnerSlides(m.ownerPhotos)} />
+                                            <SyledCardContent>
+                                                <Typography gutterBottom variant="h6" component="div">
+                                                    {m.firstName} { m.lastName}
+                                                </Typography>
+                                                <StyledTypography variant="body2" color="text.secondary" gutterBottom>
+                                                    {m.Address}
+                                                </StyledTypography>
+                                                <StyledTypography variant="body2" color="text.secondary" gutterBottom>
+                                                    {m.city} {m.state} {m.zipCode}
+                                                </StyledTypography>
+                                            </SyledCardContent>
+                                            <SyledCardContent sx={{ my: 1 }}>
+                                                <Fab color="primary" sx={{ alignSelf: 'center' }} onClick={() => handleOpenOwner(m)} aria-label="add">
+                                                    <EditIcon />
+                                                </Fab>
+                                            </SyledCardContent>
+                                        </SyledCard>
                                 </Grid>
                             )}
                         </Grid>
                     )}
-                </Box>
-                <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} />
+            {/*    <ViewPet open={openViewOwner} viewPet={selectedOwner} handleClose={handleCloseOwner} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} />*/}
             </Container>
         </AppTheme>
         /* </AuthorizeView>*/

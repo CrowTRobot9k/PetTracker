@@ -104,6 +104,23 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            //owner
+            '^/owner': {
+                target,
+                secure: false
+            },
+            '^/api/Owner/GetStates': {
+                target,
+                secure: false
+            },
+            '^/api/Owner/CreateOwner': {
+                target,
+                secure: false
+            },
+            '^/api/Owner/GetOwners': {
+                target,
+                secure: false
+            },
         },
         port: parseInt(env.DEV_SERVER_PORT || '50449'),
         https: {

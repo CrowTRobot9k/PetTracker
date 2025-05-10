@@ -12,8 +12,9 @@ export interface Owner {
     state: string;
     zipCode: string;
     email: string;
-    phone: string;
-    refferedBy: string;
+    primaryPhone: string;
+    secondaryPhone: string;
+    referredBy: string;
     vet: string;
     vetPhone: string;
 }
