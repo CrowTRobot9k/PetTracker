@@ -52,55 +52,36 @@ namespace PetTracker.Infrastucture.Services
 
             return addOwner.Id;
         }
-        public async Task<int> UpdatePet(AddPetDto pet)
+        public async Task<int> UpdateOwner(AddOwnerDto owner)
         {
             var uploadIds = new List<int>();
-            if (pet.PetPhotos.Any())
+            if (owner.OwnerPhotos.Any())
             {
-                uploadIds = await new FileUploadService(_logger, _dbContext).CreateFileUploads(pet.PetPhotos);
+                uploadIds = await new FileUploadService(_logger, _dbContext).CreateFileUploads(owner.OwnerPhotos);
             }
 
-            var existingPet = await _dbContext.Pets.FirstOrDefaultAsync(p => p.Id == pet.Id);
-            if (existingPet == null)
+            var existingOwner = await _dbContext.Owners.FirstOrDefaultAsync(p => p.Id == owner.Id);
+            if (existingOwner == null)
             {
-                throw new Exception("Pet not found");
+                throw new Exception("Owner not found");
             }
 
-            existingPet.UpdatePet(pet);
+            existingOwner.UpdateOwner(owner);
 
             var tasks = new List<Task>();
 
             var fileMappings = new List<FileUploadMapping>();
             if (uploadIds.Any())
             {
-                _dbContext.FileUploadMappings.RemoveRange(existingPet.FileUploadMappings);
-                _dbContext.FileUploads.RemoveRange(existingPet.FileUploadMappings.Select(s => s.FileUpload));
+                _dbContext.FileUploadMappings.RemoveRange(existingOwner.FileUploadMappings);
+                _dbContext.FileUploads.RemoveRange(existingOwner.FileUploadMappings.Select(s => s.FileUpload));
                 fileMappings = uploadIds.Select(s => new FileUploadMapping()
                 {
-                    PetId = existingPet.Id,
+                    OwnerId = existingOwner.Id,
                     FileUploadId = s
                 }).ToList();
 
                 tasks.Add(_dbContext.FileUploadMappings.AddRangeAsync(fileMappings));
-            }
-
-
-            if (existingPet.PetBreedTypes?.Any() ?? false &&
-                !pet.BreedTypeIds.All(b => existingPet.PetBreedTypes.Select(s => s.BreedType.Id).Contains(b)))
-            {
-                //add non existing breed types
-                var breedTypes = pet.BreedTypeIds.Where(x => !existingPet.PetBreedTypes.Select(s => s.BreedTypeId).Contains(x)).Select(s => new PetBreedType()
-                {
-                    PetId = existingPet.Id,
-                    BreedTypeId = s
-                });
-                //remove breed types not sent for save
-                _dbContext.PetBreedTypes.RemoveRange(existingPet.PetBreedTypes.Where(w => !pet.BreedTypeIds.Contains(w.BreedTypeId)));
-
-                if (breedTypes.Any())
-                {
-                    tasks.Add(_dbContext.PetBreedTypes.AddRangeAsync(breedTypes));
-                }
             }
 
             if (tasks.Any())
@@ -108,11 +89,11 @@ namespace PetTracker.Infrastucture.Services
                 await Task.WhenAll(tasks);
             }
 
-            existingPet.UpdatePet(pet);
+            existingOwner.UpdateOwner(owner);
 
             await _dbContext.SaveChangesAsync();
 
-            return existingPet.Id;
+            return existingOwner.Id;
         }
         public async Task<List<GetOwnerDto>> GetOwners(int? companyId = null)
         {

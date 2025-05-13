@@ -102,18 +102,18 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
             addPetData.append(`model.PetPhotos`, f);
         });
 
-        addPetData.append("model.Name", addPet.name);
-        addPetData.append("model.PetTypeId", addPet.petTypeId);
-        addPetData.append("model.PetType", addPet.petType);
+        addPetData.append("model.Name", addPet.name??'');
+        addPetData.append("model.PetTypeId", addPet.petTypeId??'');
+        addPetData.append("model.PetType", addPet.petType??'');
         addPet.breedTypeIds.forEach(f => {
             addPetData.append("model.BreedTypeIds", f);
         });
-        addPetData.append("model.Breeds", addPet.breeds);
-        addPetData.append("model.Color", addPet.color);
-        addPetData.append("model.BirthDate", addPet.birthDate);
-        addPetData.append("model.Weight", addPet.weight);
-        addPetData.append("model.Sex", addPet.sex);
-        addPetData.append("model.MedicalProblems", addPet.medicalProblems);
+        addPetData.append("model.Breeds", addPet.breeds??'');
+        addPetData.append("model.Color", addPet.color??'');
+        addPetData.append("model.BirthDate", addPet.birthDate??'');
+        addPetData.append("model.Weight", addPet.weight??'');
+        addPetData.append("model.Sex", addPet.sex??'');
+        addPetData.append("model.MedicalProblems", addPet.medicalProblems??'');
 
         fetch("/api/Pet/CreatePet", {
             method: "POST",

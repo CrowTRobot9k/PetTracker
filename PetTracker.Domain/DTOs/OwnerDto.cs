@@ -14,6 +14,7 @@ namespace PetTracker.Domain.DTOs
         public OwnerDto(Models.Owner owner)
         {
             Id = owner.Id;
+            UserId = owner.UserId;
             FirstName = owner.FirstName;
             LastName = owner.LastName;
             Address = owner.Address;
@@ -30,17 +31,17 @@ namespace PetTracker.Domain.DTOs
 
         public int Id { get; set; }
         public string? UserId { get; set; }
-        public string FirstName { get; set; } = null!;
-        public string LastName { get; set; } = null!;
-        public string Address { get; set; } = null!;
-        public string City { get; set; } = null!;
-        public string State { get; set; } = null!;
-        public string ZipCode { get; set; } = null!;
-        public string Email { get; set; } = null!;
-        public string PrimaryPhone { get; set; } = null!;
-        public string SecondaryPhone { get; set; } = null!;
-        public string ReferredBy { get; set; } = null!;
-        public string Vet { get; set; } = null!;
-        public string VetPhone { get; set; } = null!;
+        public string? FirstName { get; set; } = null!;
+        public string? LastName { get; set; } = null!;
+        public string? Address { get; set; }
+        public string? City { get; set; } 
+        public string? State { get; set; } 
+        public string? ZipCode { get; set; } 
+        public string? Email { get; set; }
+        public string? PrimaryPhone { get; set; } = null!;
+        public string? SecondaryPhone { get; set; }
+        public string? ReferredBy { get; set; } 
+        public string? Vet { get; set; } 
+        public string? VetPhone { get; set; }
     }
 }

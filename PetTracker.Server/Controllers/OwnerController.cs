@@ -44,6 +44,22 @@ namespace PetTracker.Server.Controllers
             return true;
         }
 
+        [HttpPost("UpdateOwner")]
+        public async Task<bool> UpdateOwner([FromForm] AddOwnerDto model)
+
+        {
+            try
+            {
+                var result = await _OwnerService.UpdateOwner(model);
+            }
+            catch (Exception ex)
+            {
+                HandleUIException(ex, model);
+            }
+
+            return true;
+        }
+
         [HttpGet("GetStates")]
         public async Task<List<USState>> GetStates()
         {

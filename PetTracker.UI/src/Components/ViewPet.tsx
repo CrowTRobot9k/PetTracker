@@ -130,18 +130,18 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
         });
 
         editPetData.append("model.Id", editPet.id);
-        editPetData.append("model.Name", editPet.name);
-        editPetData.append("model.PetTypeId", editPet.petTypeId);
-        editPetData.append("model.PetType", editPet.petType);
+        editPetData.append("model.Name", editPet.name??'');
+        editPetData.append("model.PetTypeId", editPet.petTypeId??'');
+        editPetData.append("model.PetType", editPet.petType??'');
         editPet.breedTypeIds.forEach(f => {
             editPetData.append("model.BreedTypeIds", f);
         });
-        editPetData.append("model.Breeds", editPet.breeds);
-        editPetData.append("model.Color", editPet.color);
-        editPetData.append("model.BirthDate", editPet.birthDate);
-        editPetData.append("model.Weight", editPet.weight);
-        editPetData.append("model.Sex", editPet.sex);
-        editPetData.append("model.MedicalProblems", editPet.medicalProblems);
+        editPetData.append("model.Breeds", editPet.breeds??'');
+        editPetData.append("model.Color", editPet.color??'');
+        editPetData.append("model.BirthDate", editPet.birthDate??'');
+        editPetData.append("model.Weight", editPet.weight??'');
+        editPetData.append("model.Sex", editPet.sex??'');
+        editPetData.append("model.MedicalProblems", editPet.medicalProblems??'');
 
         fetch("/api/Pet/UpdatePet", {
             method: "POST",

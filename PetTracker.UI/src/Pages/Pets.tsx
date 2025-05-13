@@ -13,9 +13,6 @@ import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Avatar from '@mui/material/Avatar';
-import AvatarGroup from '@mui/material/AvatarGroup';
 import { styled } from '@mui/material/styles';
 import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
 import Carousel from '../Components/Carousel/Carousel';
@@ -120,7 +117,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
             <CssBaseline enableColorScheme />
             <AppAppBar currentPage="pets" />
             <Container
-                maxWidth="lg"
+                maxWidth="xl"
                 component="main"
                 sx={{
                     display: 'flex',
@@ -156,11 +153,11 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                 </SyledCard>
             </Container>
             <Container
-                maxWidth="lg"
+                maxWidth="xl"
                 component="main"
                 sx={{
                     display: 'flex',
-                    flexDirection: 'row',
+                    flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
                     my: 1,
@@ -172,14 +169,14 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                         <CircularProgress />
                     )}
                     {(!loadingPets || loadingPets)&& (
-                        <Grid container spacing={2} size={12} sx={{
+                    <Grid container spacing={2} size={ 12} sx={{
                             //height: '100%',
-                            //display: 'flex',
+                            display: 'flex',
                             //alignItems: 'center',
                             //justifyContent: 'center',
                         }}>
                             {pets?.map(m =>
-                                <Grid size={{ xs: 12, md: 4 }}>
+                                <Grid size={ 4}>
                                     <SyledCard
                                         variant="outlined"
                                         sx={{ height: '100%' }}

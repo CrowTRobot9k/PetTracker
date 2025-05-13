@@ -66,18 +66,18 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
             addOwnerData.append(`model.OwnerPhotos`, f);
         });
 
-        addOwnerData.append("model.FirstName", addOwner.firstName);
-        addOwnerData.append("model.LastName", addOwner.lastName);
-        addOwnerData.append("model.Address", addOwner.address);
-        addOwnerData.append("model.City", addOwner.city);
-        addOwnerData.append("model.State", addOwner.state);
-        addOwnerData.append("model.ZipCode", addOwner.zipCode);
-        addOwnerData.append("model.Email", addOwner.email);
-        addOwnerData.append("model.PrimaryPhone", addOwner.primaryPhone);
-        addOwnerData.append("model.SecondaryPhone", addOwner.secondaryPhone);
-        addOwnerData.append("model.ReferredBy", addOwner.referredBy);
-        addOwnerData.append("model.Vet", addOwner.vet);
-        addOwnerData.append("model.VetPhone", addOwner.vetPhone);
+        addOwnerData.append("model.FirstName", addOwner.firstName??'');
+        addOwnerData.append("model.LastName", addOwner.lastName??'');
+        addOwnerData.append("model.Address", addOwner.address??'');
+        addOwnerData.append("model.City", addOwner.city??'');
+        addOwnerData.append("model.State", addOwner.state??'');
+        addOwnerData.append("model.ZipCode", addOwner.zipCode??'');
+        addOwnerData.append("model.Email", addOwner.email??'');
+        addOwnerData.append("model.PrimaryPhone", addOwner.primaryPhone??'');
+        addOwnerData.append("model.SecondaryPhone", addOwner.secondaryPhone??'');
+        addOwnerData.append("model.ReferredBy", addOwner.referredBy??'');
+        addOwnerData.append("model.Vet", addOwner.vet??'');
+        addOwnerData.append("model.VetPhone", addOwner.vetPhone??'');
 
         fetch("/api/Owner/CreateOwner", {
             method: "POST",
@@ -140,7 +140,7 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
                         </DialogContentText>
                         <OutlinedInput
                             autoFocus
-                            required
+                            //required
                             margin="dense"
                             id="address"
                             name="address"
@@ -193,6 +193,7 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
                             Primary Phone
                         </DialogContentText>
                         <OutlinedInput
+                            required
                             margin="dense"
                             id="primaryPhone"
                             name="primaryPhone"
@@ -241,7 +242,7 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
                         </DialogContentText>
                         <OutlinedInput
                             autoFocus
-                            required
+                            //required
                             margin="dense"
                             id="city"
                             name="city"

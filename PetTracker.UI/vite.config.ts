@@ -117,6 +117,10 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            '^/api/Owner/UpdateOwner': {
+                target,
+                secure: false
+            },
             '^/api/Owner/GetOwners': {
                 target,
                 secure: false

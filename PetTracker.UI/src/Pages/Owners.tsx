@@ -8,6 +8,7 @@ import AppTheme from '../Theme/AppTheme';
 import AppAppBar from '../Components/AppAppBar';
 import AddIcon from '@mui/icons-material/Add';
 import AddOwner from '../Components/AddOwner';
+import ViewOwner from '../Components/ViewOwner';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import Card from '@mui/material/Card';
@@ -16,10 +17,8 @@ import { styled } from '@mui/material/styles';
 import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
 import Carousel from '../Components/Carousel/Carousel';
 import EditIcon from '@mui/icons-material/Edit';
-import Chip from '@mui/material/Chip';
 import Fab from '@mui/material/Fab';
 import useOwnersStore from '../Stores/OwnersStore';
-
 import { Owner } from '../Types/SharedTypes.ts';
 
 
@@ -78,10 +77,10 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
         padding: 0,
         height: '100%',
         backgroundColor: (theme.vars || theme).palette.background.paper,
-        //'&:hover': {
-        //    backgroundColor: 'transparent',
-        //    cursor: 'pointer',
-        //},
+        '&:hover': {
+            backgroundColor: 'transparent',
+            cursor: 'pointer',
+        },
         '&:focus-visible': {
             outline: '3px solid',
             outlineColor: 'hsla(210, 98%, 48%, 0.5)',
@@ -114,7 +113,7 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
             <CssBaseline enableColorScheme />
             <AppAppBar currentPage="owners" />
             <Container
-                maxWidth="lg"
+                maxWidth="xl"
                 component="main"
                 sx={{
                     display: 'flex',
@@ -150,11 +149,11 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
                 </SyledCard>
             </Container>
             <Container
-                maxWidth="lg"
+                maxWidth="xl"
                 component="main"
                 sx={{
                     display: 'flex',
-                    flexDirection: 'row',
+                    flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
                     my: 1,
@@ -163,10 +162,10 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
             >
                     {loadingOwners && (
                         <CircularProgress />
-                    )}
-                    {!loadingOwners && (
-                    <Grid container spacing={2} sx={{
-                        height: '100%',
+                )}
+                {(!loadingOwners || loadingOwners) && (
+                    <Grid container spacing={2} size="auto" sx={{
+                        //height: '100%',
                         //width:'100%',
                         //display: 'flex',
                         //alignItems: 'center',
@@ -174,13 +173,13 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
 
                     }}>
                             {owners?.map(m =>
-                                <Grid size={{ xs: 12, md: 4 }} >
+                                <Grid size={ 4} >
                                         <SyledCard
                                         variant="outlined"
                                         sx={{ height: '100%' }}
-                                        className="full-width"
+                                        //className="full-width"
                                         >
-                                        <Carousel cards={getOwnerSlides(m.ownerPhotos)} />
+                                            <Carousel cards={getOwnerSlides(m.ownerPhotos)} />
                                             <SyledCardContent>
                                                 <Typography gutterBottom variant="h6" component="div">
                                                     {m.firstName} { m.lastName}
@@ -201,8 +200,8 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
                                 </Grid>
                             )}
                         </Grid>
-                    )}
-            {/*    <ViewPet open={openViewOwner} viewPet={selectedOwner} handleClose={handleCloseOwner} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} />*/}
+                )}
+                <ViewOwner open={openViewOwner} viewOwner={selectedOwner} handleClose={handleCloseOwner} ownerStates={states} reloadOwners={reloadOwners} setReloadOwners={setReloadOwners} />
             </Container>
         </AppTheme>
         /* </AuthorizeView>*/

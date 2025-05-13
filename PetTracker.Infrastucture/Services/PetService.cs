@@ -78,8 +78,6 @@ namespace PetTracker.Infrastucture.Services
                 throw new Exception("Pet not found");
             }
 
-            existingPet.UpdatePet(pet);
-
             var tasks = new List<Task>();
 
             var fileMappings = new List<FileUploadMapping>();
@@ -95,7 +93,6 @@ namespace PetTracker.Infrastucture.Services
 
                 tasks.Add(_dbContext.FileUploadMappings.AddRangeAsync(fileMappings));
             }
-
 
             if (existingPet.PetBreedTypes?.Any()??false &&
                 !pet.BreedTypeIds.All(b=> existingPet.PetBreedTypes.Select(s=>s.BreedType.Id).Contains(b)))
