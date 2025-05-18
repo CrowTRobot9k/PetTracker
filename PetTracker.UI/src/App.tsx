@@ -6,6 +6,7 @@ import SignIn from './Pages/SignIn.tsx';
 import Pets from './Pages/Pets.tsx';
 import Owners from './Pages/Owners.tsx';
 import Appointments from './Pages/Appointments.tsx';
+import Blog from './Pages/Blog.tsx';
 import '../src/Styles/petTracker.css';
 
 function App() {
@@ -13,12 +14,12 @@ function App() {
             <BrowserRouter>
                 <Routes>
                      <Route path="/" element={<Home />} />
-                    {/*<Route path="/blog" element={<Blog />} />*/}
                     <Route path="/signin" element={<SignIn />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/owners" element={<Owners />} />
                     <Route path="/pets" element={<Pets />} />
                     <Route path="/appointments" element={<Appointments />} />
+                    <Route path="/blog" element={<Blog />} />
                 </Routes>
             </BrowserRouter>
     );

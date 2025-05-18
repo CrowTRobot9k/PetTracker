@@ -14,12 +14,13 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpGet("GetOwners")]
-        public async Task<List<GetOwnerDto>> GetOwners()
+        public async Task<IEnumerable<GetOwnerDto>> GetOwners()
         {
             try
             {
                 var result = await _OwnerService.GetOwners();
                 return result;
+                    //.Take(1);
             }
             catch (Exception ex)
             {

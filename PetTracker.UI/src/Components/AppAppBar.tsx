@@ -86,6 +86,9 @@ export default function AppAppBar({currentPage})
               <Button onClick={() => navigate('/appointments')} variant={currentPage == "appointments" ? "contained" : "text"} color="info" size="small">
                 Appointments
               </Button>
+              <Button onClick={() => navigate('/blog')} variant={currentPage == "blog" ? "contained" : "text"} color="info" size="small">
+                  Blog
+              </Button>
             </Box>
           </Box>
           <Box
@@ -129,7 +132,8 @@ export default function AppAppBar({currentPage})
                 <MenuItem onClick={() => navigate('/owners')}>Owners</MenuItem>
                 <MenuItem onClick={() => navigate('/pets')}>Pets</MenuItem>
                 <MenuItem onClick={() => navigate('/appointments')}>Appointments</MenuItem>
-                <Divider sx={{ my: 3 }} />
+                <MenuItem onClick={() => navigate('/blog')}>Blog</MenuItem>
+                 <Divider sx={{ my: 3 }} />
                   <MenuItem>
                       <Button onClick={navLogout} color="primary" variant="outlined" fullWidth>
                           Logout

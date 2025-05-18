@@ -154,8 +154,6 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
                     my: 1,
                     gap: 1
                 }}
@@ -164,12 +162,13 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
                         <CircularProgress />
                 )}
                 {(!loadingOwners || loadingOwners) && (
-                    <Grid container spacing={2} size="auto" sx={{
+                    <Grid container spacing={2} columns={12} sx={{
                         //height: '100%',
-                        //width:'100%',
-                        //display: 'flex',
-                        //alignItems: 'center',
-                        //justifyContent: 'center',
+                        width:'100%',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
 
                     }}>
                             {owners?.map(m =>

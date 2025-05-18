@@ -45,7 +45,6 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
     {
         if (addPet.petTypeId) {
             getPetBreeds(addPet.petTypeId);
-
         }
     }, [addPet.petTypeId]);
 

@@ -14,6 +14,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\Components\Logos\" />
+    <Folder Include="src\Util\" />
     <Folder Include="src\Stores\" />
   </ItemGroup>
 </Project>

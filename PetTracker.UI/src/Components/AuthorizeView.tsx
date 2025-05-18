@@ -44,23 +44,18 @@ function AuthorizeView(props: { children: React.ReactNode }) {
                     let j: any = await response.json();
                     setUser({ email: j.email });
                     setAuthorized(true);
-                    return response; // return the response
+                    return response;
                 } else if (response.status == 401) {
                     console.log("Unauthorized");
-                    return response; // return the response
+                    return response; 
                 } else {
-                    // throw an error to trigger the catch block
                     throw new Error("" + response.status);
                 }
             } catch (error) {
-                // increment the retry count
                 retryCount++;
-                // check if the retry limit is reached
                 if (retryCount > maxRetries) {
-                    // stop retrying and rethrow the error
                     throw error;
                 } else {
-                    // wait for some time and retry
                     await wait(delay);
                     return fetchWithRetry(url, options);
                 }
