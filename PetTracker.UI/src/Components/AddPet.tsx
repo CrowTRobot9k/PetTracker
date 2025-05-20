@@ -18,6 +18,8 @@ import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Pet from '../Types/SharedTypes';
 import usePetStore from '../Stores/PetStore';
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 interface AddPetProps {
     open: boolean;
@@ -142,7 +144,14 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
             onClose={handleClose}
             fullWidth
             maxWidth="lg"
-          >
+        >
+          {(petBreeds?.length < 1) && (
+              <DialogContent
+                  sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', width: '100%', alignItems: 'center' }}
+              >
+                  <CircularProgress />
+              </DialogContent>
+          )}
           <form name="addPetForm" onSubmit={handleAddPetSubmit}>
           <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', width: '100%', alignItems: 'center' }}

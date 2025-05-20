@@ -116,70 +116,70 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
         <AppTheme {...props}>
             <CssBaseline enableColorScheme />
             <AppAppBar currentPage="pets" />
-            <Container
-                maxWidth="xl"
-                component="main"
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    my: 1,
-                    gap: 1
-                }}
-            >
-                <SyledCard
-                    variant="outlined"
+            {loadingPets && (
+                <Container
+                    maxWidth="xl"
+                    component="main"
                     sx={{
-                        height: '100%',
                         display: 'flex',
+                        flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        my: 2,
+                        gap: 4
                     }}
                 >
-                    <Box sx={{
-                        bgcolor: 'background.paper',
-                        borderRadius: 1,
-                        mx: 'auto'
-                    }}
-                    >
-                        <div>
-                            <Button onClick={handleClickOpen} variant="contained" color="info" endIcon={<AddIcon />}>
-                                Add Pet
-                            </Button>
-                        </div>
-                    </Box>
-                    <AddPet open={open} handleClose={handleClose} petTypes={petTypes} />
-                </SyledCard>
-            </Container>
+                    <CircularProgress />
+                </Container>
+            )}
             <Container
                 maxWidth="xl"
                 component="main"
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    my: 1,
-                    gap: 1
+                    my: 2,
+                    gap: 4,
+
                 }}
             >
-
-                    {loadingPets && (
-                        <CircularProgress />
-                    )}
-                    {(!loadingPets || loadingPets)&& (
-                    <Grid container spacing={2} size={ 12} sx={{
-                            //height: '100%',
+                {(!loadingPets) && (
+                        <Grid container spacing={2} columns={12} sx={{
+                            //height: '400px',
+                            //width: '100%',
                             display: 'flex',
+                            flexDirection: 'row',
                             //alignItems: 'center',
                             //justifyContent: 'center',
                         }}>
+                            <Grid
+                                size={pets.length < 3 ? "grow" : 4}
+                                sx={{ height: '380px' }}
+                            >
+                                <Card
+                                    //variant="outlined"
+                                    sx={{
+                                        height: '100%',
+                                        //width: '100%',
+                                        display: 'flex',
+                                        //flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <Button onClick={handleClickOpen} variant="contained" color="info" endIcon={<AddIcon />}>
+                                        Add Pet
+                                    </Button>
+                                </Card>
+                            </Grid>
+                            <AddPet open={open} handleClose={handleClose} petTypes={petTypes} />
                             {pets?.map(m =>
-                                <Grid size={ 4}>
+                                <Grid size={pets.length < 3 ? "grow" : 4}
+                                    sx={{ height: '380px' }}
+                                >
                                     <SyledCard
                                         variant="outlined"
-                                        sx={{ height: '100%' }}
+                                        sx={{ height: '100%', my: 0, gap: 1, }}
                                     >
                                         <Carousel cards={getPetSlides(m.petPhotos)} />
                                         <SyledCardContent>
@@ -215,8 +215,8 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                             )}
                         </Grid>
                     )}
-                <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} />
-            </Container>
+                    <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} />
+                 </Container>
             </AppTheme>
        /* </AuthorizeView>*/
     );
