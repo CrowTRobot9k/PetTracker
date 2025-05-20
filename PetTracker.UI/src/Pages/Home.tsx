@@ -22,7 +22,7 @@ export default function Blog(props: { disableCustomTheme?: boolean }) {
                     sx={{ display: 'flex', flexDirection: 'column', my: 16, gap: 4 }}
                 >
                 </Container>
-                <PtFooter />
+{/*                <PtFooter />*/}
             </AppTheme>
         </AuthorizeView>
 

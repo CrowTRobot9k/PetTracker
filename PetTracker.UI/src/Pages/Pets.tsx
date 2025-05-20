@@ -154,7 +154,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                         }}>
                             <Grid
                                 size={pets.length < 3 ? "grow" : 4}
-                                sx={{ height: '380px' }}
+                                sx={{ height: '365px' }}
                             >
                                 <Card
                                     //variant="outlined"
@@ -175,11 +175,18 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                             <AddPet open={open} handleClose={handleClose} petTypes={petTypes} />
                             {pets?.map(m =>
                                 <Grid size={pets.length < 3 ? "grow" : 4}
-                                    sx={{ height: '380px' }}
+                                    sx={{ height: '365px' }}
                                 >
-                                    <SyledCard
+                                    <Card
                                         variant="outlined"
-                                        sx={{ height: '100%', my: 0, gap: 1, }}
+                                        sx={{
+                                            height: '100%',
+                                            ////width: '100%',
+                                            //display: 'flex',
+                                            ////flexDirection: 'row',
+                                            //alignItems: 'center',
+                                            //justifyContent: 'center',
+                                        }}
                                     >
                                         <Carousel cards={getPetSlides(m.petPhotos)} />
                                         <SyledCardContent>
@@ -206,11 +213,11 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                                             ))}
                                         </Box>
                                         <SyledCardContent sx={{ my: 1 }}>
-                                            <Fab color="primary" sx={{ alignSelf: 'center' }} onClick={() => handleOpenPet(m)} aria-label="add">
+                                            <Fab size="small" color="primary" sx={{ alignSelf: 'center' }} onClick={() => handleOpenPet(m)} aria-label="add">
                                                 <EditIcon />
                                             </Fab>
                                         </SyledCardContent>
-                                    </SyledCard>
+                                    </Card>
                                 </Grid>
                             )}
                         </Grid>

@@ -128,7 +128,7 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
                         }}>
                             <Grid
                                 size={owners.length < 3 ? "grow" : 4}
-                                sx={{ height: '380px' }}
+                                sx={{ height: '365px' }}
                             >
                                 <Card
                                     //variant="outlined"
@@ -150,7 +150,7 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
                             {owners?.map(m =>
                                 <Grid
                                     size={owners.length < 3 ? "grow" : 4}
-                                    sx={{ height: '380px' }}
+                                    sx={{ height: '365px' }}
                                 >
                                     <Card
                                         variant="outlined"
@@ -175,8 +175,8 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
                                                 {m.city} {m.state} {m.zipCode}
                                             </StyledTypography>
                                         </SyledCardContent>
-                                        <SyledCardContent sx={{ my: 1 }}>
-                                            <Fab color="primary" sx={{ alignSelf: 'center' }} onClick={() => handleOpenOwner(m)} aria-label="add">
+                                        <SyledCardContent sx={{ my: 0 }}>
+                                            <Fab size="small" color="primary" sx={{ alignSelf: 'center' }} onClick={() => handleOpenOwner(m)} aria-label="add">
                                                 <EditIcon />
                                             </Fab>
                                         </SyledCardContent>
