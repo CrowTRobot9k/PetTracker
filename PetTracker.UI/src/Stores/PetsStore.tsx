@@ -7,10 +7,10 @@ const usePetsStore = create((set) => ({
     petTypes: [],
 
     error: null,
-    getPets: async () => {
+    getPets: async (ownerId?:number) => {
         set({ loadingPets: true });
         try {
-            const response = await fetch("/api/Pet/GetPets");
+            const response = await fetch(`/api/Pet/GetPets?ownerId=${ownerId??''}`);
             if (response.status == 200) {
                 const data = await response.json();
                 set({

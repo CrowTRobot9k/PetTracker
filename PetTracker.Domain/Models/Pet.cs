@@ -11,6 +11,7 @@ public partial class Pet
     }
     public Pet(AddPetDto pet)
     {
+        OwnerId = pet.OwnerId;
         Name = pet.Name;
         PetTypeId = pet.PetTypeId;
         Color = pet.Color;

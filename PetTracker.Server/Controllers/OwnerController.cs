@@ -20,7 +20,6 @@ namespace PetTracker.Server.Controllers
             {
                 var result = await _OwnerService.GetOwners();
                 return result;
-                    //.Take(1);
             }
             catch (Exception ex)
             {

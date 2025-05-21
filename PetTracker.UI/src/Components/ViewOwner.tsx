@@ -19,6 +19,10 @@ import Chip from '@mui/material/Chip';
 import { Owner } from '../Types/SharedTypes';
 import usePetStore from '../Stores/PetStore';
 import dayjs, { Dayjs } from 'dayjs';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import ViewPets from '../Components/ViewPets';
+
 
 interface viewPetProps {
     open: boolean;
@@ -35,6 +39,8 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [openStates, setOpenStates] = useState(false);
     const [editOwner, setEditOwner] = useState<Owner>({});
+    const [tabIndex, setTabIndex] = React.useState(0);
+
 
     useEffect(() => {
         const copy = {
@@ -93,6 +99,40 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
         }));
     };
 
+    function a11yProps(index: number) {
+        return {
+            id: `simple-tab-${index}`,
+            'aria-controls': `simple-tabpanel-${index}`,
+        };
+    }
+
+    interface TabPanelProps {
+        children?: React.ReactNode;
+        index: number;
+        value: number;
+    }
+
+    function CustomTabPanel(props: TabPanelProps) {
+        const { children, value, index, ...other } = props;
+
+        return (
+            <div
+                role="tabpanel"
+                hidden={value !== index}
+                id={`simple-tabpanel-${index}`}
+                aria-labelledby={`simple-tab-${index}`}
+                {...other}
+            >
+                {value === index && <Box sx={{ p: 0 }}>{children}</Box>}
+            </div>
+        );
+    }
+
+
+    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+        setTabIndex(newValue);
+    };
+
     const handleSaveOwnerSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSuccessMessage("");
@@ -145,207 +185,229 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
             maxWidth="lg"
         >
             <form name="saveOwnerForm" onSubmit={handleSaveOwnerSubmit}>
-                <DialogContent
-                    sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', width: '100%', alignItems: 'center' }}
-                >
-                    <DialogTitle>Add Owner</DialogTitle>
-                    <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} />
-                </DialogContent>
-                <DialogContent
-                    sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width: '100%' }}
-                >
+                <DialogContent sx={{ height:800}}>
                     <DialogContent
-                        sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', flex: 1 }}
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            flexWrap: 'wrap',
+                            width: '100%',
+                            alignItems: 'center',
+                            p:0
+                        }}
                     >
-                        <DialogContentText>
-                            First Name
-                        </DialogContentText>
-                        <OutlinedInput
-                            autoFocus
-                           // required
-                            margin="dense"
-                            id="firstName"
-                            name="firstName"
-                            label="First Name"
-                            placeholder="First Name"
-                            type="text"
-                            value={editOwner.firstName}
-                            onChange={handleChange}
-                        />
-                        <DialogContentText>
-                            Address
-                        </DialogContentText>
-                        <OutlinedInput
-                            autoFocus
-                            //required
-                            margin="dense"
-                            id="address"
-                            name="address"
-                            label="Address"
-                            placeholder="Address"
-                            type="text"
-                            value={editOwner.address}
-                            onChange={handleChange}
-                        />
-                        <DialogContentText>
-                            State
-                        </DialogContentText>
-                        <FormControl fullWidth>
-                            <Select
-                                displayEmpty
-                                id="select-owner-state"
-                                name="ownerState"
-                                value={editOwner.state}
-                                label="Pet Type"
-                                onChange={handleChangeState}
-                                renderValue={(selected) => {
-                                    if (!selected) {
-                                        return <em>Select</em>;
-                                    }
-
-                                    return selected;
-                                }}
+                        <DialogTitle sx={{p:0}} >View Owner</DialogTitle>
+                        <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} />
+                    </DialogContent>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <Tabs value={tabIndex} onChange={handleTabChange}>
+                            <Tab label="Info" {...a11yProps(0)} />
+                            <Tab label="Pets" {...a11yProps(1)} />
+                        </Tabs>
+                    </Box>
+                    <CustomTabPanel value={tabIndex} index={0}>
+                        <DialogContent
+                            sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width: '100%'  }}
+                        >
+                            <DialogContent
+                                sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', flex: 1 }}
                             >
-                                {ownerStates?.length > 0 && (ownerStates?.map(m =>
+                                <DialogContentText>
+                                    First Name
+                                </DialogContentText>
+                                <OutlinedInput
+                                    autoFocus
+                                    // required
+                                    margin="dense"
+                                    id="firstName"
+                                    name="firstName"
+                                    label="First Name"
+                                    placeholder="First Name"
+                                    type="text"
+                                    value={editOwner.firstName}
+                                    onChange={handleChange}
+                                />
+                                <DialogContentText>
+                                    Address
+                                </DialogContentText>
+                                <OutlinedInput
+                                    autoFocus
+                                    //required
+                                    margin="dense"
+                                    id="address"
+                                    name="address"
+                                    label="Address"
+                                    placeholder="Address"
+                                    type="text"
+                                    value={editOwner.address}
+                                    onChange={handleChange}
+                                />
+                                <DialogContentText>
+                                    State
+                                </DialogContentText>
+                                <FormControl fullWidth>
+                                    <Select
+                                        displayEmpty
+                                        id="select-owner-state"
+                                        name="ownerState"
+                                        value={editOwner.state}
+                                        label="Pet Type"
+                                        onChange={handleChangeState}
+                                        renderValue={(selected) => {
+                                            if (!selected) {
+                                                return <em>Select</em>;
+                                            }
 
-                                    <MenuItem key={m} value={m.abbr}>{m.name}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <DialogContentText>
-                            Email
-                        </DialogContentText>
-                        <OutlinedInput
-                            margin="dense"
-                            id="ownerEmail"
-                            name="email"
-                            label="Owner Email"
-                            placeholder="Email"
-                            type="text"
-                            fullWidth
-                            value={editOwner.email}
-                            onChange={handleChange}
-                        />
-                        <DialogContentText>
-                            Primary Phone
-                        </DialogContentText>
-                        <OutlinedInput
-                            margin="dense"
-                            id="primaryPhone"
-                            name="primaryPhone"
-                            label="Primary Phone"
-                            placeholder="Primary Phone"
-                            type="text"
-                            fullWidth
-                            value={editOwner.primaryPhone}
-                            onChange={handleChange}
-                        />
-                        <DialogContentText>
-                            Veterinarian
-                        </DialogContentText>
-                        <OutlinedInput
-                            margin="dense"
-                            id="vet"
-                            name="vet"
-                            label="Veterinarian"
-                            placeholder="Veterinarian"
-                            type="text"
-                            fullWidth
-                            value={editOwner.vet}
-                            onChange={handleChange}
-                        />
-                    </DialogContent>
-                    <DialogContent
-                        sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', flex: 1 }}
-                    >
-                        <DialogContentText>
-                            Last Name
-                        </DialogContentText>
-                        <OutlinedInput
-                            autoFocus
-                            //required
-                            margin="dense"
-                            id="lastName"
-                            name="lastName"
-                            label="Last Name"
-                            placeholder="Last Name"
-                            type="text"
-                            value={editOwner.lastName}
-                            onChange={handleChange}
-                        />
-                        <DialogContentText>
-                            City
-                        </DialogContentText>
-                        <OutlinedInput
-                            autoFocus
-                            //required
-                            margin="dense"
-                            id="city"
-                            name="city"
-                            label="city"
-                            placeholder="City"
-                            type="text"
-                            value={editOwner.city}
-                            onChange={handleChange}
-                        />
-                        <DialogContentText>
-                            Zip Code
-                        </DialogContentText>
-                        <OutlinedInput
-                            margin="dense"
-                            id="zipCode"
-                            name="zipCode"
-                            label="Owner Zip"
-                            placeholder="Zip Code"
-                            type="text"
-                            fullWidth
-                            value={editOwner.zipCode}
-                            onChange={handleChange}
-                        />
-                        <DialogContentText>
-                            Referred By
-                        </DialogContentText>
-                        <OutlinedInput
-                            margin="dense"
-                            id="referredBy"
-                            name="referredBy"
-                            label="Referred By"
-                            placeholder="Referred By"
-                            type="text"
-                            fullWidth
-                            value={editOwner.referredBy}
-                            onChange={handleChange}
-                        />
-                        <DialogContentText>
-                            Secondary Phone
-                        </DialogContentText>
-                        <OutlinedInput
-                            margin="dense"
-                            id="secondaryPhone"
-                            name="secondaryPhone"
-                            label="Secondary Phone"
-                            placeholder="Secondary Phone"
-                            type="text"
-                            fullWidth
-                            value={editOwner.secondaryPhone}
-                            onChange={handleChange}
-                        />
-                        <DialogContentText>
-                            Veterinarian Phone
-                        </DialogContentText>
-                        <OutlinedInput
-                            margin="dense"
-                            id="vetPhone"
-                            name="vetPhone"
-                            label="Veterinarian Phone"
-                            placeholder="Veterinarian Phone"
-                            type="text"
-                            fullWidth
-                            value={editOwner.vetPhone}
-                            onChange={handleChange}
-                        />
+                                            return selected;
+                                        }}
+                                    >
+                                        {ownerStates?.length > 0 && (ownerStates?.map(m =>
 
-                    </DialogContent>
+                                            <MenuItem key={m} value={m.abbr}>{m.name}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <DialogContentText>
+                                    Email
+                                </DialogContentText>
+                                <OutlinedInput
+                                    margin="dense"
+                                    id="ownerEmail"
+                                    name="email"
+                                    label="Owner Email"
+                                    placeholder="Email"
+                                    type="text"
+                                    fullWidth
+                                    value={editOwner.email}
+                                    onChange={handleChange}
+                                />
+                                <DialogContentText>
+                                    Primary Phone
+                                </DialogContentText>
+                                <OutlinedInput
+                                    margin="dense"
+                                    id="primaryPhone"
+                                    name="primaryPhone"
+                                    label="Primary Phone"
+                                    placeholder="Primary Phone"
+                                    type="text"
+                                    fullWidth
+                                    value={editOwner.primaryPhone}
+                                    onChange={handleChange}
+                                />
+                                <DialogContentText>
+                                    Veterinarian
+                                </DialogContentText>
+                                <OutlinedInput
+                                    margin="dense"
+                                    id="vet"
+                                    name="vet"
+                                    label="Veterinarian"
+                                    placeholder="Veterinarian"
+                                    type="text"
+                                    fullWidth
+                                    value={editOwner.vet}
+                                    onChange={handleChange}
+                                />
+                            </DialogContent>
+                            <DialogContent
+                                sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', flex: 1 }}
+                            >
+                                <DialogContentText>
+                                    Last Name
+                                </DialogContentText>
+                                <OutlinedInput
+                                    autoFocus
+                                    //required
+                                    margin="dense"
+                                    id="lastName"
+                                    name="lastName"
+                                    label="Last Name"
+                                    placeholder="Last Name"
+                                    type="text"
+                                    value={editOwner.lastName}
+                                    onChange={handleChange}
+                                />
+                                <DialogContentText>
+                                    City
+                                </DialogContentText>
+                                <OutlinedInput
+                                    autoFocus
+                                    //required
+                                    margin="dense"
+                                    id="city"
+                                    name="city"
+                                    label="city"
+                                    placeholder="City"
+                                    type="text"
+                                    value={editOwner.city}
+                                    onChange={handleChange}
+                                />
+                                <DialogContentText>
+                                    Zip Code
+                                </DialogContentText>
+                                <OutlinedInput
+                                    margin="dense"
+                                    id="zipCode"
+                                    name="zipCode"
+                                    label="Owner Zip"
+                                    placeholder="Zip Code"
+                                    type="text"
+                                    fullWidth
+                                    value={editOwner.zipCode}
+                                    onChange={handleChange}
+                                />
+                                <DialogContentText>
+                                    Referred By
+                                </DialogContentText>
+                                <OutlinedInput
+                                    margin="dense"
+                                    id="referredBy"
+                                    name="referredBy"
+                                    label="Referred By"
+                                    placeholder="Referred By"
+                                    type="text"
+                                    fullWidth
+                                    value={editOwner.referredBy}
+                                    onChange={handleChange}
+                                />
+                                <DialogContentText>
+                                    Secondary Phone
+                                </DialogContentText>
+                                <OutlinedInput
+                                    margin="dense"
+                                    id="secondaryPhone"
+                                    name="secondaryPhone"
+                                    label="Secondary Phone"
+                                    placeholder="Secondary Phone"
+                                    type="text"
+                                    fullWidth
+                                    value={editOwner.secondaryPhone}
+                                    onChange={handleChange}
+                                />
+                                <DialogContentText>
+                                    Veterinarian Phone
+                                </DialogContentText>
+                                <OutlinedInput
+                                    margin="dense"
+                                    id="vetPhone"
+                                    name="vetPhone"
+                                    label="Veterinarian Phone"
+                                    placeholder="Veterinarian Phone"
+                                    type="text"
+                                    fullWidth
+                                    value={editOwner.vetPhone}
+                                    onChange={handleChange}
+                                />
+
+                            </DialogContent>
+                        </DialogContent>
+                    </CustomTabPanel>
+                    <CustomTabPanel value={tabIndex} index={1}>
+                        <DialogContent>
+                            <ViewPets ownerId={viewOwner.id} />
+                        </DialogContent>
+                    </CustomTabPanel>
                 </DialogContent>
                 <DialogActions sx={{ pb: 3, px: 3 }}>
                     <Button onClick={handleClose}>Cancel</Button>

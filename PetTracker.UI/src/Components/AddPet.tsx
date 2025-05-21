@@ -21,15 +21,17 @@ import usePetStore from '../Stores/PetStore';
 import CircularProgress from '@mui/material/CircularProgress';
 
 
-interface AddPetProps {
+interface AddPetProps
+{
     open: boolean;
     handleClose: () => void;
     petTypes: [];
-    reloadPets: boolean,
+    reloadPets: boolean;
     setReloadPets: React.Dispatch<React.SetStateAction<boolean>>;
+    ownerId?: number
 }
 
-export default function AddPet({ open, handleClose, petTypes, reloadPets, setReloadPets }: AddPetProps)
+export default function AddPet({ open, handleClose, petTypes, reloadPets, setReloadPets, ownerId }: AddPetProps)
 {
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
@@ -103,6 +105,7 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
             addPetData.append(`model.PetPhotos`, f);
         });
 
+        addPetData.append("model.OwnerId", ownerId ?? '');
         addPetData.append("model.Name", addPet.name??'');
         addPetData.append("model.PetTypeId", addPet.petTypeId??'');
         addPetData.append("model.PetType", addPet.petType??'');
@@ -145,13 +148,6 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
             fullWidth
             maxWidth="lg"
         >
-          {(petBreeds?.length < 1) && (
-              <DialogContent
-                  sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', width: '100%', alignItems: 'center' }}
-              >
-                  <CircularProgress />
-              </DialogContent>
-          )}
           <form name="addPetForm" onSubmit={handleAddPetSubmit}>
           <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', width: '100%', alignItems: 'center' }}
@@ -331,7 +327,7 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
           </DialogContent>
           <DialogActions sx={{ pb: 3, px: 3 }}>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button variant="contained" color="info" type="submit">Create</Button>
+            <Button variant="contained" color="info" type="submit">Add Pet</Button>
           </DialogActions>
           {/*{submitSuccessMessage?.length > 0 && (*/}
           {/*    <Alert variant="filled" severity="success">*/}

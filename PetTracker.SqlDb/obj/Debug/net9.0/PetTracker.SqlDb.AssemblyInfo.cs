@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PetTracker.SqlDb")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2a8be891b2c724d2c33a10f96260faba12b8bacd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b4d6a9dd32b86974f7d2ee6fe4b97e8d9491ac5c")]
 [assembly: System.Reflection.AssemblyProductAttribute("PetTracker.SqlDb")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PetTracker.SqlDb")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

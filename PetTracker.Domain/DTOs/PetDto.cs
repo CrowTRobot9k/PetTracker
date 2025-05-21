@@ -15,6 +15,7 @@ namespace PetTracker.Domain.DTOs
         public PetDto(Pet pet)
         {
             Id = pet.Id;
+            OwnerId = pet.OwnerId;
             Name = pet.Name;
             Color = pet.Color;
             BirthDate = pet.BirthDate;
@@ -23,6 +24,7 @@ namespace PetTracker.Domain.DTOs
             MedicalProblems = pet.MedicalProblems;
         }
         public int Id { get; set; }
+        public int? OwnerId { get; set; }
         public string? Name { get; set; }
         public int PetTypeId { get; set; }
         public string? PetType { get; set; }
