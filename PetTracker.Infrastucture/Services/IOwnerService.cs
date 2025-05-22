@@ -7,5 +7,6 @@ namespace PetTracker.Infrastucture.Services
         Task<int> CreateOwner(AddOwnerDto owner);
         Task<int> UpdateOwner(AddOwnerDto owner);
         Task<List<GetOwnerDto>> GetOwners(int? companyId = null);
+        Task<bool> AddExistingPetsToOwner(AddExistingPetsToOwnerDto model);
     }
 }

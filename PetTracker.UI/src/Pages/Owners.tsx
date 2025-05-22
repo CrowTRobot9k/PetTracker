@@ -19,6 +19,7 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import AddOwner from '../Components/AddOwner';
 import ViewOwner from '../Components/ViewOwner';
+import { getImageUrlFromBlob } from '../Util/CommonFunctions'
 
 const SyledCardContent = styled(CardContent)({
     display: 'flex',
@@ -66,10 +67,6 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
     const handleClose = () => {
         setOpen(false);
     };
-
-    const getImageUrlFromBlob = (base64String) => {
-        return `data:image/png;base64,${base64String}`;
-    }
 
     const getOwnerSlides = (images) => {
         return Array.from(images.map((f, index) => (

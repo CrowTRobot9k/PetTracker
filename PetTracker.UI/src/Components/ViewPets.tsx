@@ -16,6 +16,7 @@ import Carousel from '../Components/Carousel/Carousel';
 import EditIcon from '@mui/icons-material/Edit';
 import Chip from '@mui/material/Chip';
 import Fab from '@mui/material/Fab';
+import { getImageUrlFromBlob } from '../Util/CommonFunctions'
 import usePetsStore from '../Stores/PetsStore.tsx';
 
 import { Pet } from '../Types/SharedTypes.tsx';
@@ -57,10 +58,6 @@ export default function ViewPets(props: { ownerId?: number }) {
     const handleCloseAddExisting = () => {
         setOpenAddExistingPet(false);
     };
-
-    const getImageUrlFromBlob = (base64String) => {
-        return `data:image/png;base64,${base64String}`;
-    }
 
     const getPetSlides = (images) => {
         return Array.from(images.map((f, index) => (
@@ -138,7 +135,7 @@ export default function ViewPets(props: { ownerId?: number }) {
                                     height: '100%',
                                     //width: '100%',
                                     display: 'flex',
-                                    //flexDirection: 'row',
+                                    flexDirection: 'column',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                 }}
@@ -147,7 +144,7 @@ export default function ViewPets(props: { ownerId?: number }) {
                                     Add New Pet
                                 </Button>
                                 {props.ownerId != null && (<Button onClick={handleClickOpenAddExisting} variant="contained" color="info" endIcon={<AddIcon />}>
-                                    Add Existing Pet
+                                    Add Existing Pets
                                 </Button>) }
                             </Card>
                         </Grid>

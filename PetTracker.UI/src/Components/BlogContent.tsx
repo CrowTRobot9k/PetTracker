@@ -9,6 +9,7 @@ import useOwnersStore from '../Stores/OwnersStore';
 import Carousel from '../Components/Carousel/Carousel';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
+import { getImageUrlFromBlob } from '../Util/CommonFunctions'
 
 
 
@@ -116,10 +117,6 @@ export default function BlogContent(props: { disableCustomTheme?: boolean }) {
     const handleClose = () => {
         setOpen(false);
     };
-
-    const getImageUrlFromBlob = (base64String) => {
-        return `data:image/png;base64,${base64String}`;
-    }
 
     const getOwnerSlides = (images) => {
         return Array.from(images.map((f, index) => (

@@ -4,6 +4,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import Container from '@mui/material/Container';
 import Carousel from '../Components/Carousel/Carousel';
 import Alert from '@mui/material/Alert';
+import { getImageUrlFromBlob } from '../Util/CommonFunctions'
 
 interface FileUploadProps {
     label: string;
@@ -14,10 +15,6 @@ interface FileUploadProps {
 export default function ImageUpload({ label, selectedFiles, onChange }: FileUploadProps) {
     const [slides, setSlides] = useState<React.ReactElement[]>([]);
     const [errorMessage, setErrorMessage] = React.useState('');
-
-    const getImageUrlFromBlob = (base64String) => {
-        return `data:image/png;base64,${base64String}`;
-    }
 
     useEffect(() =>
     {

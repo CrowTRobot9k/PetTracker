@@ -107,5 +107,28 @@ namespace PetTracker.Infrastucture.Services
 
             return results.Select(s => new GetOwnerDto(s)).ToList();
         }
+
+        public async Task<bool> AddExistingPetsToOwner(AddExistingPetsToOwnerDto model)
+        { 
+            var existingPets = _dbContext.Pets
+                .Where(w => model.PetIds.Contains(w.Id))
+                .ToList();
+
+            if (existingPets == null || !existingPets.Any())
+            {
+                return false;
+            }
+
+            existingPets.ForEach(f =>
+            {
+                f.OwnerId = model.OwnerId;
+            });
+
+            _dbContext.Pets.UpdateRange(existingPets);
+
+            await _dbContext.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
