@@ -130,5 +130,28 @@ namespace PetTracker.Infrastucture.Services
 
             return true;
         }
+
+        public async Task<bool> RemoveExistingPetsToOwner(AddExistingPetsToOwnerDto model)
+        {
+            var existingPets = _dbContext.Pets
+                .Where(w => model.PetIds.Contains(w.Id))
+                .ToList();
+
+            if (existingPets == null || !existingPets.Any())
+            {
+                return false;
+            }
+
+            existingPets.ForEach(f =>
+            {
+                f.OwnerId = null;
+            });
+
+            _dbContext.Pets.UpdateRange(existingPets);
+
+            await _dbContext.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

@@ -14,10 +14,12 @@ import CardContent from '@mui/material/CardContent';
 import { styled } from '@mui/material/styles';
 import Carousel from '../Components/Carousel/Carousel';
 import EditIcon from '@mui/icons-material/Edit';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import Chip from '@mui/material/Chip';
 import Fab from '@mui/material/Fab';
 import { getImageUrlFromBlob } from '../Util/CommonFunctions'
 import usePetsStore from '../Stores/PetsStore.tsx';
+import ConfirmDialog from './ConfirmDialog.tsx';
 
 import { Pet } from '../Types/SharedTypes.tsx';
 
@@ -32,7 +34,10 @@ export default function ViewPets(props: { ownerId?: number }) {
     const [selectedPet, setSelectedPet] = useState<Pet>(
         {
         });
+    const [removePetId, setRemovePetId] = useState<number>(0);
     const [reloadPets, setReloadPets] = React.useState(false);
+    const [openConfirm, setOpenConfirm] = React.useState(false);
+
 
 
     useEffect(() => {
@@ -73,6 +78,42 @@ export default function ViewPets(props: { ownerId?: number }) {
 
     const handleClosePet = () => {
         setOpenViewPet(false);
+    };
+
+    const handleConfirmOpen = (pet) => {
+        setRemovePetId(pet.id);
+        setOpenConfirm(true);
+    };
+
+    const handleConfirmClose = () => {
+        setOpenConfirm(false);
+    };
+
+    const handleConfirmRemovePet = () => {
+
+        const removeExistingPetsModel = {
+            OwnerId: props.ownerId,
+            PetIds: [removePetId],
+        };
+
+        fetch("/api/Owner/RemoveExistingPetFromOwner", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(removeExistingPetsModel)
+        }).then((data) => {
+            if (data.ok) {
+                setOpenConfirm(false);
+                setReloadPets(true);
+            }
+            else {
+                //setErrorMessage("Error Adding Pets");
+            }
+        }).catch((error) => {
+            console.log(error);
+            //setErrorMessage("Error Adding Pets");
+        });
     };
 
     const SyledCardContent = styled(CardContent)({
@@ -189,10 +230,21 @@ export default function ViewPets(props: { ownerId?: number }) {
                                             }} label={b.name} />
                                         ))}
                                     </Box>
-                                    <SyledCardContent sx={{ my: 1 }}>
-                                        <Fab size="small" color="primary" sx={{ alignSelf: 'center' }} onClick={() => handleOpenPet(m)} aria-label="add">
+                                    <SyledCardContent sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        my: 1
+                                    }}>
+                                        <Fab size="small" color="primary" sx={{ alignSelf: 'center', m: 1, }} onClick={() => handleOpenPet(m)} aria-label="add">
                                             <EditIcon />
                                         </Fab>
+                                        {props.ownerId != null && (
+                                            <Fab size="small" color="warning" sx={{ alignSelf: 'center', m: 1, }} onClick={() => handleConfirmOpen(m)} aria-label="add">
+                                                <RemoveCircleIcon />
+                                            </Fab>
+                                        )}
                                     </SyledCardContent>
                                 </Card>
                             </Grid>
@@ -200,6 +252,7 @@ export default function ViewPets(props: { ownerId?: number }) {
                     </Grid>
                 )}
                 <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} />
+                <ConfirmDialog open={openConfirm} handleClose={handleConfirmClose} handleConfirm={handleConfirmRemovePet}  confirmTitle={"Remove Pet"} confirmDescription={"Remove pet from this owner?"} confirmbuttonText="Yes" />
             </Container>
         </>
     );

@@ -129,6 +129,10 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            '^/api/Owner/RemoveExistingPetFromOwner': {
+                target,
+                secure: false
+            },
         },
         port: parseInt(env.DEV_SERVER_PORT || '50449'),
         https: {
