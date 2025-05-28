@@ -18,6 +18,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import DialogContent from '@mui/material/DialogContent';
+import ErrorDisplay from '../Components/ErrorDisplay';
 
 interface AddExistingPetProps {
     open: boolean;
@@ -38,7 +39,7 @@ const SyledCardContent = styled(CardContent)({
 
 export default function AddExistingPet({ open, handleClose, reloadPets, setReloadPets, ownerId }: AddExistingPetProps) {
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
-    const [submitErrorMessage, setErrorMessage] = React.useState('');
+    const [submitErrorMessage, setSubmitErrorMessage] = React.useState('');
     const getExistingPets = useExistingPetsStore((state) => state.getExistingPets);
     const { existingPets, loadingExistingPets } = useExistingPetsStore();
     const [searchValue, setSearchValue] = React.useState('');
@@ -66,9 +67,9 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
         }));
     };
 
-    const AddExistingPetsToOwner = () => {
+    const AddExistingPetsToOwner = async () => {
         setSuccessMessage("");
-        setErrorMessage("");
+        setSubmitErrorMessage("");
 
         const selectedPetIds = Object.keys(selectedPets).filter(key => selectedPets[key] === true).map(Number);
 
@@ -77,27 +78,29 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
             PetIds: selectedPetIds,
         };
 
-        fetch("/api/Owner/AddExistingPetsToOwner", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(addExistingPetsModel)
-        }).then((data) => {
-            if (data.ok) {
+        try {
+            const response = await fetch("/api/Owner/AddExistingPetsToOwner", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(addExistingPetsModel)
+            });
+
+            if (!response.ok) {
+                throw new Error(await response.json());
+            }
+
+            if (response.status == 200) {
                 setReloadPets(!reloadPets);
                 setSelectedPets({
                 });
                 setSuccessMessage("Pets Added")
                 handleClose();
             }
-            else {
-                setErrorMessage("Error Adding Pets");
-            }
-        }).catch((error) => {
-            console.log(error);
-            setErrorMessage("Error Adding Pets");
-        });
+        } catch (e) {
+            setSubmitErrorMessage(e.message);
+        } 
     }
 
     return (
@@ -132,6 +135,9 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
                         onChange={handleSearchChange}
                     />
                 </Container>
+                {submitErrorMessage?.length > 0 && (
+                    <ErrorDisplay error={submitErrorMessage} />
+                )}
                 {loadingExistingPets && (
                     <Container
                         maxWidth="xl"

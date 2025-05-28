@@ -16,21 +16,18 @@ namespace PetTracker.Server.Controllers
             _PetService = new PetService(logger, dbContext);
         }
         [HttpGet("GetPets")]
-        public async Task<List<GetPetDto>> GetPets(int? ownerId)
+        public async Task<IActionResult> GetPets(int? ownerId)
         {
             try
             {
                var result = await _PetService.GetPets(ownerId);
-               return result;
+               return new JsonResult(result);
             }
             catch (Exception ex)
             {
-                HandleUIException(ex);
+                return new JsonResult(HandleUIException(ex, ownerId));
             }
-            return new List<GetPetDto>();
         }
-
-
 
         [HttpGet("GetPet")]
         public async Task<string> GetPet()
@@ -47,8 +44,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpPost("CreatePet")]
-        public async Task<bool> CreatePet([FromForm] AddPetDto model)
-
+        public async Task<IActionResult> CreatePet([FromForm] AddPetDto model)
         {
             try
             {
@@ -56,16 +52,15 @@ namespace PetTracker.Server.Controllers
             }
             catch (Exception ex)
             {
-                HandleUIException(ex, model);
+                return new JsonResult(HandleUIException(ex, model));
             }
 
-            return true;
+            return new JsonResult(true);
         }
 
 
         [HttpPost("UpdatePet")]
-        public async Task<bool> UpdatePet([FromForm] AddPetDto model)
-
+        public async Task<IActionResult> UpdatePet([FromForm] AddPetDto model)
         {
             try
             {
@@ -73,38 +68,36 @@ namespace PetTracker.Server.Controllers
             }
             catch (Exception ex)
             {
-                HandleUIException(ex, model);
+                return new JsonResult(HandleUIException(ex,model));
             }
 
-            return true;
+            return new JsonResult(true);
         }
 
         [HttpGet("GetPetTypes")]
-        public async Task<List<PetTypeDto>> GetPetTypes()
+        public async Task<IActionResult> GetPetTypes()
         {
             try
             {
-                return await _PetService.GetPetTypes();
+                return new JsonResult(await _PetService.GetPetTypes());
             }
             catch (Exception ex)
             {
-                HandleUIException(ex);
+                return new JsonResult(HandleUIException(ex));
             }
-            return new List<PetTypeDto>();
         }
 
         [HttpGet("GetPetBreeds")]
-        public async Task<List<BreedTypeDto>> GetPetBreeds(int petTypeId)
+        public async Task<IActionResult> GetPetBreeds(int petTypeId)
         {
             try
             {
-                return await _PetService.GetPetBreeds(petTypeId);
+                return new JsonResult(await _PetService.GetPetBreeds(petTypeId));
             }
             catch (Exception ex)
             {
-                HandleUIException(ex);
+                return new JsonResult(HandleUIException(ex));
             }
-            return new List<BreedTypeDto>();
         }
     }
 }

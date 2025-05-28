@@ -21,9 +21,9 @@ namespace PetTracker.Server.Controllers
         }
         protected string GetDefaultErrorMessage()
         {
-            return "Sorry, the system encountered error message while processing your request. " +
+            return "The system encountered an error while processing your request. " +
                     "We are working to resolve the issue as soon as possible. Please try again later. " +
-                    "If the issue persists, please send a service ticket through our in application support system located at the bottom of the page. Thank you for your patience.";
+                    "Thank you for your patience.";
         }
 
         protected string HandleUIException(Exception ex = null, object context = null, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = 0, bool returnErrorStatus = true)

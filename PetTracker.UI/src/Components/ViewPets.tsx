@@ -20,6 +20,7 @@ import Fab from '@mui/material/Fab';
 import { getImageUrlFromBlob } from '../Util/CommonFunctions'
 import usePetsStore from '../Stores/PetsStore.tsx';
 import ConfirmDialog from './ConfirmDialog.tsx';
+import ErrorDisplay from '../Components/ErrorDisplay';
 
 import { Pet } from '../Types/SharedTypes.tsx';
 
@@ -27,7 +28,12 @@ export default function ViewPets(props: { ownerId?: number }) {
     const getPets = usePetsStore((state) => state.getPets);
     const getPetTypes = usePetsStore((state) => state.getPetTypes);
     const petTypes = usePetsStore((state) => state.petTypes);
-    const { pets, loadingPets } = usePetsStore();
+    const {
+        pets,
+        loadingPets,
+        errorMessage,
+        showErrors
+    } = usePetsStore();
     const [open, setOpen] = React.useState(false);
     const [openAddExistingPet, setOpenAddExistingPet] = React.useState(false);
     const [openViewPet, setOpenViewPet] = React.useState(false);
@@ -37,8 +43,7 @@ export default function ViewPets(props: { ownerId?: number }) {
     const [removePetId, setRemovePetId] = useState<number>(0);
     const [reloadPets, setReloadPets] = React.useState(false);
     const [openConfirm, setOpenConfirm] = React.useState(false);
-
-
+    const [submitErrorMessage, setSubmitErrorMessage] = React.useState('');
 
     useEffect(() => {
         getPets(props.ownerId);
@@ -89,31 +94,36 @@ export default function ViewPets(props: { ownerId?: number }) {
         setOpenConfirm(false);
     };
 
-    const handleConfirmRemovePet = () => {
+    const handleConfirmRemovePet = async () => {
+
+        setSubmitErrorMessage("");
 
         const removeExistingPetsModel = {
             OwnerId: props.ownerId,
             PetIds: [removePetId],
         };
 
-        fetch("/api/Owner/RemoveExistingPetFromOwner", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(removeExistingPetsModel)
-        }).then((data) => {
-            if (data.ok) {
-                setOpenConfirm(false);
+        try {
+            const response = await fetch("/api/Owner/RemoveExistingPetFromOwner", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(removeExistingPetsModel)
+            });
+
+            setOpenConfirm(false);
+
+            if (!response.ok) {
+                throw new Error(await response.json());
+            }
+
+            if (response.status == 200) {
                 setReloadPets(true);
             }
-            else {
-                //setErrorMessage("Error Adding Pets");
-            }
-        }).catch((error) => {
-            console.log(error);
-            //setErrorMessage("Error Adding Pets");
-        });
+        } catch (e) {
+            setSubmitErrorMessage(e.message);
+        } 
     };
 
     const SyledCardContent = styled(CardContent)({
@@ -129,118 +139,126 @@ export default function ViewPets(props: { ownerId?: number }) {
 
     return (
         <>
+            {showErrors && (
+                <ErrorDisplay error={errorMessage} height={700} />
+            )}
+            {submitErrorMessage?.length > 0 && (
+                <ErrorDisplay error={submitErrorMessage} />
+            )}
             {loadingPets && (
                 <LoadingPlaceholder />
             )}
-            <Container
-                maxWidth="xl"
-                component="main"
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    my: 2,
-                    gap: 4,
-
-                }}
-            >
-                {(!loadingPets) && (
-                    <Grid container spacing={2} columns={12} sx={{
-                        //height: '400px',
-                        //width: '100%',
+            {!(showErrors) && (
+                <Container
+                    maxWidth="xl"
+                    component="main"
+                    sx={{
                         display: 'flex',
-                        flexDirection: 'row',
-                        //alignItems: 'center',
-                        //justifyContent: 'center',
-                    }}>
-                        <Grid
-                            size={ pets.length < 3 ? "grow" : 4
-                            }
-                            sx={{ height: '365px' }}
-                        >
-                            <Card
-                                //variant="outlined"
-                                sx={{
-                                    height: '100%',
-                                    //width: '100%',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Button onClick={handleClickOpen} variant="contained" color="info" endIcon={<AddIcon />}>
-                                    Add New Pet
-                                </Button>
-                                {props.ownerId != null && (<Button onClick={handleClickOpenAddExisting} variant="contained" color="info" endIcon={<AddIcon />}>
-                                    Add Existing Pets
-                                </Button>) }
-                            </Card>
-                        </Grid>
-                        <AddPet open={open} handleClose={handleClose} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} ownerId={props.ownerId} />
-                        <AddExistingPet open={openAddExistingPet} handleClose={handleCloseAddExisting} reloadPets={reloadPets} setReloadPets={setReloadPets} ownerId={props.ownerId} />
-                        {pets?.map(m =>
-                            <Grid size={pets.length < 3 ? "grow" : 4}
+                        flexDirection: 'column',
+                        my: 2,
+                        gap: 4,
+
+                    }}
+                >
+                    {(!loadingPets) && (
+                        <Grid container spacing={2} columns={12} sx={{
+                            //height: '400px',
+                            //width: '100%',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            //alignItems: 'center',
+                            //justifyContent: 'center',
+                        }}>
+                            <Grid
+                                size={pets.length < 3 ? "grow" : 4
+                                }
                                 sx={{ height: '365px' }}
                             >
                                 <Card
-                                    variant="outlined"
+                                    //variant="outlined"
                                     sx={{
                                         height: '100%',
-                                        ////width: '100%',
-                                        //display: 'flex',
-                                        ////flexDirection: 'row',
-                                        //alignItems: 'center',
-                                        //justifyContent: 'center',
-                                    }}
-                                >
-                                    <Carousel cards={getPetSlides(m.petPhotos)} />
-                                    <SyledCardContent>
-                                        <Typography gutterBottom variant="h6" component="div">
-                                            {m.name}
-                                        </Typography>
-                                        {/*<StyledTypography variant="body2" color="text.secondary" gutterBottom>*/}
-                                        {/*    {m.petType?.type}*/}
-                                        {/*</StyledTypography>*/}
-                                    </SyledCardContent>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            bgcolor: 'background.paper',
-                                            borderRadius: 1,
-                                            mx: 'auto'
-                                        }}
-                                    >
-                                        {m.breedTypes?.length > 0 && (m.breedTypes?.map(b =>
-                                            <Chip sx={{
-                                                m: 1,
-                                            }} label={b.name} />
-                                        ))}
-                                    </Box>
-                                    <SyledCardContent sx={{
+                                        //width: '100%',
                                         display: 'flex',
-                                        flexDirection: 'row',
+                                        flexDirection: 'column',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        my: 1
-                                    }}>
-                                        <Fab size="small" color="primary" sx={{ alignSelf: 'center', m: 1, }} onClick={() => handleOpenPet(m)} aria-label="add">
-                                            <EditIcon />
-                                        </Fab>
-                                        {props.ownerId != null && (
-                                            <Fab size="small" color="warning" sx={{ alignSelf: 'center', m: 1, }} onClick={() => handleConfirmOpen(m)} aria-label="add">
-                                                <RemoveCircleIcon />
-                                            </Fab>
-                                        )}
-                                    </SyledCardContent>
+                                    }}
+                                >
+                                    <Button onClick={handleClickOpen} variant="contained" color="info" endIcon={<AddIcon />}>
+                                        Add New Pet
+                                    </Button>
+                                    {props.ownerId != null && (<Button onClick={handleClickOpenAddExisting} variant="contained" color="info" endIcon={<AddIcon />}>
+                                        Add Existing Pets
+                                    </Button>)}
                                 </Card>
                             </Grid>
-                        )}
-                    </Grid>
-                )}
-                <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} />
-                <ConfirmDialog open={openConfirm} handleClose={handleConfirmClose} handleConfirm={handleConfirmRemovePet}  confirmTitle={"Remove Pet"} confirmDescription={"Remove pet from this owner?"} confirmbuttonText="Yes" />
-            </Container>
+                            <AddPet open={open} handleClose={handleClose} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} ownerId={props.ownerId} />
+                            <AddExistingPet open={openAddExistingPet} handleClose={handleCloseAddExisting} reloadPets={reloadPets} setReloadPets={setReloadPets} ownerId={props.ownerId} />
+                            {pets?.map(m =>
+                                <Grid size={pets.length < 3 ? "grow" : 4}
+                                    sx={{ height: '365px' }}
+                                >
+                                    <Card
+                                        variant="outlined"
+                                        sx={{
+                                            height: '100%',
+                                            ////width: '100%',
+                                            //display: 'flex',
+                                            ////flexDirection: 'row',
+                                            //alignItems: 'center',
+                                            //justifyContent: 'center',
+                                        }}
+                                    >
+                                        <Carousel cards={getPetSlides(m.petPhotos)} />
+                                        <SyledCardContent>
+                                            <Typography gutterBottom variant="h6" component="div">
+                                                {m.name}
+                                            </Typography>
+                                            {/*<StyledTypography variant="body2" color="text.secondary" gutterBottom>*/}
+                                            {/*    {m.petType?.type}*/}
+                                            {/*</StyledTypography>*/}
+                                        </SyledCardContent>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                bgcolor: 'background.paper',
+                                                borderRadius: 1,
+                                                mx: 'auto'
+                                            }}
+                                        >
+                                            {m.breedTypes?.length > 0 && (m.breedTypes?.map(b =>
+                                                <Chip sx={{
+                                                    m: 1,
+                                                }} label={b.name} />
+                                            ))}
+                                        </Box>
+                                        <SyledCardContent sx={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            my: 1
+                                        }}>
+                                            <Fab size="small" color="primary" sx={{ alignSelf: 'center', m: 1, }} onClick={() => handleOpenPet(m)} aria-label="add">
+                                                <EditIcon />
+                                            </Fab>
+                                            {props.ownerId != null && (
+                                                <Fab size="small" color="warning" sx={{ alignSelf: 'center', m: 1, }} onClick={() => handleConfirmOpen(m)} aria-label="add">
+                                                    <RemoveCircleIcon />
+                                                </Fab>
+                                            )}
+                                        </SyledCardContent>
+                                    </Card>
+                                </Grid>
+                            )}
+                        </Grid>
+                    )}
+                    <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} />
+                    <ConfirmDialog open={openConfirm} handleClose={handleConfirmClose} handleConfirm={handleConfirmRemovePet} confirmTitle={"Remove Pet"} confirmDescription={"Remove pet from this owner?"} confirmbuttonText="Yes" />
+                </Container>
+            )}
         </>
     );
 }

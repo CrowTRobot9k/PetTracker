@@ -6,14 +6,15 @@ const useOwnersStore = create((set) => ({
     owners: [],
     states: [],
 
-    error: null,
+    errorMessage: null,
+    showErrors:false,
     getOwners: async () => {
-        set({ loadingOwners: true });
+        set({ showErrors: false, errorMessage: null, loadingOwners: true });
         try {
             const response = await fetch("/api/Owner/GetOwners");
             if (!response.ok)
             {
-                throw new Error(await response.text());
+                throw new Error(await response.json());
             }
 
             if (response.status == 200) {
@@ -23,14 +24,19 @@ const useOwnersStore = create((set) => ({
                     loadingOwners: false,
                 });
             }
-        } catch (e) {
-            set({ error: e, loadingOwners: false });
+        } catch (e)
+        {
+            set({ showErrors:true,errorMessage: e.message, loadingOwners: false });
         }
     },
     getStates: async () => {
-        set({ loadingOwnerTypes: true });
+        set({ showErrors: false, errorMessage: null, loadingStates: true });
         try {
             const response = await fetch("/api/Owner/GetStates");
+            if (!response.ok) {
+                throw new Error(await response.json());
+            }
+
             if (response.status == 200) {
                 const data = await response.json();
                 set({
@@ -38,8 +44,8 @@ const useOwnersStore = create((set) => ({
                     loadingStates: false,
                 });
             }
-        } catch (error) {
-            set({ error: "Failed to fetch States", loadingStates: false });
+        } catch (e) {
+            set({ showErrors: true, errorMessage: e.message, loadingStates: false });
         }
     }
 }));

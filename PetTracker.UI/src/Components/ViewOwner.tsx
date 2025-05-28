@@ -22,6 +22,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import ViewPets from '../Components/ViewPets';
+import ErrorDisplay from '../Components/ErrorDisplay';
 
 
 interface viewPetProps {
@@ -133,7 +134,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
         setTabIndex(newValue);
     };
 
-    const handleSaveOwnerSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSaveOwnerSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSuccessMessage("");
         setErrorMessage("");
@@ -158,23 +159,25 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
         editOwnerData.append("model.Vet", editOwner.vet??'');
         editOwnerData.append("model.VetPhone", editOwner.vetPhone??'');
 
-        fetch("/api/Owner/UpdateOwner", {
-            method: "POST",
-            body: editOwnerData,
-        }).then((data) => {
-            if (data.ok) {
+        try {
+            const response = await fetch("/api/Owner/UpdateOwner", {
+                method: "POST",
+                body: editOwnerData,
+            });
+
+            if (!response.ok) {
+                throw new Error(await response.json());
+            }
+
+            if (response.status == 200) {
                 setSelectedFiles([]);
                 setReloadOwners(!reloadOwners);
                 setSuccessMessage("Owner Saved")
                 handleClose();
             }
-            else {
-                setErrorMessage("Error Saving Owner");
-            }
-        }).catch((error) => {
-            console.log(error);
-            setErrorMessage("Error Saving Owner");
-        });
+        } catch (e) {
+            setErrorMessage(e.message);
+        }  
     }
 
     return (
@@ -196,7 +199,10 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                             p:0
                         }}
                     >
-                        <DialogTitle sx={{p:0}} >View Owner</DialogTitle>
+                        <DialogTitle sx={{ p: 0 }} >View Owner</DialogTitle>
+                        {submitErrorMessage?.length > 0 && (
+                            <ErrorDisplay error={submitErrorMessage} />
+                        )}
                         <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} />
                     </DialogContent>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -413,16 +419,6 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button variant="contained" color="info" type="submit">Save</Button>
                 </DialogActions>
-                {/*{submitSuccessMessage?.length > 0 && (*/}
-                {/*    <Alert variant="filled" severity="success">*/}
-                {/*        {submitSuccessMessage}*/}
-                {/*    </Alert>*/}
-                {/*)}*/}
-                {submitErrorMessage?.length > 0 && (
-                    <Alert variant="filled" severity="error">
-                        {submitErrorMessage}
-                    </Alert>
-                )}
             </form>
         </Dialog>
     );

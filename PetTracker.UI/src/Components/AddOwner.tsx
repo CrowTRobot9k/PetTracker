@@ -17,6 +17,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Owner from '../Types/SharedTypes';
+import ErrorDisplay from '../Components/ErrorDisplay';
 
 interface AddOwnerProps {
     open: boolean;
@@ -56,7 +57,7 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
         }));
     };
 
-    const handleAddOwnerSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleAddOwnerSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSuccessMessage("");
         setErrorMessage("");
@@ -79,11 +80,17 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
         addOwnerData.append("model.Vet", addOwner.vet??'');
         addOwnerData.append("model.VetPhone", addOwner.vetPhone??'');
 
-        fetch("/api/Owner/CreateOwner", {
-            method: "POST",
-            body: addOwnerData,
-        }).then((data) => {
-            if (data.ok) {
+        try {
+            const response = await fetch("/api/Owner/CreateOwner", {
+                method: "POST",
+                body: addOwnerData,
+            });
+
+            if (!response.ok) {
+                throw new Error(await response.json());
+            }
+
+            if (response.status == 200) {
                 setSelectedFiles([]);
                 setReloadOwners(!reloadOwners);
                 setAddOwner({
@@ -91,13 +98,9 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
                 setSuccessMessage("Owner Created")
                 handleClose();
             }
-            else {
-                setErrorMessage("Error Creating Owner");
-            }
-        }).catch((error) => {
-            console.log(error);
-            setErrorMessage("Error Creating Owner");
-        });
+        } catch (e) {
+            setErrorMessage(e.message);
+        }        
     }
 
     return (
@@ -112,6 +115,9 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
                     sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', width: '100%', alignItems: 'center' }}
                 >
                     <DialogTitle>Add Owner</DialogTitle>
+                    {submitErrorMessage?.length > 0 && (
+                        <ErrorDisplay error={submitErrorMessage} />
+                    )}
                     <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} />
                 </DialogContent>
                 <DialogContent
@@ -315,16 +321,6 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button variant="contained" color="info" type="submit">Create</Button>
                 </DialogActions>
-                {/*{submitSuccessMessage?.length > 0 && (*/}
-                {/*    <Alert variant="filled" severity="success">*/}
-                {/*        {submitSuccessMessage}*/}
-                {/*    </Alert>*/}
-                {/*)}*/}
-                {submitErrorMessage?.length > 0 && (
-                    <Alert variant="filled" severity="error">
-                        {submitErrorMessage}
-                    </Alert>
-                )}
             </form>
         </Dialog>
     );

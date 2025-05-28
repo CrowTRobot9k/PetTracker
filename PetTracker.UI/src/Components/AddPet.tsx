@@ -19,7 +19,7 @@ import Chip from '@mui/material/Chip';
 import Pet from '../Types/SharedTypes';
 import usePetStore from '../Stores/PetStore';
 import CircularProgress from '@mui/material/CircularProgress';
-
+import ErrorDisplay from '../Components/ErrorDisplay';
 
 interface AddPetProps
 {
@@ -44,6 +44,11 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
 
     const getPetBreeds = usePetStore((state) => state.getPetBreeds);
     const petBreeds = usePetStore((state) => state.petBreeds);
+
+    const {
+        errorMessage,
+        showErrors
+    } = usePetStore();
 
     useEffect(() =>
     {
@@ -95,7 +100,7 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
         setAddPet({ ...addPet, sex: e.target.value });
     };
 
-    const handleAddPetSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleAddPetSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSuccessMessage("");
         setErrorMessage("");
@@ -119,11 +124,17 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
         addPetData.append("model.Sex", addPet.sex??'');
         addPetData.append("model.MedicalProblems", addPet.medicalProblems??'');
 
-        fetch("/api/Pet/CreatePet", {
-            method: "POST",
-            body: addPetData,
-        }).then((data) => {
-            if (data.ok) {
+        try {
+            const response = await fetch("/api/Pet/CreatePet", {
+                method: "POST",
+                body: addPetData,
+            });
+
+            if (!response.ok) {
+                throw new Error(await response.json());
+            }
+
+            if (response.status == 200) {
                 setSelectedFiles([]);
                 setReloadPets(!reloadPets);
                 setAddPet({
@@ -132,13 +143,9 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
                 setSuccessMessage("Pet Created")
                 handleClose();
             }
-            else {
-                setErrorMessage("Error Creating Pet");
-            }
-        }).catch((error) => {
-            console.log(error);
-            setErrorMessage("Error Creating Pet");
-        });
+        } catch (e) {
+            setErrorMessage(e.message);
+        } 
     }
 
     return (
@@ -152,7 +159,10 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
           <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', width: '100%', alignItems: 'center' }}
           >
-              <DialogTitle>Add Pet</DialogTitle>      
+              <DialogTitle>Add Pet</DialogTitle>
+              {showErrors && (
+                <ErrorDisplay error={errorMessage} />
+              )}
               <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} />
           </DialogContent>
           <DialogContent

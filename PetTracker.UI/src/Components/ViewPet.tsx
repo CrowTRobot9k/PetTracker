@@ -19,6 +19,8 @@ import Chip from '@mui/material/Chip';
 import Pet from '../Types/SharedTypes';
 import usePetStore from '../Stores/PetStore';
 import dayjs, { Dayjs } from 'dayjs';
+import ErrorDisplay from '../Components/ErrorDisplay';
+
 
 interface viewPetProps {
     open: boolean;
@@ -35,6 +37,14 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [openBreeds, setOpenBreeds] = useState(false);
     const [editPet, setEditPet] = useState<Pet>({});
+
+    const getPetBreeds = usePetStore((state) => state.getPetBreeds);
+    const petBreeds = usePetStore((state) => state.petBreeds);
+
+    const {
+        errorMessage,
+        showErrors
+    } = usePetStore();
 
     useEffect(() => {
         const copy = {
@@ -66,9 +76,6 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
 
         setSelectedFiles(petPhotos);
     }, [viewPet]);
-
-    const getPetBreeds = usePetStore((state) => state.getPetBreeds);
-    const petBreeds = usePetStore((state) => state.petBreeds);
 
     useEffect(() => {
         if (editPet.petTypeId) {
@@ -119,7 +126,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
         setEditPet({ ...editPet, sex: e.target.value });
     };
 
-    const handleSavePetSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSavePetSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSuccessMessage("");
         setErrorMessage("");
@@ -143,23 +150,25 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
         editPetData.append("model.Sex", editPet.sex??'');
         editPetData.append("model.MedicalProblems", editPet.medicalProblems??'');
 
-        fetch("/api/Pet/UpdatePet", {
-            method: "POST",
-            body: editPetData,
-        }).then((data) => {
-            if (data.ok) {
+        try {
+            const response = await fetch("/api/Pet/UpdatePet", {
+                method: "POST",
+                body: editPetData,
+            });
+
+            if (!response.ok) {
+                throw new Error(await response.json());
+            }
+
+            if (response.status == 200) {
                 setSelectedFiles([]);
                 setReloadPets(!reloadPets);
                 setSuccessMessage("Pet Saved")
                 handleClose();
             }
-            else {
-                setErrorMessage("Error Saving Pet");
-            }
-        }).catch((error) => {
-            console.log(error);
-            setErrorMessage("Error Saving Pet");
-        });
+        } catch (e) {
+            setErrorMessage(e.message);
+        }  
     }
 
     return (
@@ -174,6 +183,9 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                     sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', width: '100%', alignItems: 'center' }}
                 >
                     <DialogTitle>View Pet</DialogTitle>
+                    {submitErrorMessage?.length > 0 && (
+                        <ErrorDisplay error={submitErrorMessage} />
+                    )}
                     <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} />
                 </DialogContent>
                 <DialogContent

@@ -28,7 +28,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpPost("CreateOwner")]
-        public async Task<bool> CreateOwner([FromForm] AddOwnerDto model)
+        public async Task<IActionResult> CreateOwner([FromForm] AddOwnerDto model)
 
         {
             try
@@ -37,15 +37,14 @@ namespace PetTracker.Server.Controllers
             }
             catch (Exception ex)
             {
-                HandleUIException(ex, model);
+                return new JsonResult(HandleUIException(ex, model));
             }
 
-            return true;
+            return new JsonResult(true);
         }
 
         [HttpPost("UpdateOwner")]
-        public async Task<bool> UpdateOwner([FromForm] AddOwnerDto model)
-
+        public async Task<IActionResult> UpdateOwner([FromForm] AddOwnerDto model)
         {
             try
             {
@@ -53,15 +52,14 @@ namespace PetTracker.Server.Controllers
             }
             catch (Exception ex)
             {
-                HandleUIException(ex, model);
+                return new JsonResult(HandleUIException(ex, model));
             }
 
-            return true;
+            return new JsonResult(true);
         }
 
         [HttpPost("AddExistingPetsToOwner")]
-        public async Task<bool> AddExistingPetsToOwner(AddExistingPetsToOwnerDto model)
-
+        public async Task<IActionResult> AddExistingPetsToOwner(AddExistingPetsToOwnerDto model)
         {
             try
             {
@@ -69,15 +67,14 @@ namespace PetTracker.Server.Controllers
             }
             catch (Exception ex)
             {
-                HandleUIException(ex, model);
+                return new JsonResult(HandleUIException(ex, model));
             }
 
-            return true;
+            return new JsonResult(true);
         }
 
         [HttpPost("RemoveExistingPetFromOwner")]
-        public async Task<bool> RemoveExistingPetFromOwner(AddExistingPetsToOwnerDto model)
-
+        public async Task<IActionResult> RemoveExistingPetFromOwner(AddExistingPetsToOwnerDto model)
         {
             try
             {
@@ -85,14 +82,14 @@ namespace PetTracker.Server.Controllers
             }
             catch (Exception ex)
             {
-                HandleUIException(ex, model);
+                return new JsonResult(HandleUIException(ex, model));
             }
 
-            return true;
+            return new JsonResult(true);
         }
 
         [HttpGet("GetStates")]
-        public async Task<List<USState>> GetStates()
+        public async Task<IActionResult> GetStates()
         {
             var ret = new List<USState>();
             try
@@ -101,10 +98,10 @@ namespace PetTracker.Server.Controllers
             }
             catch (Exception ex)
             {
-                HandleUIException(ex);
+                return new JsonResult(HandleUIException(ex));
             }
 
-            return ret;
+            return new JsonResult(ret);
         }
     }
 }

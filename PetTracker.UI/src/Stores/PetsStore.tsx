@@ -6,11 +6,16 @@ const usePetsStore = create((set) => ({
     pets: [],
     petTypes: [],
 
-    error: null,
+    errorMessage: null,
+    showErrors: false,
     getPets: async (ownerId?:number) => {
-        set({ loadingPets: true });
+        set({ showErrors: false, errorMessage: null, loadingPets: true });
         try {
-            const response = await fetch(`/api/Pet/GetPets?ownerId=${ownerId??''}`);
+            const response = await fetch(`/api/Pet/GetPets?ownerId=${ownerId ?? ''}`);
+            if (!response.ok) {
+                throw new Error(await response.json());
+            }
+
             if (response.status == 200) {
                 const data = await response.json();
                 set({
@@ -18,14 +23,18 @@ const usePetsStore = create((set) => ({
                     loadingPets: false,
                 });
             }
-        } catch (error) {
-            set({ error: "Failed to fetch Pet Types", loadingPets: false });
+        } catch (e) {
+            set({ showErrors: true, errorMessage: e.message, loadingPets: false });
         }
     },
     getPetTypes: async () => {
-        set({ loadingPetTypes: true });
+        set({ showErrors: false, errorMessage: null, loadingPetTypes: true });
         try {
             const response = await fetch("/api/Pet/GetPetTypes");
+            if (!response.ok) {
+                throw new Error(await response.json());
+            }
+
             if (response.status == 200) {
                 const data = await response.json();
                 set({
@@ -33,8 +42,8 @@ const usePetsStore = create((set) => ({
                     loadingPetTypes: false,
                 });
             }
-        } catch (error) {
-            set({ error: "Failed to fetch Pet Types", loadingPetTypes: false });
+        } catch (e) {
+            set({ showErrors: true, errorMessage: e.message, loadingPetTypes: false });
         }
     }
 }));

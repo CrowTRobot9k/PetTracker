@@ -6,26 +6,31 @@ const usePetStore = create((set) => ({
     petTypes: [],
     petBreeds: [],
 
-    error: null,
-    getPetTypes: async () => {
-        set({ loadingPetTypes: true });
-        try {
-            const response = await fetch("/api/Pet/GetPetTypes");
-            if (response.status == 200) {
-                const data = await response.json();
-                set({
-                    petTypes: data,
-                    loadingPetTypes: false,
-                });
-            }
-        } catch (error) {
-            set({ error: "Failed to fetch Pet Types", loadingPetTypes: false });
-        }
-    },
+    errorMessage: null,
+    showErrors: false,
+    //getPetTypes: async () => {
+    //    set({ loadingPetTypes: true });
+    //    try {
+    //        const response = await fetch("/api/Pet/GetPetTypes");
+    //        if (response.status == 200) {
+    //            const data = await response.json();
+    //            set({
+    //                petTypes: data,
+    //                loadingPetTypes: false,
+    //            });
+    //        }
+    //    } catch (error) {
+    //        set({ error: "Failed to fetch Pet Types", loadingPetTypes: false });
+    //    }
+    //},
     getPetBreeds: async (petTypeId: number) => {
-        set({ loadingPetBreeds: true });
+        set({ showErrors: false, errorMessage: null, loadingPetBreeds: true });
         try {
             const response = await fetch(`/api/Pet/GetPetBreeds?petTypeId=${petTypeId}`);
+            if (!response.ok) {
+                throw new Error(await response.json());
+            }
+
             if (response.status == 200) {
                 const data = await response.json();
                 set({
@@ -33,8 +38,8 @@ const usePetStore = create((set) => ({
                     loadingPetBreeds: false,
                 });
             }
-        } catch (error) {
-            set({ error: "Failed to fetch Pet Types", loadingPetBreeds: false });
+        } catch (e) {
+            set({ showErrors: true, errorMessage: e.message, loadingPetBreeds: false });
         }
     }
 }));
