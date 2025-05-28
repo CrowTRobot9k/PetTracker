@@ -1,0 +1,21 @@
+
+TODO:
+Set page width before loading
+Error handling
+Validate Pet Entry
+Validate Owner Entry
+Add Users UI?
+Delete Photos
+Search for Pets and Owners
+Appointment
+    add appointment
+    appointment=
+    {
+        user/groomer
+        owner
+        pet
+        date/time
+        notes
+    },
+    change appointment,
+    delete appointment,

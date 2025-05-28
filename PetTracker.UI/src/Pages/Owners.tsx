@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
-import CircularProgress from '@mui/material/CircularProgress';
 import AppTheme from '../Theme/AppTheme';
 import AppAppBar from '../Components/AppAppBar';
 import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
@@ -20,6 +18,8 @@ import AddIcon from '@mui/icons-material/Add';
 import AddOwner from '../Components/AddOwner';
 import ViewOwner from '../Components/ViewOwner';
 import { getImageUrlFromBlob } from '../Util/CommonFunctions'
+import LoadingPlaceholder from '../Components/LoadingPlaceholder.tsx';
+
 
 const SyledCardContent = styled(CardContent)({
     display: 'flex',
@@ -90,20 +90,7 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
                 <CssBaseline enableColorScheme />
                 <AppAppBar currentPage="owners" />
                 {loadingOwners && (
-                    <Container
-                        maxWidth="xl"
-                        component="main"
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            my: 2,
-                            gap: 4
-                        }}
-                    >
-                        <CircularProgress />
-                    </Container>
+                    <LoadingPlaceholder />
                 )}
                 <Container
                     maxWidth="xl"

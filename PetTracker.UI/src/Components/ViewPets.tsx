@@ -8,7 +8,7 @@ import AddPet from '../Components/AddPet';
 import AddExistingPet from '../Components/AddExistingPet';
 import ViewPet from '../Components/ViewPet.tsx';
 import Container from '@mui/material/Container';
-import CircularProgress from '@mui/material/CircularProgress';
+import LoadingPlaceholder from '../Components/LoadingPlaceholder.tsx';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { styled } from '@mui/material/styles';
@@ -130,20 +130,7 @@ export default function ViewPets(props: { ownerId?: number }) {
     return (
         <>
             {loadingPets && (
-                <Container
-                    maxWidth="xl"
-                    component="main"
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        my: 2,
-                        gap: 4
-                    }}
-                >
-                    <CircularProgress />
-                </Container>
+                <LoadingPlaceholder />
             )}
             <Container
                 maxWidth="xl"
