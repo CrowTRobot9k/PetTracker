@@ -97,7 +97,7 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
                     component="main"
                     sx={{
                         display: 'flex',
-                        flexDirection: 'column', my: 2, gap: 4,
+                        flexDirection: 'column', my: 2, gap: 2,
 
                     }}
                 >
@@ -112,7 +112,7 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
                         }}>
                             <Grid
                                 size={owners.length < 3 ? "grow" : 4}
-                                sx={{ height: '365px' }}
+                                sx={{ height: '350px' }}
                             >
                                 <Card
                                     //variant="outlined"
@@ -134,7 +134,7 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
                             {owners?.map(m =>
                                 <Grid
                                     size={owners.length < 3 ? "grow" : 4}
-                                    sx={{ height: '365px' }}
+                                    sx={{ height: '350px' }}
                                 >
                                     <Card
                                         variant="outlined"

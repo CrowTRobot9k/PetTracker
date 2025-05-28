@@ -11,6 +11,11 @@ const useOwnersStore = create((set) => ({
         set({ loadingOwners: true });
         try {
             const response = await fetch("/api/Owner/GetOwners");
+            if (!response.ok)
+            {
+                throw new Error(await response.text());
+            }
+
             if (response.status == 200) {
                 const data = await response.json();
                 set({
@@ -18,8 +23,8 @@ const useOwnersStore = create((set) => ({
                     loadingOwners: false,
                 });
             }
-        } catch (error) {
-            set({ error: "Failed to fetch Owners", loadingOwners: false });
+        } catch (e) {
+            set({ error: e, loadingOwners: false });
         }
     },
     getStates: async () => {

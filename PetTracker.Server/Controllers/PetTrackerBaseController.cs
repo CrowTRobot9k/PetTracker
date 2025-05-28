@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PetTracker.SqlDb.Models;
+using System.Net;
 using System.Runtime.CompilerServices;
+
 
 namespace PetTracker.Server.Controllers
 {
@@ -24,8 +26,13 @@ namespace PetTracker.Server.Controllers
                     "If the issue persists, please send a service ticket through our in application support system located at the bottom of the page. Thank you for your patience.";
         }
 
-        protected string HandleUIException(Exception ex = null, object context = null, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = 0)
+        protected string HandleUIException(Exception ex = null, object context = null, [CallerMemberName] string callerName = "", [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = 0, bool returnErrorStatus = true)
         {
+            if (returnErrorStatus)
+            {
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            }
+
             var showExceptions = false;
 
             var contextJson = JsonConvert.SerializeObject(context);

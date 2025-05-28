@@ -181,3 +181,6 @@ C:\Repositories\PetTracker\PetTracker.Server\obj\Debug\net9.0\refint\PetTracker.
 C:\Repositories\PetTracker\PetTracker.Server\obj\Debug\net9.0\PetTracker.Server.pdb
 C:\Repositories\PetTracker\PetTracker.Server\obj\Debug\net9.0\PetTracker.Server.genruntimeconfig.cache
 C:\Repositories\PetTracker\PetTracker.Server\obj\Debug\net9.0\ref\PetTracker.Server.dll
+C:\Repositories\PetTracker\PetTracker.Server\bin\Debug\net9.0\System.Net.Http.Formatting.dll
+C:\Repositories\PetTracker\PetTracker.Server\bin\Debug\net9.0\System.Web.Http.dll
+C:\Repositories\PetTracker\PetTracker.Server\bin\Debug\net9.0\Newtonsoft.Json.Bson.dll

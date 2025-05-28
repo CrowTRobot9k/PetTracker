@@ -8,17 +8,6 @@ import { Container } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-const useStyles = makeStyles({
-    calendar: {
-        '& .rbc-event': {
-            backgroundColor: '#3f51b5',
-            color: '#fff',
-        },
-        '& .rbc-selected': {
-            backgroundColor: '#757de8',
-        },
-    },
-});
 
 export default function AppointmentScheduler() {
 
@@ -26,7 +15,17 @@ export default function AppointmentScheduler() {
     const dayLayoutAlgorithm = 'no-overlap';
     const [myEvents, setEvents] = useState(events)
 
-    const classes = useStyles();
+    const schedulerStyles = makeStyles({
+        css: {
+            '& .rbc-event': {
+                backgroundColor: '#3f51b5',
+                color: '#fff',
+            },
+            '& .rbc-selected': {
+                backgroundColor: '#757de8',
+            },
+        },
+    });
 
     const handleSelectSlot = useCallback(
         ({ start, end }) => {
@@ -66,7 +65,7 @@ export default function AppointmentScheduler() {
                     selectable
                     style={{ height: 700 }}
                     scrollToTime={scrollToTime}
-                    className={classes.calendar}
+                    className={schedulerStyles.css}
                 />
         </Container>
     )
