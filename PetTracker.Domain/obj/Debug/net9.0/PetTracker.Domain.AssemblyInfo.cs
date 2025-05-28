@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PetTracker.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9f3ba7ce8e1910f9efa85fb8d3c6f67707433c1d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0871ec39e22d1cf213d08512574e69d0f4583f9b")]
 [assembly: System.Reflection.AssemblyProductAttribute("PetTracker.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PetTracker.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

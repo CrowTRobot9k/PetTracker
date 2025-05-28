@@ -6,6 +6,7 @@ import AppAppBar from '../Components/AppAppBar';
 import MainContent from '../Components/MainContent';
 import Latest from '../Components/Latest';
 import Footer from '../Components/Footer';
+import AppointmentScheduler from '../Components/AppointmentScheduler.tsx'
 import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
 
 
@@ -15,15 +16,7 @@ export default function Appointments(props: { disableCustomTheme?: boolean }) {
             <AppTheme {...props}>
                 <CssBaseline enableColorScheme />
                 <AppAppBar currentPage="appointments" />
-                <Container
-                    maxWidth="lg"
-                    component="main"
-                    sx={{ display: 'flex', flexDirection: 'column', my: 16, gap: 4 }}
-                >
-                    <MainContent />
-                    <Latest />
-                </Container>
-                <Footer />
+                    <AppointmentScheduler></AppointmentScheduler>
             </AppTheme>
         </AuthorizeView>
 

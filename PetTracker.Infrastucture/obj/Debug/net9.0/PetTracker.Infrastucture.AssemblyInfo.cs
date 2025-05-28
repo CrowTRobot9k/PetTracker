@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PetTracker.Infrastucture")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1f7bd8d67347008da51816344179ec7312405cc6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0871ec39e22d1cf213d08512574e69d0f4583f9b")]
 [assembly: System.Reflection.AssemblyProductAttribute("PetTracker.Infrastucture")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PetTracker.Infrastucture")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

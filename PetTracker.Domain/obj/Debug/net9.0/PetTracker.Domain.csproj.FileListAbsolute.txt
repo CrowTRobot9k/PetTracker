@@ -1,4 +1,5 @@
 C:\Repositories\PetTracker\PetTracker.Domain\bin\Debug\net9.0\PetTracker.Domain.deps.json
+C:\Repositories\PetTracker\PetTracker.Domain\bin\Debug\net9.0\PetTracker.Domain.runtimeconfig.json
 C:\Repositories\PetTracker\PetTracker.Domain\bin\Debug\net9.0\PetTracker.Domain.dll
 C:\Repositories\PetTracker\PetTracker.Domain\bin\Debug\net9.0\PetTracker.Domain.pdb
 C:\Repositories\PetTracker\PetTracker.Domain\obj\Debug\net9.0\PetTracker.Domain.csproj.AssemblyReference.cache
@@ -10,6 +11,5 @@ C:\Repositories\PetTracker\PetTracker.Domain\obj\Debug\net9.0\PetTracker.Domain.
 C:\Repositories\PetTracker\PetTracker.Domain\obj\Debug\net9.0\PetTracker.Domain.dll
 C:\Repositories\PetTracker\PetTracker.Domain\obj\Debug\net9.0\refint\PetTracker.Domain.dll
 C:\Repositories\PetTracker\PetTracker.Domain\obj\Debug\net9.0\PetTracker.Domain.pdb
-C:\Repositories\PetTracker\PetTracker.Domain\obj\Debug\net9.0\ref\PetTracker.Domain.dll
-C:\Repositories\PetTracker\PetTracker.Domain\bin\Debug\net9.0\PetTracker.Domain.runtimeconfig.json
 C:\Repositories\PetTracker\PetTracker.Domain\obj\Debug\net9.0\PetTracker.Domain.genruntimeconfig.cache
+C:\Repositories\PetTracker\PetTracker.Domain\obj\Debug\net9.0\ref\PetTracker.Domain.dll
