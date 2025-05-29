@@ -21,6 +21,7 @@ import { getImageUrlFromBlob } from '../Util/CommonFunctions'
 import usePetsStore from '../Stores/PetsStore.tsx';
 import ConfirmDialog from './ConfirmDialog.tsx';
 import ErrorDisplay from '../Components/ErrorDisplay';
+import { useSearch } from '../Components/SearchProvider';
 
 import { Pet } from '../Types/SharedTypes.tsx';
 
@@ -44,6 +45,9 @@ export default function ViewPets(props: { ownerId?: number }) {
     const [reloadPets, setReloadPets] = React.useState(false);
     const [openConfirm, setOpenConfirm] = React.useState(false);
     const [submitErrorMessage, setSubmitErrorMessage] = React.useState('');
+    const { searchTerm } = useSearch();
+
+
 
     useEffect(() => {
         getPets(props.ownerId);
@@ -195,7 +199,11 @@ export default function ViewPets(props: { ownerId?: number }) {
                             </Grid>
                             <AddPet open={open} handleClose={handleClose} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} ownerId={props.ownerId} />
                             <AddExistingPet open={openAddExistingPet} handleClose={handleCloseAddExisting} reloadPets={reloadPets} setReloadPets={setReloadPets} ownerId={props.ownerId} />
-                            {pets?.map(m =>
+                            {pets?.filter(f => (
+                                (searchTerm ?? '') == '' ||
+                                ((f.name).toLowerCase().indexOf(searchTerm?.toLowerCase()) > -1) ||
+                                (f.breedTypes.some(s => s.name.toLowerCase().indexOf(searchTerm?.toLowerCase()) > -1))
+                            )).map(m =>
                                 <Grid size={pets.length < 3 ? "grow" : 4}
                                     sx={{ height: '365px' }}
                                 >

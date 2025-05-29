@@ -134,12 +134,15 @@ export default function ViewOwners() {
                                             }}
                                         >
                                             <Button onClick={handleClickOpen} variant="contained" color="info" endIcon={<AddIcon />}>
-                                                Add Owner {searchTerm}
+                                                Add Owner
                                             </Button>
                                         </Card>
                                     </Grid>
                                     <AddOwner open={open} handleClose={handleClose} ownerStates={states} reloadOwners={reloadOwners} setReloadOwners={setReloadOwners} />
-                                    {owners?.map(m =>
+                            {owners?.filter(f => (
+                                (searchTerm ?? '') == '' ||
+                                ((f.firstName + " " + f.lastName).toLowerCase().indexOf(searchTerm?.toLowerCase()) > -1)
+                            )).map(m =>
                                         <Grid
                                             size={owners.length < 3 ? "grow" : 4}
                                             sx={{ height: '350px' }}
