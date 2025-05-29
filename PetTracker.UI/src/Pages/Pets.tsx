@@ -3,15 +3,19 @@ import AppTheme from '../Theme/AppTheme';
 import AppAppBar from '../Components/AppAppBar';
 import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
 import ViewPets from '../Components/ViewPets';
+import SearchProvider from '../Components/SearchProvider.tsx';
+
 export default function Pets(props: { disableCustomTheme?: boolean }) {
 
     return (
        /* <AuthorizeView>*/
         <AppTheme {...props}>
             <CssBaseline enableColorScheme />
-            <AppAppBar currentPage="pets" />
-            <ViewPets/>
-            </AppTheme>
+            <SearchProvider>
+                <AppAppBar currentPage="pets" />
+                <ViewPets />
+            </SearchProvider>
+        </AppTheme>
        /* </AuthorizeView>*/
     );
 }

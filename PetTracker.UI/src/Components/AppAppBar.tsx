@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { alpha, styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
@@ -11,14 +11,14 @@ import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import ColorModeIconDropdown from '../Theme/ColorModeIconDropdown';
-import Sitemark from './SitemarkIcon';
 import { useNavigate } from "react-router";
+import OutlinedInput from '@mui/material/OutlinedInput';
+import { useSearch } from '../Components/SearchProvider';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'space-between',
+  justifyContent: 'space-evenly',
   flexShrink: 0,
   borderRadius: `calc(${theme.shape.borderRadius}px + 8px)`,
   backdropFilter: 'blur(24px)',
@@ -28,13 +28,18 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     ? `rgba(${theme.vars.palette.background.defaultChannel} / 0.4)`
     : alpha(theme.palette.background.default, 0.4),
   boxShadow: (theme.vars || theme).shadows[1],
-  padding: '8px 12px',
+    padding: '8px 12px',
 }));
 
-export default function AppAppBar({currentPage})
+export default function AppAppBar(props: { currentPage:string})
 {
     const [open, setOpen] = React.useState(false);
     const navigate = useNavigate();
+    const { searchTerm, setSearchTerm } = useSearch();
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
 
     const toggleDrawer = (newOpen: boolean) => () => {
       setOpen(newOpen);
@@ -60,8 +65,9 @@ export default function AppAppBar({currentPage})
         })
     }
 
-  return (
-      <AppBar
+    return (
+        <>
+        <AppBar
           position="static"
           enableColorOnDark
           sx={{
@@ -71,26 +77,42 @@ export default function AppAppBar({currentPage})
             mt: 'calc(var(--template-frame-height, 0px) + 28px)',
           }}
       >
-
       <Container maxWidth="xl">
         <img src="../src/assets/PetTrackerLogoWide.png" width="400" height="120" />
-        <StyledToolbar variant="dense" disableGutters>
-          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
-              <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Button onClick={() => navigate('/owners')} variant={currentPage == "owners" ?"contained": "text"} color="info" size="small">
-                Owners
-              </Button>
-              <Button onClick={() => navigate('/pets')} variant={currentPage == "pets" ? "contained" : "text"} color="info" size="small">
-                Pets
-              </Button>
-              <Button onClick={() => navigate('/appointments')} variant={currentPage == "appointments" ? "contained" : "text"} color="info" size="small">
-                Appointments
-              </Button>
-              {/*<Button onClick={() => navigate('/blog')} variant={currentPage == "blog" ? "contained" : "text"} color="info" size="small">*/}
-              {/*    Blog*/}
-              {/*</Button>*/}
+          <StyledToolbar variant="dense" disableGutters>
+            <Box sx={{ display: 'flex', px: 0, mx: 2 }}>
+                  <Box sx={{ mx: 2, display: { xs: 'none', md: 'flex' } }}>
+                      <Button onClick={() => navigate('/owners')} variant={props.currentPage == "owners" ? "contained" : "text"} color="info" size="small">
+                          Owners
+                      </Button>
+                      <Button onClick={() => navigate('/pets')} variant={props.currentPage == "pets" ? "contained" : "text"} color="info" size="small">
+                          Pets
+                      </Button>
+                      <Button onClick={() => navigate('/appointments')} variant={props.currentPage == "appointments" ? "contained" : "text"} color="info" size="small">
+                          Appointments
+                      </Button>
+                      {/*<Button onClick={() => navigate('/blog')} variant={currentPage == "blog" ? "contained" : "text"} color="info" size="small">*/}
+                      {/*    Blog*/}
+                      {/*</Button>*/}
+                  </Box>
+                  <Box
+                      sx={{
+                          display: { xs: 'none', md: 'flex' },
+                          mx: 2,
+                          alignItems: 'center',
+                      }}
+                  >
+                      <OutlinedInput
+                              autoFocus
+                              margin="dense"
+                              placeholder="Search"
+                              type="text"
+                              sx={{ width: "1000px" }}
+                              value={searchTerm}
+                              onChange={handleSearchChange}
+                      />
+                  </Box>
             </Box>
-          </Box>
           <Box
             sx={{
               display: { xs: 'none', md: 'flex' },
@@ -101,10 +123,18 @@ export default function AppAppBar({currentPage})
             <Button onClick={navLogout} color="primary" variant="contained" size="small">
                 Logout
             </Button>
-          {/*  <ColorModeIconDropdown />*/}
+{/*            <ColorModeIconDropdown />*/}
           </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
+          <Box sx={{ width:1, display: { xs: 'flex', md: 'none' }, gap: 1 }}>
             {/*<ColorModeIconDropdown size="medium" />*/}
+
+            <OutlinedInput
+                autoFocus
+                margin="dense"
+                placeholder="Search"
+                type="text"
+                sx={{width:"100%"}}
+            />
             <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
               <MenuIcon />
             </IconButton>
@@ -144,6 +174,7 @@ export default function AppAppBar({currentPage})
           </Box>
         </StyledToolbar>
       </Container>
-    </AppBar>
+            </AppBar>
+        </>
   );
 }
