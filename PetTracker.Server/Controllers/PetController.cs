@@ -9,7 +9,7 @@ namespace PetTracker.Server.Controllers
 {
     public class PetController : PetTrackerBaseController
     {
-        private readonly PetService _PetService;
+        private readonly IPetService _PetService;
 
         public PetController(ILogger<PetController> logger, IPtDbContext dbContext) : base(logger,dbContext)
         {

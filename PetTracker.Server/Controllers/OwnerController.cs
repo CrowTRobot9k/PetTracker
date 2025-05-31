@@ -7,7 +7,7 @@ namespace PetTracker.Server.Controllers
 {
     public class OwnerController : PetTrackerBaseController
     {
-        private readonly OwnerService _OwnerService;
+        private readonly IOwnerService _OwnerService;
         public OwnerController(ILogger<OwnerController> logger, IPtDbContext dbContext) : base(logger, dbContext)
         {
             _OwnerService = new OwnerService(logger, dbContext);

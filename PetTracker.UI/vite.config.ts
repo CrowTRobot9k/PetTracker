@@ -133,6 +133,11 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            //appointment
+            '^/api/Appointment/GetAppointments': {
+                target,
+                secure: false
+            },
         },
         port: parseInt(env.DEV_SERVER_PORT || '50449'),
         https: {

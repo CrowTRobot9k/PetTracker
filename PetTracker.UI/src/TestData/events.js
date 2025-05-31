@@ -134,9 +134,9 @@ export default [
   {
     id: 15,
     title: 'Point in Time Event',
-    start: now,
-    end: now,
-  },
+      start: new Date(2025, 4, 29, 5, 0, 0),
+      end: new Date(2025, 4, 29, 6, 0, 0),
+    },
   {
     id: 16,
     title: 'Video Record',

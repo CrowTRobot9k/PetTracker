@@ -1,4 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep';
+import moment from 'moment';
 
 export const deepClone = (obj) =>
 {
@@ -8,4 +9,21 @@ export const deepClone = (obj) =>
 
 export const getImageUrlFromBlob = (base64String: string) => {
     return `data:image/png;base64,${base64String}`;
+}
+
+function isValidDateTime(dateTimeString:string) {
+    const momentObj = moment(dateTimeString,"YYYY-MM-DDTHH:mm:ss",true);
+    return momentObj.isValid();
+}
+
+export const convertDates = (obj:any) => {
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            if (typeof obj[key] === 'string' && isValidDateTime(obj[key])) {
+                obj[key] = new Date(obj[key]);
+            } else if (typeof obj[key] === 'object') {
+                convertDates(obj[key]);
+            }
+        }
+    }
 }

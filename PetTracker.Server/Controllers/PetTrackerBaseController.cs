@@ -50,5 +50,13 @@ namespace PetTracker.Server.Controllers
 
             return defaultErrorMessage;
         }
+
+        [NonAction]
+        public ActionResult NewtonsoftJson(object obj)
+        {
+            var json = JsonConvert.SerializeObject(obj);
+
+            return Content(json, "application/json");
+        }
     }
 }
