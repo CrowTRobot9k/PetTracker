@@ -7,6 +7,7 @@ export default interface Owner {
     userId: number;
     firstName: string;
     lastName: string;
+    fullName: string;
     address: string;
     city: string;
     state: string;
@@ -30,4 +31,16 @@ export default interface Pet {
     weight: string;
     sex: string;
     medicalProblems?: string;
+}
+
+export default interface Appointment {
+    id: number;
+    ownerId: number;
+    owner: string;
+    petId: number;
+    petName: string;
+    start: Date;
+    end: Date;
+    title: string;
+    description?: string;
 }

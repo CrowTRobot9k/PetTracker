@@ -27,6 +27,20 @@ namespace PetTracker.Server.Controllers
             }
         }
 
+        [HttpGet("GetOwnerList")]
+        public async Task<IActionResult> GetOwnerList()
+        {
+            try
+            {
+                var result = await _OwnerService.GetOwnerList();
+                return new JsonResult(result);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(HandleUIException(ex));
+            }
+        }
+
         [HttpPost("CreateOwner")]
         public async Task<IActionResult> CreateOwner([FromForm] AddOwnerDto model)
 

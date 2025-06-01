@@ -162,6 +162,9 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
               <DialogTitle>Add Pet</DialogTitle>
               {showErrors && (
                 <ErrorDisplay error={errorMessage} />
+                    )}
+              {submitErrorMessage?.length > 0 && (
+                  <ErrorDisplay error={submitErrorMessage} />
               )}
               <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} />
           </DialogContent>
@@ -339,16 +342,6 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
             <Button onClick={handleClose}>Cancel</Button>
             <Button variant="contained" color="info" type="submit">Add Pet</Button>
           </DialogActions>
-          {/*{submitSuccessMessage?.length > 0 && (*/}
-          {/*    <Alert variant="filled" severity="success">*/}
-          {/*        {submitSuccessMessage}*/}
-          {/*    </Alert>*/}
-          {/*)}*/}
-          {submitErrorMessage?.length > 0 && (
-              <Alert variant="filled" severity="error">
-                  {submitErrorMessage}
-              </Alert>
-          )}
           </form>
         </Dialog>
     );

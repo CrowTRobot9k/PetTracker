@@ -84,6 +84,10 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            '^/api/Pet/GetPetList': {
+                target,
+                secure: false
+            },
             '^/api/Pet/GetPet': {
                 target,
                 secure: false
@@ -122,6 +126,10 @@ export default defineConfig({
                 secure: false
             },
             '^/api/Owner/GetOwners': {
+                target,
+                secure: false
+            },
+            '^/api/Owner/GetOwnerList': {
                 target,
                 secure: false
             },

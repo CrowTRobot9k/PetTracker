@@ -27,24 +27,24 @@ namespace PetTracker.Server.Controllers
                 {
                     new AppointmentDto()
                     {
-                        Id = 1,
-                        Title = "Test Appointment 1",
-                        StartDate = new DateTime(cd.Year,cd.Month,cd.AddDays(-2).Day,cd.AddHours(-1).Hour,cd.Minute,cd.Second),
-                        EndDate = new DateTime(cd.Year,cd.Month,cd.AddDays(-2).Day,cd.Hour,cd.Minute,cd.Second)
+                        id = 1,
+                        title = "Test Appointment 1",
+                        start = new DateTime(cd.Year,cd.Month,cd.AddDays(-2).Day,cd.AddHours(-1).Hour,cd.Minute,cd.Second),
+                        end = new DateTime(cd.Year,cd.Month,cd.AddDays(-2).Day,cd.Hour,cd.Minute,cd.Second)
                     },
                     new AppointmentDto()
                     {
-                        Id = 2,
-                        Title = "Test Appointment 2",
-                        StartDate = new DateTime(cd.Year,cd.Month,cd.AddDays(-1).Day,cd.AddHours(-1).Hour,cd.Minute,cd.Second),
-                        EndDate = new DateTime(cd.Year,cd.Month,cd.AddDays(-1).Day,cd.Hour,cd.Minute,cd.Second)
+                        id = 2,
+                        title = "Test Appointment 2",
+                        start = new DateTime(cd.Year,cd.Month,cd.AddDays(-1).Day,cd.AddHours(-1).Hour,cd.Minute,cd.Second),
+                        end = new DateTime(cd.Year,cd.Month,cd.AddDays(-1).Day,cd.Hour,cd.Minute,cd.Second)
                     },
                     new AppointmentDto()
                     {
-                        Id=3,
-                        Title = "Test Appointment 3",
-                        StartDate = new DateTime(cd.Year,cd.Month,cd.Day,cd.AddHours(-1).Hour,cd.Minute,cd.Second),
-                        EndDate = new DateTime(cd.Year,cd.Month,cd.Day,cd.Hour,cd.Minute,cd.Second)
+                        id=3,
+                        title = "Test Appointment 3",
+                        start = new DateTime(cd.Year,cd.Month,cd.Day,cd.AddHours(-1).Hour,cd.Minute,cd.Second),
+                        end = new DateTime(cd.Year,cd.Month,cd.Day,cd.Hour,cd.Minute,cd.Second)
                     },
                 };
                 //var result = await _AppointmentService.GetOwners();

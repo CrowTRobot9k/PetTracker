@@ -29,6 +29,20 @@ namespace PetTracker.Server.Controllers
             }
         }
 
+        [HttpGet("GetPetList")]
+        public async Task<IActionResult> GetPetList(int? ownerId)
+        {
+            try
+            {
+                var result = await _PetService.GetPetList(ownerId);
+                return new JsonResult(result);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(HandleUIException(ex, ownerId));
+            }
+        }
+
         [HttpGet("GetPet")]
         public async Task<string> GetPet()
         {

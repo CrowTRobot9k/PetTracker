@@ -10,31 +10,31 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import useAppointmentsStore from '../Stores/AppointmentsStore'
 import LoadingPlaceholder from '../Components/LoadingPlaceholder.tsx';
 import ErrorDisplay from '../Components/ErrorDisplay.tsx';
+import { convertDates } from '../Util/CommonFunctions'
 
 export default function AppointmentScheduler() {
 
     const localizer = new momentLocalizer(moment);
     const dayLayoutAlgorithm = 'no-overlap';
-    const events1 = [
-        {
-            id: 27,
-            title: 'DST starts on this day (Europe)',
-            start: new Date(2025, 5, 30, 12, 0, 0),
-            end: new Date(2025, 5, 30, 13, 0, 0),
-        },
-    ];
-    const [myEvents, setEvents] = useState(events)
 
     const getAppointments = useAppointmentsStore((state) => state.getAppointments);
+    const getOwnerList = useAppointmentsStore((state) => state.getOwnerList);
+
     const {
         appointments,
         loadingAppointments,
+        loadingOwners,
+        owners,
         errorMessage,
         showErrors
     } = useAppointmentsStore();
 
     useEffect(() => {
         getAppointments();
+    }, []);
+
+    useEffect(() => {
+        getOwnerList();
     }, []);
 
     const schedulerStyles = makeStyles({
@@ -51,12 +51,12 @@ export default function AppointmentScheduler() {
 
     const handleSelectSlot = useCallback(
         ({ start, end }) => {
-            const title = window.prompt('New Event Name')
-            if (title) {
-                setEvents((prev) => [...prev, { start, end, title }])
-            }
+            //const title = window.prompt('New Event Name')
+            //if (title) {
+            //    setEvents((prev) => [...prev, { start, end, title }])
+            //}
         },
-        [setEvents]
+        []
     )
 
     const handleSelectEvent = useCallback(
@@ -89,7 +89,7 @@ export default function AppointmentScheduler() {
                         dayLayoutAlgorithm={dayLayoutAlgorithm}
                         defaultDate={defaultDate}
                         defaultView={Views.WEEK}
-                        events={myEvents}
+                        events={appointments}
                         localizer={localizer}
                         onSelectEvent={handleSelectEvent}
                         onSelectSlot={handleSelectSlot}

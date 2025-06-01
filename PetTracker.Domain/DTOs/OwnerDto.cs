@@ -33,6 +33,7 @@ namespace PetTracker.Domain.DTOs
         public string? UserId { get; set; }
         public string? FirstName { get; set; } = null!;
         public string? LastName { get; set; } = null!;
+        public string? FullName => $"{FirstName} {LastName}"?.Trim();
         public string? Address { get; set; }
         public string? City { get; set; } 
         public string? State { get; set; } 

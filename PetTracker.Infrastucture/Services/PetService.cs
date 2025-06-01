@@ -130,6 +130,12 @@ namespace PetTracker.Infrastucture.Services
             return results.Select(s => new GetPetDto(s)).ToList();
         }
 
+        public async Task<List<PetDto>> GetPetList(int? ownerId = null)
+        {
+            var results = await _dbContext.Pets.Where(w => ownerId == null || w.OwnerId == ownerId).ToListAsync();
+            return results.Select(s => new PetDto(s)).ToList();
+        }
+
         public async Task<List<PetTypeDto>> GetPetTypes()
         {
             try

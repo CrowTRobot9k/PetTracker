@@ -8,13 +8,13 @@ namespace PetTracker.Domain.DTOs
 {
     public class AppointmentDto
     {
-        public int Id { get; set; }
-        public int? UserId {get;set;}
-        public int? OwnerId { get; set; }
-        public int? PetId { get; set; }
-        public string? Title { get; set; }
-        public string? Description { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public int id { get; set; }
+        public int? userId {get;set;}
+        public int? ownerId { get; set; }
+        public int? petId { get; set; }
+        public string? title { get; set; }
+        public string? description { get; set; }
+        public DateTime start { get; set; }
+        public DateTime end { get; set; }
     }
 }

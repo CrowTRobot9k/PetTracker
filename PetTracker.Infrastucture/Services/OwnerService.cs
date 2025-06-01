@@ -108,6 +108,19 @@ namespace PetTracker.Infrastucture.Services
             return results.Select(s => new GetOwnerDto(s)).ToList();
         }
 
+        public async Task<List<OwnerDto>> GetOwnerList(int? companyId = null)
+        {
+            var results = await _dbContext.Owners
+                .Where(w => companyId == null || (w.User != null && w.User.CompanyId == companyId))
+                .ToListAsync();
+            if (results == null || !results.Any())
+            {
+                return new List<OwnerDto>();
+            }
+
+            return results.Select(s => new OwnerDto(s)).ToList();
+        }
+
         public async Task<bool> AddExistingPetsToOwner(AddExistingPetsToOwnerDto model)
         { 
             var existingPets = _dbContext.Pets

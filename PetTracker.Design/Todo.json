@@ -1,10 +1,5 @@
 
 TODO:
-Search for Pets and Owners
-Validate Pet Entry
-Validate Owner Entry
-Add Users UI?
-Delete Photos
 Appointment
     add appointment
     appointment=
@@ -17,3 +12,8 @@ Appointment
     },
     change appointment,
     delete appointment,
+Search for Pets and Owners
+Validate Pet Entry
+Validate Owner Entry
+Manage Users UI?
+Delete Photos
