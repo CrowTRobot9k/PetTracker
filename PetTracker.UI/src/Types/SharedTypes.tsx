@@ -1,3 +1,5 @@
+import dayjs, { Dayjs } from 'dayjs';
+
 export default interface User {
     email: string;
 }
@@ -39,8 +41,8 @@ export default interface Appointment {
     owner: string;
     petId: number;
     petName: string;
-    start: Date;
-    end: Date;
+    start: Dayjs,
+    end: Dayjs,
     title: string;
     description?: string;
 }

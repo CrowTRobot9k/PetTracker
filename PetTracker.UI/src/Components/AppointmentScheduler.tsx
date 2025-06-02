@@ -11,7 +11,7 @@ import useAppointmentsStore from '../Stores/AppointmentsStore'
 import LoadingPlaceholder from '../Components/LoadingPlaceholder.tsx';
 import ErrorDisplay from '../Components/ErrorDisplay.tsx';
 import { convertDates } from '../Util/CommonFunctions'
-
+import AddAppointment from '../Components/AddAppointment.tsx';
 export default function AppointmentScheduler() {
 
     const localizer = new momentLocalizer(moment);
@@ -29,6 +29,11 @@ export default function AppointmentScheduler() {
         showErrors
     } = useAppointmentsStore();
 
+    const [openAddAppt, setOpenAddAppt] = React.useState(false);
+    const [reloadAppts, setReloadAppts] = React.useState(false);
+    const [apptStart, setApptStart] = useState(new Date());
+    const [apptEnd, setApptEnd] = useState(new Date());
+
     useEffect(() => {
         getAppointments();
     }, []);
@@ -36,6 +41,10 @@ export default function AppointmentScheduler() {
     useEffect(() => {
         getOwnerList();
     }, []);
+
+    const handleCloseAddAppt = () => {
+        setOpenAddAppt(false);
+    };
 
     const schedulerStyles = makeStyles({
         css: {
@@ -50,7 +59,11 @@ export default function AppointmentScheduler() {
     });
 
     const handleSelectSlot = useCallback(
-        ({ start, end }) => {
+        ({ start, end }) =>
+        {
+            setOpenAddAppt(true);
+            setApptStart(start);
+            setApptEnd(end);
             //const title = window.prompt('New Event Name')
             //if (title) {
             //    setEvents((prev) => [...prev, { start, end, title }])
@@ -98,7 +111,9 @@ export default function AppointmentScheduler() {
                         scrollToTime={scrollToTime}
                         //className={schedulerStyles.css}
                     />
+                    <AddAppointment open={openAddAppt} handleClose={handleCloseAddAppt} reloadAppointments={reloadAppts} setReloadAppointments={setReloadAppts} startDate={apptStart} endDate={apptEnd} owners={owners} />
                 </Container>
+
             )}
         </>
     )

@@ -21,31 +21,39 @@ namespace PetTracker.Server.Controllers
             try
             {
                 var cd = DateTime.Now;
-                //var test1 = new DateTime(cd.Year, cd.Month, cd.AddDays(-2).Date.Day, cd.AddHours(-1).Hour, cd.Minute, cd.Second);
+                var d1 = cd.AddDays(-2);
+                var d2 = cd.AddDays(-1);
+                var d3 = cd;
+
+                var appt1 = new AppointmentDto()
+                {
+                    id = 1,
+                    title = "Test Appointment 1",
+                    start = new DateTime(d1.Year, d1.Month, d1.Day, d1.AddHours(-1).Hour, d1.Minute, d1.Second),
+                    end = new DateTime(d1.Year, d1.Month, d1.Day, d1.Hour, d1.Minute, d1.Second)
+                };
+
+                var appt2 = new AppointmentDto()
+                {
+                    id = 2,
+                    title = "Test Appointment 2",
+                    start = new DateTime(d2.Year, d2.Month, d2.Day, d2.AddHours(-1).Hour, d2.Minute, d2.Second),
+                    end = new DateTime(d2.Year, d2.Month, d2.Day, d2.Hour, d2.Minute, d2.Second)
+                };
+
+                var appt3 = new AppointmentDto()
+                {
+                    id = 3,
+                    title = "Test Appointment 3",
+                    start = new DateTime(d3.Year, d3.Month, cd.Day, d3.AddHours(-1).Hour, d3.Minute, d3.Second),
+                    end = new DateTime(d3.Year, d3.Month, d3.Day, d3.Hour, d3.Minute, d3.Second)
+                };
 
                 var test = new List<AppointmentDto>()
                 {
-                    new AppointmentDto()
-                    {
-                        id = 1,
-                        title = "Test Appointment 1",
-                        start = new DateTime(cd.Year,cd.Month,cd.AddDays(-2).Day,cd.AddHours(-1).Hour,cd.Minute,cd.Second),
-                        end = new DateTime(cd.Year,cd.Month,cd.AddDays(-2).Day,cd.Hour,cd.Minute,cd.Second)
-                    },
-                    new AppointmentDto()
-                    {
-                        id = 2,
-                        title = "Test Appointment 2",
-                        start = new DateTime(cd.Year,cd.Month,cd.AddDays(-1).Day,cd.AddHours(-1).Hour,cd.Minute,cd.Second),
-                        end = new DateTime(cd.Year,cd.Month,cd.AddDays(-1).Day,cd.Hour,cd.Minute,cd.Second)
-                    },
-                    new AppointmentDto()
-                    {
-                        id=3,
-                        title = "Test Appointment 3",
-                        start = new DateTime(cd.Year,cd.Month,cd.Day,cd.AddHours(-1).Hour,cd.Minute,cd.Second),
-                        end = new DateTime(cd.Year,cd.Month,cd.Day,cd.Hour,cd.Minute,cd.Second)
-                    },
+                    appt1,
+                    appt2,
+                    appt3
                 };
                 //var result = await _AppointmentService.GetOwners();
                 return NewtonsoftJson(test);

@@ -13,8 +13,9 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import ErrorDisplay from '../Components/ErrorDisplay';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import useOwnerStore from '../Stores/OwnerStore';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import useAppointmentStore from '../Stores/AppointmentStore';
+import dayjs, { Dayjs } from 'dayjs';
 
 
 interface AddAppointmentProps {
@@ -30,20 +31,25 @@ interface AddAppointmentProps {
 export default function AddAppointment({ open, handleClose, reloadAppointments, setReloadAppointments, startDate, endDate, owners }: AddAppointmentProps) {
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
+    const [start, setStart] = React.useState<Dayjs>(dayjs());
+    const [end, setEnd] = React.useState<Dayjs>(dayjs());
     const [addAppointment, setAddAppointment] = useState<Appointment>(
         {
-            start: startDate,
-            end: endDate,
         });
     const [openPets, setOpenPets] = useState(false);
 
-    const getPetList = useOwnerStore((state) => state.getPetList);
+    const getPetList = useAppointmentStore((state) => state.getPetList);
     const {
         pets,
         loadingPets,
         errorMessage,
         showErrors
-    } = useOwnerStore();
+    } = useAppointmentStore();
+
+    useEffect(() => {
+        setStart(dayjs(startDate));
+        setEnd(dayjs(endDate));
+    }, [startDate,endDate]);
 
     useEffect(() => {
         if (addAppointment.ownerId) {
@@ -76,8 +82,12 @@ export default function AddAppointment({ open, handleClose, reloadAppointments, 
         setOpenPets(false);
     };
 
-    const handleChangeDate = (e) => {
-        setAddAppointment({ ...addAppointment, birthDate: e });
+    const handleChangeStartDate = (e) => {
+        setStart(e);
+    };
+
+    const handleChangeEndDate = (e) => {
+        setEnd(e);
     };
 
     const handleAddAppointmentSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -108,43 +118,47 @@ export default function AddAppointment({ open, handleClose, reloadAppointments, 
                     )}
                 </DialogContent>
                 <DialogContent
-                    sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width: '100%' }}
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', flex: 1, pb:1 }}
+                >
+                    <DialogContentText>
+                        Title
+                    </DialogContentText>
+                    <OutlinedInput
+                        required
+                        margin="dense"
+                        id="appointmentTitle"
+                        name="color"
+                        label="Title"
+                        placeholder="Title"
+                        type="text"
+                        fullWidth
+                        value={addAppointment.title}
+                        onChange={handleChange}
+                    />
+                    <DialogContentText>
+                        Description
+                    </DialogContentText>
+                    <OutlinedInput
+                        required
+                        margin="dense"
+                        id="appointmentDescription"
+                        name="appointmentDescription"
+                        label="Appointment Description"
+                        placeholder="Description"
+                        type="textArea"
+                        multiline
+                        minRows="3"
+                        fullWidth
+                        value={addAppointment.description}
+                        onChange={handleChange}
+                    />
+                </DialogContent>
+                <DialogContent
+                    sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width: '100%', px:0 }}
                 >
                     <DialogContent
                         sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', flex: 1 }}
                     >
-                        <DialogContentText>
-                            Title
-                        </DialogContentText>
-                        <OutlinedInput
-                            //required
-                            margin="dense"
-                            id="appointmentTitle"
-                            name="color"
-                            label="Title"
-                            placeholder="Title"
-                            type="text"
-                            fullWidth
-                            value={addAppointment.title}
-                            onChange={handleChange}
-                        />
-                        <DialogContentText>
-                            Description
-                        </DialogContentText>
-                        <OutlinedInput
-                            //required
-                            margin="dense"
-                            id="appointmentDescription"
-                            name="appointmentDescription"
-                            label="Appointment Description"
-                            placeholder="Description"
-                            type="textArea"
-                            multiline
-                            minRows="3"
-                            fullWidth
-                            value={addAppointment.description}
-                            onChange={handleChange}
-                        />
                         <DialogContentText>
                             Owner
                         </DialogContentText>
@@ -210,10 +224,10 @@ export default function AddAppointment({ open, handleClose, reloadAppointments, 
                             Start Date
                         </DialogContentText>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                                name="birthDate"
-                                value={addAppointment.start}
-                                onChange={handleChangeDate}
+                            <DateTimePicker
+                                name="apptStart"
+                                value={start}
+                                onChange={handleChangeStartDate}
                                 slotProps={{ textField: { size: 'small' } }}
                             />
                         </LocalizationProvider>
@@ -221,10 +235,10 @@ export default function AddAppointment({ open, handleClose, reloadAppointments, 
                             End Date
                         </DialogContentText>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                                name="birthDate"
-                                value={addAppointment.end}
-                                onChange={handleChangeDate}
+                            <DateTimePicker
+                                name="apptEnd"
+                                value={end}
+                                onChange={handleChangeEndDate}
                                 slotProps={{ textField: { size: 'small' } }}
                             />
                         </LocalizationProvider>
