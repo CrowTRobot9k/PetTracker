@@ -66,8 +66,6 @@ namespace PetTracker.Infrastucture.Services
                 throw new Exception("Owner not found");
             }
 
-            existingOwner.UpdateOwner(owner);
-
             var tasks = new List<Task>();
 
             var fileMappings = new List<FileUploadMapping>();

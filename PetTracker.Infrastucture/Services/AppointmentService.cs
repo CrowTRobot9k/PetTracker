@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using PetTracker.Domain.DTOs;
+using PetTracker.Domain.Models;
 using PetTracker.SqlDb.Models;
 using System;
 using System.Collections.Generic;
@@ -8,10 +11,47 @@ using System.Threading.Tasks;
 
 namespace PetTracker.Infrastucture.Services
 {
-    public class AppointmentService : ServiceBase,IAppointmentService
+    public class AppointmentService : ServiceBase, IAppointmentService
     {
         public AppointmentService(ILogger logger, IPtDbContext dbContext) : base(logger, dbContext)
         {
+        }
+
+        public async Task<int> CreateAppointment(AppointmentDto appointment) 
+        {
+            var addAppointment = new Appointment(appointment);
+
+            await _dbContext.Appointments.AddAsync(addAppointment);
+            await _dbContext.SaveChangesAsync();
+
+            return addAppointment.Id;
+        }
+        public async Task<List<GetAppointmentDto>> GetAppointments(int? companyId = null)
+        {
+            var results = await _dbContext.Appointments
+                .Where(w => companyId == null || w.CompanyId == companyId)
+                .ToListAsync();
+
+            if (results == null || !results.Any())
+            {
+                return new List<GetAppointmentDto>();
+            }
+
+            return results.Select(s => new GetAppointmentDto(s)).ToList();
+        }
+
+        public async Task<int> UpdateAppointment(AppointmentDto appointment)
+        { 
+            var existingAppointment = await _dbContext.Appointments.FirstOrDefaultAsync(a => a.Id == appointment.id);
+            if (existingAppointment == null)
+            {
+                throw new KeyNotFoundException($"Appointment with ID {appointment.id} not found.");
+            }
+
+            existingAppointment.UpdateAppointment(appointment);
+            await _dbContext.SaveChangesAsync();
+
+            return existingAppointment.Id;
         }
     }
 }

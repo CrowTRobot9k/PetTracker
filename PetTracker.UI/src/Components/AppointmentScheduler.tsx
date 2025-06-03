@@ -36,7 +36,7 @@ export default function AppointmentScheduler() {
 
     useEffect(() => {
         getAppointments();
-    }, []);
+    }, [reloadAppts]);
 
     useEffect(() => {
         getOwnerList();
@@ -85,6 +85,17 @@ export default function AppointmentScheduler() {
         []
     )
 
+
+    const customEvent = ({ event }) => {
+        return (
+            <div>
+                {event.title} - {event.description}
+                <br/>
+                {event.owner} - {event.petName }
+            </div>
+        )
+    }
+
     return (
         <>
             {showErrors && (
@@ -110,6 +121,7 @@ export default function AppointmentScheduler() {
                         style={{ height: 700 }}
                         scrollToTime={scrollToTime}
                         //className={schedulerStyles.css}
+                        components={{ event: customEvent }}
                     />
                     <AddAppointment open={openAddAppt} handleClose={handleCloseAddAppt} reloadAppointments={reloadAppts} setReloadAppointments={setReloadAppts} startDate={apptStart} endDate={apptEnd} owners={owners} />
                 </Container>

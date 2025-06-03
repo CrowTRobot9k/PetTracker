@@ -76,8 +76,10 @@ export default function AddAppointment({ open, handleClose, reloadAppointments, 
 
     const handleChangePet = (e: SelectChangeEvent) => {
         if (pets && pets?.length > 0) {
-            const pet = pets.filter(f => e.target.value.indexOf(f.name) > -1);
-            setAddAppointment({ ...addAppointment, petId: pet.id, petName: pet.name });
+            const pet = pets.find(f => e.target.value == f.name);
+            if (pet) {
+                setAddAppointment({ ...addAppointment, petId: pet.id, petName: pet.name });
+            }
         }
         setOpenPets(false);
     };
@@ -94,6 +96,42 @@ export default function AddAppointment({ open, handleClose, reloadAppointments, 
         event.preventDefault();
         setSuccessMessage("");
         setErrorMessage("");
+
+        const addAppointmentModel = {
+            //id: 0,
+            //companyId: null,
+            userId:null,
+            ownerId: addAppointment.ownerId??null,
+            petId: addAppointment.petId??null,
+            title: addAppointment.title??'',
+            description: addAppointment.description??'',
+            start: start??'',
+            end: end??'',
+        };
+
+        try {
+            const response = await fetch("/api/Appointment/CreateAppointment", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(addAppointmentModel)
+            });
+
+            if (!response.ok) {
+                throw new Error(await response.json());
+            }
+
+            if (response.status == 200) {
+                setReloadAppointments(!reloadAppointments);
+                setAddAppointment({
+                });
+                setSuccessMessage("Appointment Created")
+                handleClose();
+            }
+        } catch (e) {
+            setErrorMessage(e.message);
+        } 
 
         setReloadAppointments(!reloadAppointments);
     }
@@ -127,7 +165,7 @@ export default function AddAppointment({ open, handleClose, reloadAppointments, 
                         required
                         margin="dense"
                         id="appointmentTitle"
-                        name="color"
+                        name="title"
                         label="Title"
                         placeholder="Title"
                         type="text"
@@ -142,7 +180,7 @@ export default function AddAppointment({ open, handleClose, reloadAppointments, 
                         required
                         margin="dense"
                         id="appointmentDescription"
-                        name="appointmentDescription"
+                        name="description"
                         label="Appointment Description"
                         placeholder="Description"
                         type="textArea"

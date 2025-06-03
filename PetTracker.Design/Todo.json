@@ -12,8 +12,11 @@ Appointment
     },
     change appointment,
     delete appointment,
-Search for Pets and Owners
 Validate Pet Entry
 Validate Owner Entry
 Manage Users UI?
 Delete Photos
+Manage Companies or just hardcode
+
+//remember to take out extra slashes
+dotnet ef PtDbContext scaffold "Data Source=localhost\SQLEXPRESS;Initial Catalog=PetTrackerDb;Integrated Security=True;Trust Server Certificate=True;"   --project PetTracker.Infrastructure --table Appointment 
