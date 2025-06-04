@@ -53,5 +53,10 @@ namespace PetTracker.Infrastucture.Services
 
             return existingAppointment.Id;
         }
+
+        public async Task<int> DeleteAppointment(int appointmentId)
+        {
+           return await _dbContext.Appointments.Where(w => w.Id == appointmentId).ExecuteDeleteAsync();
+        }
     }
 }

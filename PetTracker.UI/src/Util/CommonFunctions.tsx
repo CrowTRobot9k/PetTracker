@@ -19,8 +19,9 @@ function isValidDateTime(dateTimeString:string) {
 export const convertDates = (obj:any) => {
     for (const key in obj) {
         if (obj.hasOwnProperty(key)) {
-            if (typeof obj[key] === 'string' && isValidDateTime(obj[key])) {
-                obj[key] = new Date(obj[key]);
+            if (typeof obj[key] === 'string' && isValidDateTime(obj[key]))
+            {
+                obj[key] = moment.utc(obj[key], "YYYY-MM-DDTHH:mm:ss", true).local().toDate();
             } else if (typeof obj[key] === 'object') {
                 convertDates(obj[key]);
             }

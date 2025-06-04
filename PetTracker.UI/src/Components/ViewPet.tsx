@@ -365,16 +365,6 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button variant="contained" color="info" type="submit">Save</Button>
                 </DialogActions>
-                {/*{submitSuccessMessage?.length > 0 && (*/}
-                {/*    <Alert variant="filled" severity="success">*/}
-                {/*        {submitSuccessMessage}*/}
-                {/*    </Alert>*/}
-                {/*)}*/}
-                {submitErrorMessage?.length > 0 && (
-                    <Alert variant="filled" severity="error">
-                        {submitErrorMessage}
-                    </Alert>
-                )}
             </form>
         </Dialog>
     );

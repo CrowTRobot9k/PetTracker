@@ -25,11 +25,9 @@ namespace PetTracker.Domain.DTOs
                 petName = appointment.Pet.Name;
             }            
         }
-        public int ownerId { get; set; }
         public string? firstName { get; set; } = null!;
         public string? lastName { get; set; } = null!;
         public string? owner => $"{firstName} {lastName}"?.Trim();
-        public int id { get; set; }
         public string? petName { get; set; }
     }
 }

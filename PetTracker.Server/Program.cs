@@ -16,6 +16,16 @@ builder.Services.AddDbContext<PtDbContext>(options =>
     options.EnableDetailedErrors();
 });
 
+builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
+    builder =>
+    {
+        builder
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
+    }));
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddIdentityApiEndpoints<AspNetUser>()

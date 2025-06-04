@@ -12,6 +12,7 @@ namespace PetTracker.Infrastucture.Services
         Task<int> CreateAppointment(AppointmentDto appointment);
         Task<int> UpdateAppointment(AppointmentDto appointment);
         Task<List<GetAppointmentDto>> GetAppointments(int? companyId = null);
+        Task<int> DeleteAppointment(int appointmentId);
 
     }
 }

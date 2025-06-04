@@ -12,6 +12,8 @@ import LoadingPlaceholder from '../Components/LoadingPlaceholder.tsx';
 import ErrorDisplay from '../Components/ErrorDisplay.tsx';
 import { convertDates } from '../Util/CommonFunctions'
 import AddAppointment from '../Components/AddAppointment.tsx';
+import ViewAppointment from '../Components/ViewAppointment.tsx';
+import { Appointment } from '../Types/SharedTypes.tsx'
 export default function AppointmentScheduler() {
 
     const localizer = new momentLocalizer(moment);
@@ -34,6 +36,11 @@ export default function AppointmentScheduler() {
     const [apptStart, setApptStart] = useState(new Date());
     const [apptEnd, setApptEnd] = useState(new Date());
 
+    const [openViewAppt, setOpenViewAppt] = React.useState(false);
+    const [selectedAppt, setSelectedAppt] = useState<Appointment>(
+        {
+        });
+
     useEffect(() => {
         getAppointments();
     }, [reloadAppts]);
@@ -45,6 +52,10 @@ export default function AppointmentScheduler() {
     const handleCloseAddAppt = () => {
         setOpenAddAppt(false);
     };
+
+    const handleCloseViewAppt = () => {
+        setOpenViewAppt(false);
+    }
 
     const schedulerStyles = makeStyles({
         css: {
@@ -73,7 +84,12 @@ export default function AppointmentScheduler() {
     )
 
     const handleSelectEvent = useCallback(
-        (event) => window.alert(event.title),
+        (event) => {
+            setOpenViewAppt(true);
+            setSelectedAppt(event);
+            setApptStart(event.start);
+            setApptEnd(event.end);
+        },
         []
     )
 
@@ -124,6 +140,8 @@ export default function AppointmentScheduler() {
                         components={{ event: customEvent }}
                     />
                     <AddAppointment open={openAddAppt} handleClose={handleCloseAddAppt} reloadAppointments={reloadAppts} setReloadAppointments={setReloadAppts} startDate={apptStart} endDate={apptEnd} owners={owners} />
+                    <ViewAppointment open={openViewAppt} handleClose={handleCloseViewAppt} viewAppointment={selectedAppt } reloadAppointments={reloadAppts} setReloadAppointments={setReloadAppts} startDate={apptStart} endDate={apptEnd} owners={owners} />
+
                 </Container>
 
             )}

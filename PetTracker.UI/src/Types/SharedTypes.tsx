@@ -1,10 +1,10 @@
 import dayjs, { Dayjs } from 'dayjs';
 
-export default interface User {
+export interface User {
     email: string;
 }
 
-export default interface Owner {
+export  interface Owner {
     id: number;
     userId: number;
     firstName: string;
@@ -22,7 +22,7 @@ export default interface Owner {
     vetPhone: string;
 }
 
-export default interface Pet {
+export interface Pet {
     name: string;
     petTypeId: number;
     petType: string;
@@ -35,8 +35,10 @@ export default interface Pet {
     medicalProblems?: string;
 }
 
-export default interface Appointment {
+export interface Appointment {
     id: number;
+    companyId: number;
+    userId: string;
     ownerId: number;
     owner: string;
     petId: number;
