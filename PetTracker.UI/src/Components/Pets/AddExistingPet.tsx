@@ -5,20 +5,20 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { styled } from '@mui/material/styles';
-import Carousel from '../Components/Carousel/Carousel';
-import useExistingPetsStore from '../Stores/ExistingPetStore';
+import Carousel from '../Carousel/Carousel';
+import useExistingPetsStore from '../../Stores/ExistingPetStore';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
-import { getImageUrlFromBlob } from '../Util/CommonFunctions'
+import { getImageUrlFromBlob } from '../../Util/CommonFunctions'
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import DialogContent from '@mui/material/DialogContent';
-import ErrorDisplay from '../Components/ErrorDisplay';
+import ErrorDisplay from '../ErrorDisplay';
 
 interface AddExistingPetProps {
     open: boolean;
@@ -38,12 +38,12 @@ const SyledCardContent = styled(CardContent)({
 });
 
 export default function AddExistingPet({ open, handleClose, reloadPets, setReloadPets, ownerId }: AddExistingPetProps) {
-    const [submitSuccessMessage, setSuccessMessage] = React.useState('');
-    const [submitErrorMessage, setSubmitErrorMessage] = React.useState('');
+    const [submitSuccessMessage, setSuccessMessage] = useState('');
+    const [submitErrorMessage, setSubmitErrorMessage] = useState('');
     const getExistingPets = useExistingPetsStore((state) => state.getExistingPets);
     const { existingPets, loadingExistingPets } = useExistingPetsStore();
-    const [searchValue, setSearchValue] = React.useState('');
-    const [ selectedPets, setSelectedPets ] = React.useState({});
+    const [searchValue, setSearchValue] = useState('');
+    const [ selectedPets, setSelectedPets ] = useState({});
 
      useEffect(() => {
          getExistingPets(ownerId);

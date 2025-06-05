@@ -5,8 +5,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import Alert from '@mui/material/Alert';
-import ImageUpload from './ImageUpload';
+import ImageUpload from '../ImageUpload';
 import React, { useState, useEffect } from 'react';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -16,10 +15,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
-import Pet from '../Types/SharedTypes';
-import usePetStore from '../Stores/PetStore';
-import CircularProgress from '@mui/material/CircularProgress';
-import ErrorDisplay from '../Components/ErrorDisplay';
+import { Pet } from '../../Types/SharedTypes';
+import usePetStore from '../../Stores/PetStore';
+import ErrorDisplay from '../ErrorDisplay';
 
 interface AddPetProps
 {

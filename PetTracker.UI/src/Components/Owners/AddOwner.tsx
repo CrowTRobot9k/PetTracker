@@ -5,19 +5,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import Alert from '@mui/material/Alert';
-import ImageUpload from './ImageUpload';
-import React, { useState, useEffect } from 'react';
+import ImageUpload from '../ImageUpload';
+import React, { useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import Owner from '../Types/SharedTypes';
-import ErrorDisplay from '../Components/ErrorDisplay';
+import { Owner } from '../../Types/SharedTypes';
+import ErrorDisplay from '../ErrorDisplay';
 
 interface AddOwnerProps {
     open: boolean;

@@ -1,26 +1,22 @@
-import React, { useState, useEffect, useContext } from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
+import React, { useState, useEffect, useMemo } from 'react';
 import Container from '@mui/material/Container';
-import AppTheme from '../Theme/AppTheme';
-import AppAppBar from '../Components/AppAppBar';
-import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import useOwnersStore from '../Stores/OwnersStore';
-import Carousel from '../Components/Carousel/Carousel';
+import useOwnersStore from '../../Stores/OwnersStore.tsx';
+import Carousel from '../Carousel/Carousel.tsx';
 import EditIcon from '@mui/icons-material/Edit';
 import Fab from '@mui/material/Fab';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import AddOwner from '../Components/AddOwner';
-import ViewOwner from '../Components/ViewOwner';
-import { getImageUrlFromBlob } from '../Util/CommonFunctions'
-import LoadingPlaceholder from '../Components/LoadingPlaceholder.tsx';
-import ErrorDisplay from '../Components/ErrorDisplay.tsx';
-import { useSearch } from '../Components/SearchProvider';
+import AddOwner from './AddOwner.tsx';
+import ViewOwner from './ViewOwner.tsx';
+import { getImageUrlFromBlob } from '../../Util/CommonFunctions.tsx'
+import LoadingPlaceholder from '../LoadingPlaceholder.tsx';
+import ErrorDisplay from '../ErrorDisplay.tsx';
+import { useSearch } from '../SearchProvider.tsx';
 
 const SyledCardContent = styled(CardContent)({
     display: 'flex',
@@ -63,7 +59,7 @@ export default function ViewOwners() {
         getOwners();
     }, [reloadOwners]);
 
-    useEffect(() => {
+    useMemo(() => {
         getStates();
     }, []);
 

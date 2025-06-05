@@ -1,18 +1,15 @@
 import React, { useCallback, useState, useEffect, useMemo, Fragment } from 'react'
 import moment from 'moment'
 import { momentLocalizer } from 'react-big-calendar'
-import PropTypes from 'prop-types'
 import { Calendar, Views } from 'react-big-calendar'
-import events from '../TestData/events'
 import { Container } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import useAppointmentsStore from '../Stores/AppointmentsStore'
 import LoadingPlaceholder from '../Components/LoadingPlaceholder.tsx';
 import ErrorDisplay from '../Components/ErrorDisplay.tsx';
-import { convertDates } from '../Util/CommonFunctions'
-import AddAppointment from '../Components/AddAppointment.tsx';
-import ViewAppointment from '../Components/ViewAppointment.tsx';
+import AddAppointment from '../Components/Appointments/AddAppointment.tsx';
+import ViewAppointment from '../Components/Appointments/ViewAppointment.tsx'
 import { Appointment } from '../Types/SharedTypes.tsx'
 export default function AppointmentScheduler() {
 
@@ -57,28 +54,12 @@ export default function AppointmentScheduler() {
         setOpenViewAppt(false);
     }
 
-    const schedulerStyles = makeStyles({
-        css: {
-            '& .rbc-event': {
-                backgroundColor: '#3f51b5',
-                color: '#fff',
-            },
-            '& .rbc-selected': {
-                backgroundColor: '#757de8',
-            },
-        },
-    });
-
     const handleSelectSlot = useCallback(
         ({ start, end }) =>
         {
             setOpenAddAppt(true);
             setApptStart(start);
             setApptEnd(end);
-            //const title = window.prompt('New Event Name')
-            //if (title) {
-            //    setEvents((prev) => [...prev, { start, end, title }])
-            //}
         },
         []
     )
@@ -136,7 +117,6 @@ export default function AppointmentScheduler() {
                         selectable
                         style={{ height: 700 }}
                         scrollToTime={scrollToTime}
-                        //className={schedulerStyles.css}
                         components={{ event: customEvent }}
                     />
                     <AddAppointment open={openAddAppt} handleClose={handleCloseAddAppt} reloadAppointments={reloadAppts} setReloadAppointments={setReloadAppts} startDate={apptStart} endDate={apptEnd} owners={owners} />

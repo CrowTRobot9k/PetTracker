@@ -13,7 +13,6 @@
     <TypeScriptConfiguration Remove="node_modules\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src\Components\Logos\" />
     <Folder Include="src\TestData\" />
     <Folder Include="src\Stores\" />
   </ItemGroup>

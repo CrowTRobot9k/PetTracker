@@ -19,7 +19,6 @@ function App() {
                     <Route path="/owners" element={<Owners />} />
                     <Route path="/pets" element={<Pets />} />
                     <Route path="/appointments" element={<Appointments />} />
-                    <Route path="/blog" element={<Blog />} />
                 </Routes>
             </BrowserRouter>
     );

@@ -5,8 +5,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import Alert from '@mui/material/Alert';
-import ImageUpload from './ImageUpload';
+import ImageUpload from '../ImageUpload';
 import React, { useState, useEffect } from 'react';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -16,13 +15,13 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
-import Pet from '../Types/SharedTypes';
-import usePetStore from '../Stores/PetStore';
+import { Pet } from '../../Types/SharedTypes';
+import usePetStore from '../../Stores/PetStore';
 import dayjs, { Dayjs } from 'dayjs';
-import ErrorDisplay from '../Components/ErrorDisplay';
+import ErrorDisplay from '../ErrorDisplay';
 
 
-interface viewPetProps {
+interface ViewPetProps {
     open: boolean;
     viewPet: Pet;
     handleClose: () => void;
@@ -31,7 +30,7 @@ interface viewPetProps {
     setReloadPets: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPets, setReloadPets }: viewPetProps) {
+export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPets, setReloadPets }: ViewPetProps) {
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);

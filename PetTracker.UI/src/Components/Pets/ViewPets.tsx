@@ -4,26 +4,26 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
-import AddPet from '../Components/AddPet';
-import AddExistingPet from '../Components/AddExistingPet';
-import ViewPet from '../Components/ViewPet.tsx';
+import AddPet from './AddPet.tsx';
+import AddExistingPet from './AddExistingPet.tsx';
+import ViewPet from './ViewPet.tsx';
 import Container from '@mui/material/Container';
-import LoadingPlaceholder from '../Components/LoadingPlaceholder.tsx';
+import LoadingPlaceholder from '../LoadingPlaceholder.tsx';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { styled } from '@mui/material/styles';
-import Carousel from '../Components/Carousel/Carousel';
+import Carousel from '../Carousel/Carousel.tsx';
 import EditIcon from '@mui/icons-material/Edit';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import Chip from '@mui/material/Chip';
 import Fab from '@mui/material/Fab';
-import { getImageUrlFromBlob } from '../Util/CommonFunctions'
-import usePetsStore from '../Stores/PetsStore.tsx';
-import ConfirmDialog from './ConfirmDialog.tsx';
-import ErrorDisplay from '../Components/ErrorDisplay';
-import { useSearch } from '../Components/SearchProvider';
+import { getImageUrlFromBlob } from '../../Util/CommonFunctions.tsx'
+import usePetsStore from '../../Stores/PetsStore.tsx';
+import ConfirmDialog from '../ConfirmDialog.tsx';
+import ErrorDisplay from '../ErrorDisplay.tsx';
+import { useSearch } from '../SearchProvider.tsx';
 
-import { Pet } from '../Types/SharedTypes.tsx';
+import { Pet } from '../../Types/SharedTypes.tsx';
 
 export default function ViewPets(props: { ownerId?: number }) {
     const getPets = usePetsStore((state) => state.getPets);
@@ -193,7 +193,7 @@ export default function ViewPets(props: { ownerId?: number }) {
                                         Add New Pet
                                     </Button>
                                     {props.ownerId != null && (<Button onClick={handleClickOpenAddExisting} variant="contained" color="info" endIcon={<AddIcon />}>
-                                        Add Existing Pets
+                                        Add/Move Existing Pets
                                     </Button>)}
                                 </Card>
                             </Grid>
