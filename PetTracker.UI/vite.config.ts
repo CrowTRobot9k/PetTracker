@@ -47,10 +47,6 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/weatherforecast': {
-                target,
-                secure: false
-            },
             '^/openapi': {
                 target,
                 secure: false
@@ -155,6 +151,16 @@ export default defineConfig({
                 secure: false
             },
             '^/api/Appointment/DeleteAppointment': {
+                target,
+                secure: false
+            },
+            //user
+            '^/api/User/GetUsers': {
+                target,
+                secure: false
+            },
+            //company
+            '^/api/Company/GetCompanies': {
                 target,
                 secure: false
             },
