@@ -1,7 +1,9 @@
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 
-export interface User {
-    email: string;
+export interface Company {
+    id: number;
+    name: string;
+    companyCode: string;
 }
 
 export  interface Owner {
@@ -47,4 +49,23 @@ export interface Appointment {
     end: Dayjs,
     title: string;
     description?: string;
+}
+
+export interface User {
+    id: string,
+    firstName: string;
+    lastName: string;
+    fullName: string;
+    userName: string;
+    email: string;
+    company: Company;
+    roleNames: string[];
+    roles: UserRole[];
+}
+
+export interface UserRole {
+    id: number;
+    name: string;
+    normalizedName: string;
+    concurrencyStamp: string;
 }

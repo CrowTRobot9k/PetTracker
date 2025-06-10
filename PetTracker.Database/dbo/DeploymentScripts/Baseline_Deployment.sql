@@ -1,17 +1,37 @@
 ﻿merge Companies as T
 using (
 	 values 
-		('Cut And Dry Pet Salon','00001'),
-		('Sonora Pet Care','000002'),
-		('Abril''s Paw Spa','00003'),
-		('Furry Land Of Pheonix','00004')
-) as S ([Name], CompanyCode)
+		(1,'Cut And Dry Pet Salon','00001'),
+		(2,'Sonora Pet Care','000002'),
+		(3,'Abril''s Paw Spa','00003'),
+		(4,'Furry Land Of Pheonix','00004')
+) as S (Id,[Name], CompanyCode)
 on T.[Name] = S.[Name]
 when not matched then
-insert ([Name])
+insert ([Name],[CompanyCode])
 	values (S.[Name], S.CompanyCode)
 when matched then update set
 	 T.CompanyCode = S.CompanyCode;
+
+merge AspNetRoles as T
+using (
+	 values 
+		('00000000-0000-0000-0000-000000000001','Administrator','ADMINISTRATOR',''),
+		('00000000-0000-0000-0000-000000000002','Owners Read','Owners Read',''),
+		('00000000-0000-0000-0000-000000000003','Owners Write','Owners Write',''),
+		('00000000-0000-0000-0000-000000000004','Pets Read','Pets Read',''),
+		('00000000-0000-0000-0000-000000000005','Pets Write','Pets Write',''),
+		('00000000-0000-0000-0000-000000000006','Appointments Read','Appointments Read',''),
+		('00000000-0000-0000-0000-000000000007','Appointments Write','Appointments Write','')
+) as S (Id,[Name],[NormalizedName],[ConcurrencyStamp])
+on T.Id = S.Id
+when not matched then
+insert ([Id],[Name],[NormalizedName],[ConcurrencyStamp])
+	values (S.Id, S.[Name], S.[NormalizedName], S.[ConcurrencyStamp])
+when matched then update set
+	T.[Name] = S.[Name]
+	,T.[NormalizedName] = S.[NormalizedName]
+	,T.[ConcurrencyStamp] = S.[ConcurrencyStamp];
 
 
 merge PetTypes as T

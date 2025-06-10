@@ -1,10 +1,12 @@
 
 TODO:
-Appointment
-
+Manage Users
+Consolidate components:[
+    view and add
+    multiselect
+]
 Validate Pet Entry
 Validate Owner Entry
-Manage Users
 Delete Photos
 Manage Companies or just hardcode
 

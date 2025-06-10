@@ -10,6 +10,7 @@ namespace PetTracker.Infrastucture.Services
 {
     public interface IUserService
     {
-        Task<List<AspNetUser>> GetUsers(int? companyId = null);
+        Task<List<GetUserDto>> GetUsers(int? companyId = null);
+        Task<List<RoleDto>> GetRoles();
     }
 }

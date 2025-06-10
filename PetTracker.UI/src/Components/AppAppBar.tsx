@@ -91,6 +91,9 @@ export default function AppAppBar(props: { currentPage:string})
                       <Button onClick={() => navigate('/appointments')} variant={props.currentPage == "appointments" ? "contained" : "text"} color="info" size="small">
                           Appointments
                       </Button>
+                      <Button onClick={() => navigate('/users')} variant={props.currentPage == "users" ? "contained" : "text"} color="info" size="small">
+                          Users
+                      </Button>
                       {/*<Button onClick={() => navigate('/blog')} variant={currentPage == "blog" ? "contained" : "text"} color="info" size="small">*/}
                       {/*    Blog*/}
                       {/*</Button>*/}
@@ -162,6 +165,7 @@ export default function AppAppBar(props: { currentPage:string})
                 <MenuItem onClick={() => navigate('/owners')}>Owners</MenuItem>
                 <MenuItem onClick={() => navigate('/pets')}>Pets</MenuItem>
                 <MenuItem onClick={() => navigate('/appointments')}>Appointments</MenuItem>
+                <MenuItem onClick={() => navigate('/users')}>Appointments</MenuItem>
 {/*                <MenuItem onClick={() => navigate('/blog')}>Blog</MenuItem>*/}
                  <Divider sx={{ my: 3 }} />
                   <MenuItem>

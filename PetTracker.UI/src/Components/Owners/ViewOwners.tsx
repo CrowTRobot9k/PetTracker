@@ -21,12 +21,6 @@ import { useSearch } from '../SearchProvider.tsx';
 const SyledCardContent = styled(CardContent)({
     display: 'flex',
     flexDirection: 'column',
-    //gap: 4,
-    //padding: 4,
-    // flexGrow: 1,
-    //'&:last-child': {
-    //    paddingBottom: 4,
-    //},
 });
 
 const StyledTypography = styled(Typography)({

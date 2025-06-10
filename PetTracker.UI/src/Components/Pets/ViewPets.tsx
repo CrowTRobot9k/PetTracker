@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -53,7 +53,7 @@ export default function ViewPets(props: { ownerId?: number }) {
         getPets(props.ownerId);
     }, [reloadPets, props.ownerId]);
 
-    useEffect(() => {
+    useMemo(() => {
         getPetTypes();
     }, []);
 

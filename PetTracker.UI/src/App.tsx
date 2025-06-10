@@ -6,6 +6,7 @@ import SignIn from './Pages/SignIn.tsx';
 import Pets from './Pages/Pets.tsx';
 import Owners from './Pages/Owners.tsx';
 import Appointments from './Pages/Appointments.tsx';
+import Users from './Pages/Users.tsx';
 import Blog from './Pages/Blog.tsx';
 import '../src/Styles/petTracker.css';
 
@@ -19,6 +20,7 @@ function App() {
                     <Route path="/owners" element={<Owners />} />
                     <Route path="/pets" element={<Pets />} />
                     <Route path="/appointments" element={<Appointments />} />
+                    <Route path="/users" element={<Users />} />
                 </Routes>
             </BrowserRouter>
     );
