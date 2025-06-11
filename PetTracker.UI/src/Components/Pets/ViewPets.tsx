@@ -73,7 +73,17 @@ export default function ViewPets(props: { ownerId?: number }) {
         setOpenAddExistingPet(false);
     };
 
-    const getPetSlides = (images) => {
+    const getPetSlides = (images, petType:string) =>
+    {
+        const placeholderDict =
+        {
+            Cat: "../src/assets/Cat Placeholder.png",
+            Dog: "../src/assets/Dog Placeholder.png",
+        }
+        if (!images || images.length === 0) {
+            return [<img src={placeholderDict[petType]} />]
+        }
+
         return Array.from(images.map((f, index) => (
             <img key={`${index}_${f.fileName}`} src={getImageUrlFromBlob(f.fileDataBase64)} />
         )))
@@ -166,7 +176,7 @@ export default function ViewPets(props: { ownerId?: number }) {
                 >
                     {(!loadingPets) && (
                         <Grid container spacing={2} columns={12} sx={{
-                            //height: '400px',
+                            height: '100%',
                             //width: '100%',
                             display: 'flex',
                             flexDirection: 'row',
@@ -211,15 +221,17 @@ export default function ViewPets(props: { ownerId?: number }) {
                                         variant="outlined"
                                         sx={{
                                             height: '100%',
-                                            ////width: '100%',
-                                            //display: 'flex',
-                                            ////flexDirection: 'row',
                                             //alignItems: 'center',
                                             //justifyContent: 'center',
                                         }}
                                     >
-                                        <Carousel cards={getPetSlides(m.petPhotos)} />
-                                        <SyledCardContent>
+                                        <Carousel cards={getPetSlides(m.petPhotos, m.petType?.type)} />
+                                        <SyledCardContent sx={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}>
                                             <Typography gutterBottom variant="h6" component="div">
                                                 {m.name}
                                             </Typography>

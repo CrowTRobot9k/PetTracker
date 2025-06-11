@@ -159,6 +159,10 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            '^/api/User/CreateUser': {
+                target,
+                secure: false
+            },
             '^/api/User/GetRoles': {
                 target,
                 secure: false

@@ -49,7 +49,17 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
          getExistingPets(ownerId);
      }, [ownerId]);
 
-    const getPetSlides = (images) => {
+    const getPetSlides = (images, petType: string) =>
+    {
+        const placeholderDict =
+        {
+            Cat: "../src/assets/Cat Placeholder.png",
+            Dog: "../src/assets/Dog Placeholder.png",
+        }
+        if (!images || images.length === 0) {
+            return [<img src={placeholderDict[petType]} />]
+        }
+
         return Array.from(images.map((f, index) => (
             <img key={`${index}_${f.fileName}`} src={getImageUrlFromBlob(f.fileDataBase64)} />
         )))
@@ -190,7 +200,7 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
                                             justifyContent: 'center',
                                         }}
                                     >
-                                        <Carousel cards={getPetSlides(m.petPhotos)} />
+                                        <Carousel cards={getPetSlides(m.petPhotos, m.petType?.type)} />
                                         <SyledCardContent>
                                             <Typography gutterBottom variant="h6" component="div">
                                                 {m.name}

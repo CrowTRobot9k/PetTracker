@@ -70,9 +70,10 @@ export default function AddUser(props: AddUserProps) {
         addUserData.append("model.LastName", addUser.lastName ?? '');
         addUserData.append("model.UserName", addUser.userName ?? '');
         addUserData.append("model.Email", addUser.email ?? '');
-        addUserData.append("model.company", JSON.stringify(addUser.company));
+        addUserData.append("model.Company", JSON.stringify(addUser.company));
         Array.from(addUser.roles).forEach((r, i) => {
-            addUserData.append(`model.Roles[${i}]`, JSON.stringify(r));
+            addUserData.append(`model.Roles[${i}].id`, r.id);
+            addUserData.append(`model.Roles[${i}].name`, r.name);
         });
 
 
@@ -90,6 +91,7 @@ export default function AddUser(props: AddUserProps) {
                 setSelectedFiles([]);
                 props.setReloadUsers(!props.reloadUsers);
                 setAddUser({
+                    roleNames: []
                 });
                 setSuccessMessage("User Created")
                 props.handleClose();
@@ -110,7 +112,7 @@ export default function AddUser(props: AddUserProps) {
                 <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', width: '100%', alignItems: 'center' }}
                 >
-                    <DialogTitle>Add Owner</DialogTitle>
+                    <DialogTitle>Add User</DialogTitle>
                     {submitErrorMessage?.length > 0 && (
                         <ErrorDisplay error={submitErrorMessage} />
                     )}

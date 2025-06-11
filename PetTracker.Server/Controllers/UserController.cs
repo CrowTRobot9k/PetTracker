@@ -27,8 +27,8 @@ namespace PetTracker.Server.Controllers
             }
         }
 
-        [HttpGet("CreateUser")]
-        public async Task<IActionResult> CreateUser(AddUserDto user)
+        [HttpPost("CreateUser")]
+        public async Task<IActionResult> CreateUser([FromForm] AddUserDto model)
         {
             try
             {
