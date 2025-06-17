@@ -46,6 +46,7 @@ export default defineConfig({
         }
     },
     server: {
+        cors: false,
         proxy: {
             '^/openapi': {
                 target,
@@ -93,6 +94,10 @@ export default defineConfig({
                 secure: false
             },
             '^/api/Pet/UpdatePet': {
+                target,
+                secure: false
+            },
+            '^/api/Pet/DeletePet': {
                 target,
                 secure: false
             },

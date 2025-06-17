@@ -42,8 +42,12 @@ export default function ViewPets(props: { ownerId?: number }) {
         {
         });
     const [removePetId, setRemovePetId] = useState<number>(0);
+    const [deletePetId, setDeletePetId] = useState<number>(0);
+
     const [reloadPets, setReloadPets] = React.useState(false);
-    const [openConfirm, setOpenConfirm] = React.useState(false);
+    const [openConfirmRemove, setOpenConfirmRemove] = React.useState(false);
+    const [openConfirmDelete, setOpenConfirmDelete] = React.useState(false);
+
     const [submitErrorMessage, setSubmitErrorMessage] = React.useState('');
     const { searchTerm } = useSearch();
 
@@ -99,13 +103,21 @@ export default function ViewPets(props: { ownerId?: number }) {
         setOpenViewPet(false);
     };
 
-    const handleConfirmOpen = (pet) => {
+    const handleConfirmOpenRemove = (pet) => {
         setRemovePetId(pet.id);
-        setOpenConfirm(true);
+        setOpenConfirmRemove(true);
     };
 
-    const handleConfirmClose = () => {
-        setOpenConfirm(false);
+    const handleConfirmOpenDelete = (pet) => {
+        setDeletePetId(pet.id);
+        setOpenConfirmDelete(true);
+    };
+
+    const handleConfirmCloseRemove = () => {
+        setOpenConfirmRemove(false);
+    };
+    const handleConfirmCloseDelete = () => {
+        setOpenConfirmDelete(false);
     };
 
     const handleConfirmRemovePet = async () => {
@@ -126,7 +138,7 @@ export default function ViewPets(props: { ownerId?: number }) {
                 body: JSON.stringify(removeExistingPetsModel)
             });
 
-            setOpenConfirm(false);
+            setOpenConfirmRemove(false);
 
             if (!response.ok) {
                 throw new Error(await response.json());
@@ -138,6 +150,33 @@ export default function ViewPets(props: { ownerId?: number }) {
         } catch (e) {
             setSubmitErrorMessage(e.message);
         } 
+    };
+
+    const handleConfirmDeletePet = async () => {
+
+        setSubmitErrorMessage("");
+
+        try {
+            const response = await fetch(`/api/Pet/DeletePet`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(deletePetId)
+            });
+
+            setOpenConfirmDelete(false);
+
+            if (!response.ok) {
+                throw new Error(await response.json());
+            }
+
+            if (response.status == 200) {
+                setReloadPets(true);
+            }
+        } catch (e) {
+            setSubmitErrorMessage(e.message);
+        }
     };
 
     const SyledCardContent = styled(CardContent)({
@@ -265,7 +304,12 @@ export default function ViewPets(props: { ownerId?: number }) {
                                                 <EditIcon />
                                             </Fab>
                                             {props.ownerId != null && (
-                                                <Fab size="small" color="warning" sx={{ alignSelf: 'center', m: 1, }} onClick={() => handleConfirmOpen(m)} aria-label="add">
+                                                <Fab size="small" color="warning" sx={{ alignSelf: 'center', m: 1, }} onClick={() => handleConfirmOpenRemove(m)} aria-label="remove">
+                                                    <RemoveCircleIcon />
+                                                </Fab>
+                                            )}
+                                            {props.ownerId == null && (
+                                                <Fab size="small" color="error" sx={{ alignSelf: 'center', m: 1, }} onClick={() => handleConfirmOpenDelete(m)} aria-label="delete">
                                                     <RemoveCircleIcon />
                                                 </Fab>
                                             )}
@@ -276,7 +320,8 @@ export default function ViewPets(props: { ownerId?: number }) {
                         </Grid>
                     )}
                     <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} />
-                    <ConfirmDialog open={openConfirm} handleClose={handleConfirmClose} handleConfirm={handleConfirmRemovePet} confirmTitle={"Remove Pet"} confirmDescription={"Remove pet from this owner?"} confirmbuttonText="Yes" />
+                    <ConfirmDialog open={openConfirmRemove} handleClose={handleConfirmCloseRemove} handleConfirm={handleConfirmRemovePet} confirmTitle={"Remove Pet"} confirmDescription={"Remove pet from this owner?"} confirmbuttonText="Yes" />
+                    <ConfirmDialog open={openConfirmDelete} handleClose={handleConfirmCloseDelete} handleConfirm={handleConfirmDeletePet} confirmTitle={"Delete Pet"} confirmDescription={"Are you sure you want to delete this pet?"} confirmbuttonText="Yes" />
                 </Container>
             )}
         </>

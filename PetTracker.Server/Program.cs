@@ -22,8 +22,8 @@ builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
         builder
         .AllowAnyOrigin()
         .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials();
+        .AllowAnyHeader();
+       // .AllowCredentials();
     }));
 
 builder.Services.AddAuthorization();
@@ -76,5 +76,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
-
+app.UseCors();
 app.Run();

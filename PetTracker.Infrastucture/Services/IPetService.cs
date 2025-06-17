@@ -11,6 +11,7 @@ namespace PetTracker.Infrastucture.Services
     {
         Task<int> CreatePet(AddPetDto pet);
         Task<int> UpdatePet(AddPetDto pet);
+        Task<int> DeletePet(int petId);
         Task<List<GetPetDto>> GetPets(int? ownerId = null);
         Task<List<PetDto>> GetPetList(int? ownerId = null);
         Task<List<PetTypeDto>> GetPetTypes();

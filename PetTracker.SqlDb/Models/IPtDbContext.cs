@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Internal;
 using PetTracker.Domain.Models;
 using System;
@@ -11,6 +12,7 @@ namespace PetTracker.SqlDb.Models
 {
     public interface IPtDbContext
     {
+        DatabaseFacade Database { get; }
         DbSet<Appointment> Appointments { get; set; }
         DbSet<AspNetRole> AspNetRoles { get; set; }
         DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }

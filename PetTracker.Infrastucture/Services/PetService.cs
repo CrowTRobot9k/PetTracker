@@ -7,6 +7,7 @@ using PetTracker.Domain.Models;
 using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Data.SqlClient;
 namespace PetTracker.Infrastucture.Services
 {
     public class PetService : ServiceBase, IPetService
@@ -122,6 +123,12 @@ namespace PetTracker.Infrastucture.Services
             await _dbContext.SaveChangesAsync();
 
             return existingPet.Id;
+        }
+
+        public async Task<int> DeletePet(int petId)
+        {
+            var petParam = new SqlParameter("@petId", petId);
+            return await _dbContext.Database.ExecuteSqlAsync($"Exec DeletePet {petParam}");
         }
 
         public async Task<List<GetPetDto>> GetPets(int? ownerId = null)

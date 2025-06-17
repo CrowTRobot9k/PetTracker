@@ -88,6 +88,21 @@ namespace PetTracker.Server.Controllers
             return new JsonResult(true);
         }
 
+        [HttpPost("DeletePet")]
+        public async Task<IActionResult> DeletePet([FromBody]int id)
+        {
+            try
+            {
+                var result = await _PetService.DeletePet(id);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(HandleUIException(ex, id));
+            }
+
+            return new JsonResult(true);
+        }
+
         [HttpGet("GetPetTypes")]
         public async Task<IActionResult> GetPetTypes()
         {

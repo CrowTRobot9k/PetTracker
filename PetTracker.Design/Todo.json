@@ -1,6 +1,6 @@
 
 TODO:
-delete pet
+Delete Photos
 fix cards for pets
 fix cards for owners
 Manage Users
@@ -10,7 +10,6 @@ Consolidate components:[
 ]
 Validate Pet Entry
 Validate Owner Entry
-Delete Photos
 Manage Companies or just hardcode
 
 //remember to take out extra slashes

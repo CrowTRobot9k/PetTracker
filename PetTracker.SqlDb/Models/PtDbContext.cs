@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using PetTracker.Domain;
 using PetTracker.Domain.Models;
 
@@ -26,7 +27,6 @@ public partial class PtDbContext : DbContext, IPtDbContext
         : base(options)
     {
     }
-
     public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
 
     public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }

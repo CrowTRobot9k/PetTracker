@@ -18,6 +18,7 @@ where p.Id = @petId
   delete fup from [dbo].[Pets] p 
   join [FileUploadMappings] fup
   on fup.PetId = p.Id
+  where p.Id = @petId
 
   delete fu from [FileUploads] fu 
   join @fileIds f on f.FileId = fu.Id
