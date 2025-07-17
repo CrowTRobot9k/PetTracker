@@ -75,11 +75,11 @@ function AuthorizeView(props: { children: React.ReactNode }) {
             });
     }, []);
 
-    return (
-        <>
-            <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
-        </>
-    );
+    //return (
+    //    <>
+    //        <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
+    //    </>
+    //);
 
     if (loading) {
         return (

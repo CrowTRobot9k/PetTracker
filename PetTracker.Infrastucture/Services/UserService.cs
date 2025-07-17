@@ -19,16 +19,18 @@ namespace PetTracker.Infrastucture.Services
 
         public async Task<List<GetUserDto>> GetUsers(int? companyId = null)
         {
-            var result = await _dbContext.AspNetUsers
-                .Where(w => companyId == null || (w.Company != null && w.Company.Id == companyId)).ToListAsync();
+            //var result = await _dbContext
+            //    .Where(w => companyId == null || (w.Company != null && w.Company.Id == companyId)).ToListAsync();
 
-            return result.Select(w => new GetUserDto(w)).ToList();
+            //return result.Select(w => new GetUserDto(w)).ToList();
+            return new List<GetUserDto>();
         }
 
         public async Task<List<RoleDto>> GetRoles()
         {
-            var roles = await _dbContext.AspNetRoles.ToListAsync();
-            return roles.Select(r => new RoleDto(r)).ToList();
+            //var roles = await _dbContext.AspNetRoles.ToListAsync();
+            //return roles.Select(r => new RoleDto(r)).ToList();
+            return new List<RoleDto>();
         }
     }
 }

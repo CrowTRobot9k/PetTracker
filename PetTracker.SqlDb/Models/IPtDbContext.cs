@@ -14,12 +14,12 @@ namespace PetTracker.SqlDb.Models
     {
         DatabaseFacade Database { get; }
         DbSet<Appointment> Appointments { get; set; }
-        DbSet<AspNetRole> AspNetRoles { get; set; }
-        DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
-        DbSet<AspNetUser> AspNetUsers { get; set; }
-        DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
-        DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
-        DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
+        //DbSet<AspNetRole> AspNetRoles { get; set; }
+        //DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
+        //DbSet<AspNetUser> AspNetUsers { get; set; }
+        //DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
+        //DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
+        //DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
         DbSet<BreedType> BreedTypes { get; set; }
         DbSet<Company> Companies { get; set; }
         DbSet<FileUpload> FileUploads { get; set; }

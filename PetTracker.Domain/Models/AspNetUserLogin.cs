@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 
 namespace PetTracker.Domain.Models;
 
+[Keyless]
 public partial class AspNetUserLogin
 {
     public string LoginProvider { get; set; } = null!;

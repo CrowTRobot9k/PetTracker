@@ -24,3 +24,7 @@
 .full-width {
     width:100% !important;
 }
+
+body {
+    overflow-x: hidden; /* Hides the horizontal scrollbar */
+}

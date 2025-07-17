@@ -43,20 +43,6 @@ namespace PetTracker.Server.Controllers
             }
         }
 
-        [HttpGet("GetPet")]
-        public async Task<string> GetPet()
-        {
-            try
-            {
-                return "Test";
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while getting the weather forecast.");
-                throw;
-            }
-        }
-
         [HttpPost("CreatePet")]
         public async Task<IActionResult> CreatePet([FromForm] AddPetDto model)
         {
