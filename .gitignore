@@ -1,1 +1,10 @@
 .vs/PetTracker/CopilotIndices
+.vs
+PetTracker.Database/PetTracker.Database.dbmdl
+PetTracker.Database/PetTracker.Database.jfm
+PetTracker.Infrastucture/obj
+PetTracker.Infrastucture/bin
+PetTracker.Server/obj
+PetTracker.Server/bin
+PetTracker.SqlDb/bin
+PetTracker.SqlDb/obj
