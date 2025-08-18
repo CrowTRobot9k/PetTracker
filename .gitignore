@@ -8,3 +8,9 @@ PetTracker.Server/obj
 PetTracker.Server/bin
 PetTracker.SqlDb/bin
 PetTracker.SqlDb/obj
+PetTracker.Utility/obj
+PetTracker.Domain/bin
+PetTracker.Domain/obj
+PetTracker.Database/PetTracker.Database.dbmdl
+PetTracker.Database/PetTracker.Database.jfm
+.vs

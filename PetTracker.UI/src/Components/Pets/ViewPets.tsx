@@ -225,7 +225,7 @@ export default function ViewPets(props: { ownerId?: number }) {
                             <Grid
                                 size={pets.length < 3 ? "grow" : 4
                                 }
-                                sx={{ height: '365px' }}
+                                sx={{ height: '360px' }}
                             >
                                 <Card
                                     //variant="outlined"
@@ -254,7 +254,7 @@ export default function ViewPets(props: { ownerId?: number }) {
                                 (f.breedTypes.some(s => s.name.toLowerCase().indexOf(searchTerm?.toLowerCase()) > -1))
                             )).map(m =>
                                 <Grid size={pets.length < 3 ? "grow" : 4}
-                                    sx={{ height: '365px' }}
+                                    sx={{ height: '360px' }}
                                 >
                                     <Card
                                         variant="outlined"
