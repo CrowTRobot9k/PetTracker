@@ -60,6 +60,10 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            '^/confirmemail': {
+                target,
+                secure: false
+            },
             '^/login': {
                 target,
                 secure: false

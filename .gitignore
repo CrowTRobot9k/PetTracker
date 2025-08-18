@@ -14,3 +14,8 @@ PetTracker.Domain/obj
 PetTracker.Database/PetTracker.Database.dbmdl
 PetTracker.Database/PetTracker.Database.jfm
 .vs
+PetTracker.Database/bin
+PetTracker.Database/obj
+PetTracker.Utility/bin
+PetTracker.UnitTests/bin
+PetTracker.UnitTests/obj

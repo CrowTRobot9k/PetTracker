@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
       <Version>9.*-*</Version>
@@ -21,11 +22,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.1.1" />
   </ItemGroup>
@@ -40,6 +43,7 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Pages\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
 

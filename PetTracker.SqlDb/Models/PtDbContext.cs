@@ -28,17 +28,13 @@ public partial class PtDbContext : IdentityDbContext<AspNetUser>, IPtDbContext
         : base(options)
     {
     }
-    //public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
-
-    //public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
-
+    public virtual DbSet<Appointment> Appointments { get; set; }
     //public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
-
     //public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
-
     //public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
-
     //public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
+   // public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+    //public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
 
     public virtual DbSet<BreedType> BreedTypes { get; set; }
 
@@ -55,10 +51,6 @@ public partial class PtDbContext : IdentityDbContext<AspNetUser>, IPtDbContext
     public virtual DbSet<PetBreedType> PetBreedTypes { get; set; }
 
     public virtual DbSet<PetType> PetTypes { get; set; }
-
-   // public virtual DbSet<AspNetUserClaim> UserClaims { get; set; }
-
-    public virtual DbSet<Appointment> Appointments { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.

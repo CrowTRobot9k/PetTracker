@@ -1,7 +1,9 @@
-using Microsoft.AspNetCore.Identity;
+//using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using PetTracker.Domain.Models;
+using PetTracker.Server.Models;
 using PetTracker.SqlDb.Models;
 using Scalar.AspNetCore;
 using System.Security.Claims;
@@ -16,6 +18,8 @@ builder.Services.AddDbContext<PtDbContext>(options =>
     options.EnableDetailedErrors();
 });
 
+builder.Services.AddDefaultIdentity<AspNetUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<PtDbContext>();
+
 builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
     builder =>
     {
@@ -28,11 +32,14 @@ builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddIdentityApiEndpoints<AspNetUser>()
-    .AddEntityFrameworkStores<PtDbContext>();
+builder.Services.AddIdentityCore<AspNetUser>().AddEntityFrameworkStores<PtDbContext>();
+    //.AddApiEndpoints();
+//builder.Services.AddIdentityApiEndpoints<AspNetUser>();
+   // .AddEntityFrameworkStores<PtDbContext>();
 
 // Add services to the container.
-builder.Services.AddScoped<IPtDbContext, PtDbContext>();
+builder.Services.AddTransient<IPtDbContext, PtDbContext>();
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -42,16 +49,17 @@ var app = builder.Build();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
-app.MapCustomizedIdentityApi<AspNetUser>();
+app.MapIdentityApi<AspNetUser>();
+//app.MapCustomizedIdentityApi<AspNetUser>();
 app.MapStaticAssets();
 
-app.MapPost("/logout", async (SignInManager<AspNetUser> signInManager) =>
-{
+//app.MapPost("/logout", async (SignInManager<AspNetUser> signInManager) =>
+//{
 
-    await signInManager.SignOutAsync();
-    return Results.Ok();
+//    await signInManager.SignOutAsync();
+//    return Results.Ok();
 
-}).RequireAuthorization();
+//}).RequireAuthorization();
 
 
 app.MapGet("/getauth", (ClaimsPrincipal claimsP) =>
