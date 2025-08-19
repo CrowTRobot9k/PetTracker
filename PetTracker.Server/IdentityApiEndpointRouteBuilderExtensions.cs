@@ -45,7 +45,6 @@ public static class IdentityApiEndpointRouteBuilderExtensions
 
         var timeProvider = endpoints.ServiceProvider.GetRequiredService<TimeProvider>();
         var bearerTokenOptions = endpoints.ServiceProvider.GetRequiredService<IOptionsMonitor<BearerTokenOptions>>();
-        var emailSender = endpoints.ServiceProvider.GetRequiredService<IEmailSender<TUser>>();
         var linkGenerator = endpoints.ServiceProvider.GetRequiredService<LinkGenerator>();
 
         // We'll figure out a unique endpoint name based on the final route pattern during endpoint generation.
@@ -84,7 +83,7 @@ public static class IdentityApiEndpointRouteBuilderExtensions
                 return CreateValidationProblem(result);
             }
 
-            await SendConfirmationEmailAsync(user, userManager, context, email);
+            await SendConfirmationEmailAsync(user, userManager,sp, context, email);
             return TypedResults.Ok();
         });
 
@@ -200,7 +199,7 @@ public static class IdentityApiEndpointRouteBuilderExtensions
                 return TypedResults.Ok();
             }
 
-            await SendConfirmationEmailAsync(user, userManager, context, resendRequest.Email);
+            await SendConfirmationEmailAsync(user, userManager,sp, context, resendRequest.Email);
             return TypedResults.Ok();
         });
 
@@ -214,6 +213,8 @@ public static class IdentityApiEndpointRouteBuilderExtensions
             {
                 var code = await userManager.GeneratePasswordResetTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                var emailSender = sp.GetRequiredService<IEmailSender<TUser>>();
 
                 await emailSender.SendPasswordResetCodeAsync(user, resetRequest.Email, HtmlEncoder.Default.Encode(code));
             }
@@ -381,14 +382,14 @@ public static class IdentityApiEndpointRouteBuilderExtensions
 
                 if (email != infoRequest.NewEmail)
                 {
-                    await SendConfirmationEmailAsync(user, userManager, context, infoRequest.NewEmail, isChange: true);
+                    await SendConfirmationEmailAsync(user, userManager, sp,context, infoRequest.NewEmail, isChange: true);
                 }
             }
 
             return TypedResults.Ok(await CreateInfoResponseAsync(user, userManager));
         });
 
-        async Task SendConfirmationEmailAsync(TUser user, UserManager<TUser> userManager, HttpContext context, string email, bool isChange = false)
+        async Task SendConfirmationEmailAsync(TUser user, UserManager<TUser> userManager, IServiceProvider sp,HttpContext context, string email, bool isChange = false)
         {
             if (confirmEmailEndpointName is null)
             {
@@ -415,6 +416,8 @@ public static class IdentityApiEndpointRouteBuilderExtensions
 
             var confirmEmailUrl = linkGenerator.GetUriByName(context, confirmEmailEndpointName, routeValues)
                 ?? throw new NotSupportedException($"Could not find endpoint named '{confirmEmailEndpointName}'.");
+
+            var emailSender = sp.GetRequiredService<IEmailSender<TUser>>();
 
             await emailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(confirmEmailUrl));
         }

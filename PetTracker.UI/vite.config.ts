@@ -60,7 +60,7 @@ export default defineConfig({
                 target,
                 secure: false
             },
-            '^/confirmemail': {
+            '^/confirmEmail': {
                 target,
                 secure: false
             },
