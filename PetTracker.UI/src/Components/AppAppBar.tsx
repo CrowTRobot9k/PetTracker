@@ -78,7 +78,7 @@ export default function AppAppBar(props: { currentPage:string})
           }}
       >
       <Container maxWidth="xl">
-        <img src="../src/assets/PetTrackerLogoWide.png" width="400" height="120" />
+        <img src="/PetTrackerLogoWide.png" width="400" height="120" />
           <StyledToolbar variant="dense" disableGutters>
             <Box sx={{ display: 'flex', px: 0, mx: 2 }}>
                   <Box sx={{ mx: 2, display: { xs: 'none', md: 'flex' } }}>

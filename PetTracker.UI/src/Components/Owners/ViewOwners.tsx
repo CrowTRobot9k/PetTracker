@@ -68,7 +68,7 @@ export default function ViewOwners() {
     const getOwnerSlides = (images) =>
     {
         if (!images || images.length === 0) {
-            return [<img key="no-image" src="../src/assets/Owner Placeholder.png"/>];
+            return [<img key="no-image" src="/Owner Placeholder.png"/>];
         }
 
         return Array.from(images.map((f, index) => (

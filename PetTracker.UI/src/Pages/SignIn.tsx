@@ -164,7 +164,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       <SignInContainer direction="column" justifyContent="space-between">
         <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
         <Card variant="outlined">
-          <img src="../src/assets/PetTrackerLogoWide.png" width="400" height="120" />
+          <img src="/PetTrackerLogoWide.png" width="400" height="120" />
           <Typography
             component="h1"
             variant="h4"

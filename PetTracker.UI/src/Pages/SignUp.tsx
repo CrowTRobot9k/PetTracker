@@ -172,7 +172,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
       <SignUpContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
-          <img src="../src/assets/PetTrackerLogoWide.png" width="400" height="120" />
+          <img src="/PetTrackerLogoWide.png" width="400" height="120" />
           <Typography
             component="h1"
             variant="h4"

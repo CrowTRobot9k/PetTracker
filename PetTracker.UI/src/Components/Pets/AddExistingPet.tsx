@@ -53,8 +53,8 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
     {
         const placeholderDict =
         {
-            Cat: "../src/assets/Cat Placeholder.png",
-            Dog: "../src/assets/Dog Placeholder.png",
+            Cat: "/Cat Placeholder.png",
+            Dog: "/Dog Placeholder.png",
         }
         if (!images || images.length === 0) {
             return [<img src={placeholderDict[petType]} />]
