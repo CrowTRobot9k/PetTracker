@@ -4,7 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <SpaRoot>..\pettracker.client</SpaRoot>
+    <SpaRoot>..\PetTracker.UI</SpaRoot>
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:50449</SpaProxyServerUrl>
     <UserSecretsId>d07c1821-c99e-41c0-bfe8-1ae483f9f76a</UserSecretsId>

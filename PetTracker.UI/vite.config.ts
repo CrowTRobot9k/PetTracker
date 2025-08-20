@@ -34,8 +34,16 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
     }
 }
 
-const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
-    env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:32777';
+//const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:8081` :
+//    env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:8081';
+
+//change to port of service container
+const target = 'https://localhost:7175';
+//console.log('Environment variables:');
+//console.log('ASPNETCORE_HTTPS_PORT:', env.ASPNETCORE_HTTPS_PORT);
+//console.log('ASPNETCORE_URLS:', env.ASPNETCORE_URLS);
+//console.log('Final target:', target);
+
 
 // https://vitejs.dev/config/
 export default defineConfig({

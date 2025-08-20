@@ -10,79 +10,89 @@ using PetTracker.SqlDb.Models;
 using Scalar.AspNetCore;
 using System.Security.Claims;
 
-var builder = WebApplication.CreateBuilder(args);
-
-var connectionString = builder.Configuration.GetConnectionString("PtDbConnection") ?? throw new InvalidOperationException("Connection string 'PtDbConnection' not found.");
-
-builder.Services.AddDbContext<PtDbContext>(options =>
+try
 {
-    options.UseSqlServer(connectionString, b => b.MigrationsAssembly("PetTracker.Server"));
-    options.EnableDetailedErrors();
-});
+    var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDefaultIdentity<AspNetUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<PtDbContext>();
+    builder.Services.AddTransient<IPtDbContext, PtDbContext>();
 
-builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
-    builder =>
+    var connectionString = builder.Configuration.GetConnectionString("PtDbConnection") ?? throw new InvalidOperationException("Connection string 'PtDbConnection' not found.");
+
+
+    builder.Services.AddDbContext<PtDbContext>(options =>
     {
-        builder
-        .AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader();
-       // .AllowCredentials();
-    }));
+        options.UseSqlServer(connectionString, b => b.MigrationsAssembly("PetTracker.Server"));
+        options.EnableDetailedErrors();
+    });
 
-builder.Services.AddAuthorization();
+    builder.Services.AddDefaultIdentity<AspNetUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<PtDbContext>();
 
-builder.Services.AddIdentityCore<AspNetUser>().AddEntityFrameworkStores<PtDbContext>();
+    builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
+        builder =>
+        {
+            builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+            // .AllowCredentials();
+        }));
 
-// Add services to the container.
-builder.Services.AddTransient<IPtDbContext, PtDbContext>();
-builder.Services.AddScoped<IEmailSender<AspNetUser>, IdentityEmailSender>();
-//builder.Services.AddScoped<IEmailSender, EmailSender>();
+    builder.Services.AddAuthorization();
 
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+    builder.Services.AddIdentityCore<AspNetUser>().AddEntityFrameworkStores<PtDbContext>();
 
-var app = builder.Build();
+    // Add services to the container.
+    builder.Services.AddScoped<IEmailSender<AspNetUser>, IdentityEmailSender>();
+    //builder.Services.AddScoped<IEmailSender, EmailSender>();
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
-//app.MapIdentityApi<AspNetUser>();
-app.MapCustomizedIdentityApi<AspNetUser>();
-app.MapStaticAssets();
+    builder.Services.AddControllers();
+    // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+    builder.Services.AddOpenApi();
 
-app.MapPost("/logout", async (SignInManager<AspNetUser> signInManager) =>
-{
+    var app = builder.Build();
 
-    await signInManager.SignOutAsync();
-    return Results.Ok();
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
+    //app.MapIdentityApi<AspNetUser>();
+    app.MapCustomizedIdentityApi<AspNetUser>();
+    app.MapStaticAssets();
 
-}).RequireAuthorization();
+    app.MapPost("/logout", async (SignInManager<AspNetUser> signInManager) =>
+    {
+
+        await signInManager.SignOutAsync();
+        return Results.Ok();
+
+    }).RequireAuthorization();
 
 
-app.MapGet("/getauth", (ClaimsPrincipal claimsP) =>
-{
-    var email = claimsP.FindFirstValue(ClaimTypes.Email); // get the user's email from the claim
-    var userName = claimsP.FindFirstValue(ClaimTypes.Name);
+    app.MapGet("/getauth", (ClaimsPrincipal claimsP) =>
+    {
+        var email = claimsP.FindFirstValue(ClaimTypes.Email); // get the user's email from the claim
+        var userName = claimsP.FindFirstValue(ClaimTypes.Name);
 
-    return Results.Json(new { Email = email, UserName = userName  }); ; // return the email as a plain text response
-}).RequireAuthorization();
+        return Results.Json(new { Email = email, UserName = userName }); ; // return the email as a plain text response
+    }).RequireAuthorization();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference();
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.MapOpenApi();
+        app.MapScalarApiReference();
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    app.MapFallbackToFile("/index.html");
+    app.UseCors();
+
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.MapFallbackToFile("/index.html");
-app.UseCors();
-app.Run();
+catch (Exception ex)
+{
+    Console.WriteLine($"An error occurred: {ex.Message}");
+}
