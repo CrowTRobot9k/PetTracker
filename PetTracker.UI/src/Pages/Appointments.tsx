@@ -5,6 +5,7 @@ import AppAppBar from '../Components/AppAppBar';
 import AppointmentScheduler from '../Components/AppointmentScheduler.tsx'
 import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
 import SearchProvider from '../Components/SearchProvider.tsx';
+import { Box } from '@mui/material';
 
 export default function Appointments(props: { disableCustomTheme?: boolean }) {
     return (
@@ -13,6 +14,8 @@ export default function Appointments(props: { disableCustomTheme?: boolean }) {
                 <CssBaseline enableColorScheme />
                 <SearchProvider>
                     <AppAppBar currentPage="appointments" />
+                    {/* Spacer to prevent content from being hidden behind fixed App Bar */}
+                    <Box sx={{ height: '120px' }} />
                     <AppointmentScheduler></AppointmentScheduler>
                 </SearchProvider>
             </AppTheme>

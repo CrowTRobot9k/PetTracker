@@ -14,6 +14,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { useNavigate } from "react-router";
 import OutlinedInput from '@mui/material/OutlinedInput';
 import { useSearch } from '../Components/SearchProvider';
+import Typography from '@mui/material/Typography';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -41,8 +42,9 @@ export default function AppAppBar(props: { currentPage:string})
         setSearchTerm(e.target.value);
     };
 
-    const toggleDrawer = (newOpen: boolean) => () => {
-      setOpen(newOpen);
+    const toggleDrawer = (newOpen?: boolean) => () =>
+    {
+            setOpen(newOpen||!open);
     };
 
     const navLogout = () =>
@@ -68,20 +70,38 @@ export default function AppAppBar(props: { currentPage:string})
     return (
         <>
         <AppBar
-          position="static"
+          position="fixed"
           enableColorOnDark
           sx={{
             boxShadow: 0,
             bgcolor: 'transparent',
             backgroundImage: 'none',
-            mt: 'calc(var(--template-frame-height, 0px) + 28px)',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: (theme) => theme.zIndex.drawer + 1,
           }}
       >
       <Container maxWidth="xl">
-        <img src="/PetTrackerLogoWide.png" width="400" height="120" />
+        <Box 
+          component="img"
+          src="/PetTrackerLogoWideTransparent.png" 
+          sx={{ 
+            cursor: 'pointer',
+            transition: 'opacity 0.2s ease-in-out',
+            maxWidth: '100%',
+            height: 'auto',
+            width: 'auto',
+            maxHeight: { xs: '80px', sm: '100px', md: '120px', lg: '140px', xl: '160px' }
+          }}
+          onClick={() => navigate('/')}
+          alt="PetTracker Logo - Click to go home"
+          onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+          onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+        />
           <StyledToolbar variant="dense" disableGutters>
-            <Box sx={{ display: 'flex', px: 0, mx: 2 }}>
-                  <Box sx={{ mx: 2, display: { xs: 'none', md: 'flex' } }}>
+            <Box sx={{ display: 'flex', px: 0, mx: 2, flex: 1 }}>
+                  <Box sx={{ mx: 2, display: { xs: 'none', md: 'flex' }, gap: 1 }}>
                       <Button onClick={() => navigate('/owners')} variant={props.currentPage == "owners" ? "contained" : "text"} color="info" size="small">
                           Owners
                       </Button>
@@ -94,23 +114,20 @@ export default function AppAppBar(props: { currentPage:string})
                       <Button onClick={() => navigate('/users')} variant={props.currentPage == "users" ? "contained" : "text"} color="info" size="small">
                           Users
                       </Button>
-                      {/*<Button onClick={() => navigate('/blog')} variant={currentPage == "blog" ? "contained" : "text"} color="info" size="small">*/}
-                      {/*    Blog*/}
-                      {/*</Button>*/}
                   </Box>
                   <Box
                       sx={{
                           display: { xs: 'none', md: 'flex' },
                           mx: 2,
                           alignItems: 'center',
+                          flex: 1,
+                          justifyContent: 'center'
                       }}
                   >
                       <OutlinedInput
-                              autoFocus
-                              margin="dense"
                               placeholder="Search"
                               type="text"
-                              sx={{ width: "1000px" }}
+                              sx={{ width: "100%", maxWidth: "600px" }}
                               value={searchTerm}
                               onChange={handleSearchChange}
                       />
@@ -126,19 +143,17 @@ export default function AppAppBar(props: { currentPage:string})
             <Button onClick={navLogout} color="primary" variant="contained" size="small">
                 Logout
             </Button>
-{/*            <ColorModeIconDropdown />*/}
           </Box>
-          <Box sx={{ width:1, display: { xs: 'flex', md: 'none' }, gap: 1 }}>
-            {/*<ColorModeIconDropdown size="medium" />*/}
-
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1, alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
             <OutlinedInput
-                autoFocus
-                margin="dense"
                 placeholder="Search"
                 type="text"
-                sx={{width:"100%"}}
+                sx={{ flex: 1, mr: 1 }}
+                value={searchTerm}
+                onChange={handleSearchChange}
+                size="small"
             />
-            <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
+            <IconButton aria-label="Menu button" onClick={toggleDrawer()} size="small" sx={{ flexShrink: 0 }}>
               <MenuIcon />
             </IconButton>
             <Drawer
@@ -147,32 +162,47 @@ export default function AppAppBar(props: { currentPage:string})
               onClose={toggleDrawer(false)}
               PaperProps={{
                 sx: {
-                  top: 'var(--template-frame-height, 0px)',
+                  top: '120px', // Reduced height for mobile
+                  maxHeight: 'calc(100vh - 120px)',
+                  backgroundColor: 'background.default',
+                  borderTop: '1px solid',
+                  borderColor: 'divider',
+                  width: '100%'
                 },
               }}
             >
-              <Box sx={{ p: 2, backgroundColor: 'background.default' }}>
+              <Box sx={{ p: 2 }}>
                 <Box
                   sx={{
                     display: 'flex',
                     justifyContent: 'flex-end',
+                    mb: 2
                   }}
                 >
-                  <IconButton onClick={toggleDrawer(false)}>
-                    <CloseRoundedIcon />
-                  </IconButton>
                 </Box>
-                <MenuItem onClick={() => navigate('/owners')}>Owners</MenuItem>
-                <MenuItem onClick={() => navigate('/pets')}>Pets</MenuItem>
-                <MenuItem onClick={() => navigate('/appointments')}>Appointments</MenuItem>
-                <MenuItem onClick={() => navigate('/users')}>Appointments</MenuItem>
-{/*                <MenuItem onClick={() => navigate('/blog')}>Blog</MenuItem>*/}
-                 <Divider sx={{ my: 3 }} />
-                  <MenuItem>
-                      <Button onClick={navLogout} color="primary" variant="outlined" fullWidth>
-                          Logout
-                      </Button>
+                
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <MenuItem onClick={() => { navigate('/owners'); toggleDrawer(false); }}>
+                    <Typography>Owners</Typography>
                   </MenuItem>
+                  <MenuItem onClick={() => { navigate('/pets'); toggleDrawer(false); }}>
+                    <Typography>Pets</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={() => { navigate('/appointments'); toggleDrawer(false); }}>
+                    <Typography>Appointments</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={() => { navigate('/users'); toggleDrawer(false); }}>
+                    <Typography>Users</Typography>
+                  </MenuItem>
+                </Box>
+                
+                <Divider sx={{ my: 2 }} />
+                
+                <MenuItem sx={{ p: 0 }}>
+                  <Button onClick={() => { navLogout(); toggleDrawer(false); }} color="primary" variant="outlined" fullWidth>
+                    Logout
+                  </Button>
+                </MenuItem>
               </Box>
             </Drawer>
           </Box>
