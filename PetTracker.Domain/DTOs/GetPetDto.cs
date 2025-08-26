@@ -12,7 +12,7 @@ namespace PetTracker.Domain.DTOs
         public GetPetDto(Pet pet):base(pet)
         {
             
-            PetType = new PetTypeDto(pet.PetType);
+            PetType = pet.PetType!=null?new PetTypeDto(pet.PetType):new PetTypeDto();
             BreedTypes = pet.PetBreedTypes.Select(s => new BreedTypeDto(s.BreedType)).ToList();
             PetPhotos = pet.FileUploadMappings.Select(s => new FileDownloadDto(s.FileUpload)).ToList();
         }

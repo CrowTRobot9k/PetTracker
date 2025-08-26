@@ -15,7 +15,7 @@ export default function Appointments(props: { disableCustomTheme?: boolean }) {
                 <SearchProvider>
                     <AppAppBar currentPage="appointments" />
                     {/* Spacer to prevent content from being hidden behind fixed App Bar */}
-                    <Box sx={{ height: '120px' }} />
+                    <Box sx={{ height: '180px' }} />
                     <AppointmentScheduler></AppointmentScheduler>
                 </SearchProvider>
             </AppTheme>

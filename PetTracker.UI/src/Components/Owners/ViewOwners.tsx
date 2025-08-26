@@ -100,22 +100,24 @@ export default function ViewOwners() {
                             component="main"
                             sx={{
                                 display: 'flex',
-                                flexDirection: 'column', my: 2, gap: 2,
-
+                                flexDirection: 'column', 
+                                my: 2, 
+                                gap: 2,
+                                overflow: 'hidden',
+                                height: 'calc(100vh - 260px)', // Account for App Bar (180px) and spacing
+                                minHeight: '500px'
                             }}
                         >
                             {(!loadingOwners) && (
                                 <Grid container spacing={2} columns={12} sx={{
-                                    //height: '400px',
-                                    //width: '100%',
                                     display: 'flex',
                                     flexDirection: 'row',
-                                    //alignItems: 'center',
-                                    //justifyContent: 'center',
+                                    overflow: 'auto', // Allow scrolling within the grid
+                                    height: '100%'
                                 }}>
                                     <Grid
                                         size={owners.length < 3 ? "grow" : 4}
-                                        sx={{ height: '350px' }}
+                                        sx={{ height: '350px', overflow: 'hidden' }}
                                     >
                                         <Card
                                             //variant="outlined"
@@ -126,6 +128,7 @@ export default function ViewOwners() {
                                                 //flexDirection: 'row',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
+                                                overflow: 'hidden'
                                             }}
                                         >
                                             <Button onClick={handleClickOpen} variant="contained" color="info" endIcon={<AddIcon />}>
@@ -140,7 +143,7 @@ export default function ViewOwners() {
                             )).map(m =>
                                         <Grid
                                             size={owners.length < 3 ? "grow" : 4}
-                                            sx={{ height: '350px' }}
+                                            sx={{ height: '350px', overflow: 'hidden' }}
                                         >
                                             <Card
                                                 variant="outlined"
@@ -151,6 +154,7 @@ export default function ViewOwners() {
                                                     ////flexDirection: 'row',
                                                     //alignItems: 'center',
                                                     //justifyContent: 'center',
+                                                    overflow: 'hidden'
                                                 }}
                                             >
                                                 <Carousel cards={getOwnerSlides(m.ownerPhotos)} />

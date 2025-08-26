@@ -18,7 +18,7 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                 <CssBaseline enableColorScheme />
                 <AppAppBar currentPage="home"/>
                 {/* Spacer to prevent content from being hidden behind fixed App Bar */}
-                <Box sx={{ height: '120px' }} />
+                <Box sx={{ height: '180px' }} />
                 <Container
                     maxWidth="lg"
                     component="main"

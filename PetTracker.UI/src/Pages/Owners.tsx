@@ -15,7 +15,7 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
                 <SearchProvider>
                     <AppAppBar currentPage="owners" />
                     {/* Spacer to prevent content from be hidden behind fixed App Bar */}
-                    <Box sx={{ height: '120px' }} />
+                    <Box sx={{ height: '180px' }} />
                     <ViewOwners />
                 </SearchProvider>
             </AppTheme>

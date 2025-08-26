@@ -15,7 +15,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
             <SearchProvider>
                 <AppAppBar currentPage="pets" />
                 {/* Spacer to prevent content from being hidden behind fixed App Bar */}
-                <Box sx={{ height: '120px' }} />
+                <Box sx={{ height: '180px' }} />
                 <ViewPets />
             </SearchProvider>
         </AppTheme>
