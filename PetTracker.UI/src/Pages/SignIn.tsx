@@ -27,11 +27,16 @@ const Card = styled(MuiCard)(({ theme }) => ({
   flexDirection: 'column',
   alignSelf: 'center',
   width: '100%',
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
+  padding: theme.spacing(2),
+  gap: theme.spacing(1.5),
   margin: 'auto',
   [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(3),
+    gap: theme.spacing(2),
     maxWidth: '450px',
+  },
+  [theme.breakpoints.up('md')]: {
+    padding: theme.spacing(4),
   },
   boxShadow:
     'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
@@ -44,8 +49,11 @@ const Card = styled(MuiCard)(({ theme }) => ({
 const SignInContainer = styled(Stack)(({ theme }) => ({
   height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
   minHeight: '100%',
-  padding: theme.spacing(2),
+  padding: theme.spacing(1),
   [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(2),
+  },
+  [theme.breakpoints.up('md')]: {
     padding: theme.spacing(4),
   },
   '&::before': {
@@ -162,13 +170,29 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       <AppTheme {...props}>
       <CssBaseline enableColorScheme />
       <SignInContainer direction="column" justifyContent="space-between">
-        <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
         <Card variant="outlined">
-          <img src="/PetTrackerLogoWide.png" width="400" height="120" />
+          <Box
+            component="img"
+            src="/PetTrackerLogoWide.png"
+            sx={{
+              width: '100%',
+              height: 'auto',
+              maxWidth: { xs: '300px', sm: '350px', md: '400px' },
+              maxHeight: { xs: '90px', sm: '105px', md: '120px' },
+              alignSelf: 'center',
+              objectFit: 'contain'
+            }}
+            alt="PetTracker Logo"
+          />
           <Typography
             component="h1"
             variant="h4"
-            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
+            sx={{ 
+              width: '100%', 
+              fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' },
+              textAlign: 'center',
+              fontWeight: 'bold'
+            }}
           >
             Sign in
           </Typography>
@@ -227,6 +251,11 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               fullWidth
               variant="contained"
               onClick={validateInputs}
+              size="large"
+              sx={{ 
+                py: 1.5,
+                fontSize: { xs: '1rem', sm: '1.1rem' }
+              }}
             >
               Sign in
             </Button>
@@ -234,6 +263,11 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 fullWidth
                 variant="outlined"
                 onClick={navSignUp}
+                size="large"
+                sx={{ 
+                  py: 1.5,
+                  fontSize: { xs: '1rem', sm: '1.1rem' }
+                }}
             >
                 Sign Up
             </Button>
