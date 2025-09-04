@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import useUsersStore from '../../Stores/UsersStore.tsx';
+import Box from '@mui/material/Box';
 import LoadingPlaceholder from '../LoadingPlaceholder.tsx';
 import ErrorDisplay from '../ErrorDisplay.tsx';
-import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
@@ -50,6 +50,8 @@ export default function Users() {
     } = useUsersStore();
 
     const [open, setOpen] = React.useState(false);
+    const [openViewUser, setOpenViewUser] = React.useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
     const [reloadUsers, setReloadUsers] = React.useState(false);
 
     useEffect(() => {
@@ -68,6 +70,16 @@ export default function Users() {
         setOpen(false);
     };
 
+    const handleOpenUser = (user) => {
+        const copiedUser = JSON.parse(JSON.stringify(user));
+        setSelectedUser(copiedUser);
+        setOpenViewUser(true);
+    };
+
+    const handleCloseUser = () => {
+        setOpenViewUser(false);
+    };
+
     const getUserSlides = (images) => {
         return Array.from(images.map((f, index) => (
             <img key={`${index}_${f.fileName}`} src={getImageUrlFromBlob(f.fileDataBase64)} />
@@ -82,44 +94,27 @@ export default function Users() {
             <LoadingPlaceholder />
         )}
         {!(showErrors) && (
-            <Container
-                maxWidth="xl"
-                component="main"
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column', my: 2, gap: 2,
-
-                }}
-            >
+            <>
                 {(!loadingUsers) && (
-                    <Grid container spacing={2} columns={12} sx={{
-                        //height: '400px',
-                        //width: '100%',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        //alignItems: 'center',
-                        //justifyContent: 'center',
-                    }}>
-                        <Grid
-                            size={users.length < 3 ? "grow" : 4}
-                            sx={{ height: '350px' }}
-                        >
-                            <Card
-                                //variant="outlined"
-                                sx={{
-                                    height: '100%',
-                                    //width: '100%',
-                                    display: 'flex',
-                                    //flexDirection: 'row',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
+                    <>
+                        <Box sx={{ display: 'flex', gap: 2, mb: 1, mt: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
+                            <Button 
+                                onClick={handleClickOpen} 
+                                variant="contained" 
+                                color="info" 
+                                endIcon={<AddIcon />}
+                                size="medium"
+                                sx={{ 
+                                    fontSize: { xs: '0.875rem', sm: '1rem' }
                                 }}
                             >
-                                <Button onClick={handleClickOpen} variant="contained" color="info" endIcon={<AddIcon />}>
-                                    Add User
-                                </Button>
-                            </Card>
-                        </Grid>
+                                Add User
+                            </Button>
+                        </Box>
+                        <Grid container spacing={2} columns={12} sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                        }}>
                         <AddUser
                             open={open}
                             handleClose={handleClose}
@@ -131,44 +126,81 @@ export default function Users() {
                             ((f.firstName + " " + f.lastName).toLowerCase().indexOf(searchTerm?.toLowerCase()) > -1)
                         )).map(m =>
                             <Grid
-                                size={users.length < 3 ? "grow" : 4}
-                                sx={{ height: '350px' }}
+                                key={m.id}
+                                xs={12}
+                                sm={6}
+                                md={4}
+                                lg={3}
+                                xl={2}
+                                sx={{ 
+                                    height: { xs: '320px', sm: '360px', md: '400px' },
+                                    minHeight: '320px'
+                                }}
                             >
                                 <Card
                                     variant="outlined"
                                     sx={{
                                         height: '100%',
-                                        ////width: '100%',
-                                        //display: 'flex',
-                                        ////flexDirection: 'row',
-                                        //alignItems: 'center',
-                                        //justifyContent: 'center',
+                                        display: 'flex',
+                                        flexDirection: 'column',
                                     }}
                                 >
-                                    {/*<Carousel cards={getOwnerSlides(m.ownerPhotos)} />*/}
-                                    <SyledCardContent>
-                                        <Typography gutterBottom variant="h6" component="div">
+                                    <SyledCardContent sx={{
+                                        p: { xs: 0.25, sm: 0.5 },
+                                        flexGrow: 1,
+                                    }}>
+                                        <Typography 
+                                            gutterBottom 
+                                            variant="h6" 
+                                            component="div"
+                                            sx={{
+                                                fontSize: { xs: '0.9rem', sm: '1.1rem' },
+                                                textAlign: 'center',
+                                                wordBreak: 'break-word',
+                                                mb: { xs: 0.125, sm: 0.25 },
+                                            }}
+                                        >
                                             {m.fullName}
                                         </Typography>
-                                        <StyledTypography variant="body2" color="text.secondary" gutterBottom>
+                                        <StyledTypography 
+                                            variant="body2" 
+                                            color="text.secondary" 
+                                            gutterBottom
+                                            sx={{
+                                                fontSize: { xs: '0.7rem', sm: '0.8rem' },
+                                                textAlign: 'center',
+                                                mb: { xs: 0.125, sm: 0.25 },
+                                            }}
+                                        >
                                             {m.email}
                                         </StyledTypography>
-                                        {/*<StyledTypography variant="body2" color="text.secondary" gutterBottom>*/}
-                                        {/*    {m.city} {m.state} {m.zipCode}*/}
-                                        {/*</StyledTypography>*/}
                                     </SyledCardContent>
-                                    <SyledCardContent sx={{ my: 0 }}>
-                                        {/*<Fab size="small" color="primary" sx={{ alignSelf: 'center' }} onClick={() => handleOpenOwner(m)} aria-label="add">*/}
-                                        {/*    <EditIcon />*/}
-                                        {/*</Fab>*/}
+                                    <SyledCardContent sx={{ 
+                                        my: { xs: 0.125, sm: 0 },
+                                        p: { xs: 0.25, sm: 0.5 },
+                                    }}>
+                                        <Fab 
+                                            size="small" 
+                                            color="primary" 
+                                            sx={{ 
+                                                alignSelf: 'center',
+                                                width: { xs: '36px', sm: '44px' },
+                                                height: { xs: '36px', sm: '44px' },
+                                            }} 
+                                            onClick={() => handleOpenUser(m)} 
+                                            aria-label="edit"
+                                        >
+                                            <EditIcon sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
+                                        </Fab>
                                     </SyledCardContent>
                                 </Card>
                             </Grid>
                         )}
-                    </Grid>
+                        </Grid>
+                    </>
                 )}
             {/*    <ViewOwner open={openViewOwner} viewOwner={selectedOwner} handleClose={handleCloseOwner} ownerStates={states} reloadOwners={reloadOwners} setReloadOwners={setReloadOwners} />*/}
-            </Container>
+            </>
         )}
     </>);
 }

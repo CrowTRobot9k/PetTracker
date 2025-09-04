@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { alpha, styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
@@ -10,7 +10,6 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { useNavigate } from "react-router";
 import OutlinedInput from '@mui/material/OutlinedInput';
 import { useSearch } from '../Components/SearchProvider';
@@ -36,9 +35,9 @@ export default function AppAppBar(props: { currentPage:string})
 {
     const [open, setOpen] = React.useState(false);
     const navigate = useNavigate();
-    const { searchTerm, setSearchTerm } = useSearch();
+    const { searchTerm, setSearchTerm } = useSearch() as { searchTerm: string; setSearchTerm: (term: string) => void };
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
     };
 
@@ -70,19 +69,15 @@ export default function AppAppBar(props: { currentPage:string})
     return (
         <>
         <AppBar
-          position="fixed"
+          position="static"
           enableColorOnDark
           sx={{
             boxShadow: 0,
             bgcolor: 'transparent',
             backgroundImage: 'none',
-            top: 0,
-            left: 0,
-            right: 0,
-            zIndex: (theme) => theme.zIndex.drawer + 1,
           }}
       >
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <Box 
           component="img"
           src="/PetTrackerLogoWideTransparent.png" 
@@ -102,6 +97,9 @@ export default function AppAppBar(props: { currentPage:string})
           <StyledToolbar variant="dense" disableGutters>
             <Box sx={{ display: 'flex', px: 0, mx: 2, flex: 1 }}>
                   <Box sx={{ mx: 2, display: { xs: 'none', md: 'flex' }, gap: 1 }}>
+                      <Button onClick={() => navigate('/')} variant={props.currentPage == "home" ? "contained" : "text"} color="info" size="small">
+                          Home
+                      </Button>
                       <Button onClick={() => navigate('/owners')} variant={props.currentPage == "owners" ? "contained" : "text"} color="info" size="small">
                           Owners
                       </Button>
@@ -182,6 +180,9 @@ export default function AppAppBar(props: { currentPage:string})
                 </Box>
                 
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <MenuItem onClick={() => { navigate('/'); toggleDrawer(false); }}>
+                    <Typography>Home</Typography>
+                  </MenuItem>
                   <MenuItem onClick={() => { navigate('/owners'); toggleDrawer(false); }}>
                     <Typography>Owners</Typography>
                   </MenuItem>

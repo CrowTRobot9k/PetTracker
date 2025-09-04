@@ -28,3 +28,34 @@
 body {
     overflow-x: hidden; /* Hides the horizontal scrollbar */
 }
+
+/* Mobile-friendly improvements */
+@media (max-width: 600px) {
+    .MuiContainer-root {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+    
+    .MuiGrid-container {
+        margin-left: -4px !important;
+        margin-right: -4px !important;
+    }
+    
+    .MuiGrid-item {
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+    }
+    
+    .MuiCard-root {
+        border-radius: 8px !important;
+    }
+    
+    .MuiFab-root {
+        min-height: 40px !important;
+        min-width: 40px !important;
+    }
+    
+    .MuiButton-root {
+        min-height: 44px !important; /* Better touch target */
+    }
+}

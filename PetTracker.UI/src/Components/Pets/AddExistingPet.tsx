@@ -177,32 +177,47 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
                     }}
                 >
                     {(!loadingExistingPets) && (
-                        <Grid container spacing={2} columns={12} sx={{
-                            //height: '400px',
-                            //width: '100%',
+                        <Grid container spacing={2} sx={{
                             display: 'flex',
                             flexDirection: 'row',
-                            //alignItems: 'center',
-                            //justifyContent: 'center',
                         }}>
                             {existingPets?.filter(f => ((searchValue ?? '') == '' || (f.name.toLowerCase().indexOf(searchValue?.toLowerCase())>-1))).map(m =>
-                                <Grid size={existingPets.length < 3 ? "grow" : 4}
-                                    sx={{ height: '365px' }}
+                                <Grid 
+                                    key={m.id}
+                                    xs={12}
+                                    sm={6}
+                                    md={4}
+                                    lg={3}
+                                    xl={2}
+                                    sx={{ 
+                                        height: { xs: '320px', sm: '360px', md: '400px' },
+                                        minHeight: '320px'
+                                    }}
                                 >
                                     <Card
                                         variant="outlined"
                                         sx={{
                                             height: '100%',
-                                            ////width: '100%',
                                             display: 'flex',
                                             flexDirection: 'column',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
                                         }}
                                     >
                                         <Carousel cards={getPetSlides(m.petPhotos, m.petType?.type)} />
-                                        <SyledCardContent>
-                                            <Typography gutterBottom variant="h6" component="div">
+                                        <SyledCardContent sx={{
+                                            p: { xs: 0.5, sm: 1 },
+                                            flexGrow: 1,
+                                        }}>
+                                            <Typography 
+                                                gutterBottom 
+                                                variant="h6" 
+                                                component="div"
+                                                sx={{
+                                                    fontSize: { xs: '0.9rem', sm: '1.1rem' },
+                                                    textAlign: 'center',
+                                                    wordBreak: 'break-word',
+                                                    mb: { xs: 0.5, sm: 1 },
+                                                }}
+                                            >
                                                 {m.name}
                                             </Typography>
                                         </SyledCardContent>
@@ -210,15 +225,25 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
                                             sx={{
                                                 display: 'flex',
                                                 flexDirection: 'row',
+                                                flexWrap: 'wrap',
                                                 bgcolor: 'background.paper',
                                                 borderRadius: 1,
-                                                mx: 'auto'
+                                                mx: 'auto',
+                                                p: { xs: 0.25, sm: 0.5 },
+                                                justifyContent: 'center',
+                                                mb: { xs: 0.5, sm: 1 },
                                             }}
                                         >
-                                            {m.breedTypes?.length > 0 && (m.breedTypes?.map(b =>
-                                                <Chip sx={{
-                                                    m: 1,
-                                                }} label={b.name} />
+                                            {m.breedTypes?.length > 0 && (m.breedTypes?.map((b, index) =>
+                                                <Chip 
+                                                    key={index}
+                                                    sx={{
+                                                        m: { xs: 0.125, sm: 0.25 },
+                                                        fontSize: { xs: '0.7rem', sm: '0.8rem' },
+                                                        height: { xs: '20px', sm: '28px' },
+                                                    }} 
+                                                    label={b.name} 
+                                                />
                                             ))}
                                         </Box>
                                         <Box
@@ -227,18 +252,32 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
                                                 flexDirection: 'row',
                                                 bgcolor: 'background.paper',
                                                 borderRadius: 1,
-                                                mx: 'auto'
+                                                mx: 'auto',
+                                                p: { xs: 0.25, sm: 0.5 },
+                                                justifyContent: 'center',
                                             }}
                                         >
-                                            <FormControlLabel control={<Checkbox
-                                                sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}
-                                                checked={selectedPets[m.id]||false}
-                                                onChange={handlePetCheckboxChange}
-                                                name={m.id}
-                                            />}
-                                                label="Add Pet"
+                                            <FormControlLabel 
+                                                control={
+                                                    <Checkbox
+                                                        sx={{ 
+                                                            '& .MuiSvgIcon-root': { 
+                                                                fontSize: { xs: 24, sm: 28 } 
+                                                            } 
+                                                        }}
+                                                        checked={selectedPets[m.id]||false}
+                                                        onChange={handlePetCheckboxChange}
+                                                        name={m.id}
+                                                    />
+                                                }
+                                                label={
+                                                    <Typography sx={{
+                                                        fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                                                    }}>
+                                                        Add Pet
+                                                    </Typography>
+                                                }
                                             />
-
                                         </Box>
                                     </Card>
                                 </Grid>

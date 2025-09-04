@@ -1,11 +1,9 @@
-import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import AppTheme from '../Theme/AppTheme';
 import AppAppBar from '../Components/AppAppBar';
-import PtFooter from '../Components/PtFooter';
-import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
-import { Paper, Button, Typography, Box, Card, CardContent } from '@mui/material';
+import AuthorizeView from "../Components/AuthorizeView.tsx";
+import { Button, Typography, Box, Card, CardContent } from '@mui/material';
 import { Pets, People, Event, Person } from '@mui/icons-material';
 import { useNavigate } from 'react-router';
 
@@ -17,12 +15,10 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
             <AppTheme {...props}>
                 <CssBaseline enableColorScheme />
                 <AppAppBar currentPage="home"/>
-                {/* Spacer to prevent content from being hidden behind fixed App Bar */}
-                <Box sx={{ height: '180px' }} />
                 <Container
                     maxWidth="lg"
                     component="main"
-                    sx={{ display: 'flex', flexDirection: 'column', my: 4, gap: 4 }}
+                    sx={{ display: 'flex', flexDirection: 'column', my: 2, gap: 2 }}
                 >
                     {/* Welcome Message */}
                     <Box sx={{ textAlign: 'center', mb: 4 }}>

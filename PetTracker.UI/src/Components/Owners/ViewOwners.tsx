@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
+import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -95,92 +95,121 @@ export default function ViewOwners() {
                         <LoadingPlaceholder />
                     )}
             {!(showErrors) && (
-                        <Container
-                            maxWidth="xl"
-                            component="main"
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column', 
-                                my: 2, 
-                                gap: 2,
-                                overflow: 'hidden',
-                                height: 'calc(100vh - 260px)', // Account for App Bar (180px) and spacing
-                                minHeight: '500px'
-                            }}
-                        >
+                        <>
                             {(!loadingOwners) && (
-                                <Grid container spacing={2} columns={12} sx={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    overflow: 'auto', // Allow scrolling within the grid
-                                    height: '100%'
-                                }}>
-                                    <Grid
-                                        size={owners.length < 3 ? "grow" : 4}
-                                        sx={{ height: '350px', overflow: 'hidden' }}
-                                    >
-                                        <Card
-                                            //variant="outlined"
-                                            sx={{
-                                                height: '100%',
-                                                //width: '100%',
-                                                display: 'flex',
-                                                //flexDirection: 'row',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                overflow: 'hidden'
+                                <>
+                                    <Box sx={{ display: 'flex', gap: 2, mb: 1, mt: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
+                                        <Button 
+                                            onClick={handleClickOpen} 
+                                            variant="contained" 
+                                            color="info" 
+                                            endIcon={<AddIcon />}
+                                            size="medium"
+                                            sx={{ 
+                                                fontSize: { xs: '0.875rem', sm: '1rem' }
                                             }}
                                         >
-                                            <Button onClick={handleClickOpen} variant="contained" color="info" endIcon={<AddIcon />}>
-                                                Add Owner
-                                            </Button>
-                                        </Card>
-                                    </Grid>
+                                            Add Owner
+                                        </Button>
+                                    </Box>
+                                    <Grid container spacing={2} sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                    }}>
                                     <AddOwner open={open} handleClose={handleClose} ownerStates={states} reloadOwners={reloadOwners} setReloadOwners={setReloadOwners} />
                             {owners?.filter(f => (
                                 (searchTerm ?? '') == '' ||
                                 ((f.firstName + " " + f.lastName).toLowerCase().indexOf(searchTerm?.toLowerCase()) > -1)
                             )).map(m =>
                                         <Grid
-                                            size={owners.length < 3 ? "grow" : 4}
-                                            sx={{ height: '350px', overflow: 'hidden' }}
+                                            key={m.id}
+                                            xs={12}
+                                            sm={6}
+                                            md={4}
+                                            lg={3}
+                                            xl={2}
+                                            sx={{ 
+                                                height: { xs: '320px', sm: '360px', md: '400px' },
+                                                minHeight: '320px'
+                                            }}
                                         >
                                             <Card
                                                 variant="outlined"
                                                 sx={{
                                                     height: '100%',
-                                                    ////width: '100%',
-                                                    //display: 'flex',
-                                                    ////flexDirection: 'row',
-                                                    //alignItems: 'center',
-                                                    //justifyContent: 'center',
-                                                    overflow: 'hidden'
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
                                                 }}
                                             >
                                                 <Carousel cards={getOwnerSlides(m.ownerPhotos)} />
-                                                <SyledCardContent>
-                                                    <Typography gutterBottom variant="h6" component="div">
+                                                <SyledCardContent sx={{
+                                                    p: { xs: 0.25, sm: 0.5 },
+                                                    flexGrow: 1,
+                                                }}>
+                                                    <Typography 
+                                                        gutterBottom 
+                                                        variant="h6" 
+                                                        component="div"
+                                                        sx={{
+                                                            fontSize: { xs: '0.9rem', sm: '1.1rem' },
+                                                            textAlign: 'center',
+                                                            wordBreak: 'break-word',
+                                                            mb: { xs: 0.125, sm: 0.25 },
+                                                        }}
+                                                    >
                                                         {m.firstName} {m.lastName}
                                                     </Typography>
-                                                    <StyledTypography variant="body2" color="text.secondary" gutterBottom>
+                                                    <StyledTypography 
+                                                        variant="body2" 
+                                                        color="text.secondary" 
+                                                        gutterBottom
+                                                        sx={{
+                                                            fontSize: { xs: '0.7rem', sm: '0.8rem' },
+                                                            textAlign: 'center',
+                                                            mb: { xs: 0.125, sm: 0.25 },
+                                                        }}
+                                                    >
                                                         {m.Address}
                                                     </StyledTypography>
-                                                    <StyledTypography variant="body2" color="text.secondary" gutterBottom>
+                                                    <StyledTypography 
+                                                        variant="body2" 
+                                                        color="text.secondary" 
+                                                        gutterBottom
+                                                        sx={{
+                                                            fontSize: { xs: '0.7rem', sm: '0.8rem' },
+                                                            textAlign: 'center',
+                                                            mb: { xs: 0.125, sm: 0.25 },
+                                                        }}
+                                                    >
                                                         {m.city} {m.state} {m.zipCode}
                                                     </StyledTypography>
                                                 </SyledCardContent>
-                                                <SyledCardContent sx={{ my: 0 }}>
-                                                    <Fab size="small" color="primary" sx={{ alignSelf: 'center' }} onClick={() => handleOpenOwner(m)} aria-label="add">
-                                                        <EditIcon />
+                                                <SyledCardContent sx={{ 
+                                                    my: { xs: 0.125, sm: 0 },
+                                                    p: { xs: 0.25, sm: 0.5 },
+                                                }}>
+                                                    <Fab 
+                                                        size="small" 
+                                                        color="primary" 
+                                                        sx={{ 
+                                                            alignSelf: 'center',
+                                                            width: { xs: '36px', sm: '44px' },
+                                                            height: { xs: '36px', sm: '44px' },
+                                                        }} 
+                                                        onClick={() => handleOpenOwner(m)} 
+                                                        aria-label="edit"
+                                                    >
+                                                        <EditIcon sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
                                                     </Fab>
                                                 </SyledCardContent>
                                             </Card>
                                         </Grid>
                                     )}
-                                </Grid>
+                                    </Grid>
+                                </>
                             )}
                             <ViewOwner open={openViewOwner} viewOwner={selectedOwner} handleClose={handleCloseOwner} ownerStates={states} reloadOwners={reloadOwners} setReloadOwners={setReloadOwners} />
-                        </Container>
+                        </>
                     )}
         </>
     );

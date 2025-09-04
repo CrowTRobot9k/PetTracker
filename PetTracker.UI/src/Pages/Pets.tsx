@@ -1,24 +1,28 @@
 ﻿import CssBaseline from '@mui/material/CssBaseline';
 import AppTheme from '../Theme/AppTheme';
 import AppAppBar from '../Components/AppAppBar';
-import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
+import AuthorizeView from "../Components/AuthorizeView.tsx";
 import ViewPets from '../Components/Pets/ViewPets.tsx';
 import SearchProvider from '../Components/SearchProvider.tsx';
-import { Box } from '@mui/material';
+import Container from '@mui/material/Container';
 
 export default function Pets(props: { disableCustomTheme?: boolean }) {
 
     return (
-       /* <AuthorizeView>*/
-        <AppTheme {...props}>
-            <CssBaseline enableColorScheme />
-            <SearchProvider>
-                <AppAppBar currentPage="pets" />
-                {/* Spacer to prevent content from being hidden behind fixed App Bar */}
-                <Box sx={{ height: '180px' }} />
-                <ViewPets />
-            </SearchProvider>
-        </AppTheme>
-       /* </AuthorizeView>*/
+        <AuthorizeView>
+            <AppTheme {...props}>
+                <CssBaseline enableColorScheme />
+                <SearchProvider>
+                    <AppAppBar currentPage="pets" />
+                    <Container
+                        maxWidth="lg"
+                        component="main"
+                        sx={{ display: 'flex', flexDirection: 'column', my: 2, gap: 2 }}
+                    >
+                        <ViewPets />
+                    </Container>
+                </SearchProvider>
+            </AppTheme>
+        </AuthorizeView>
     );
 }

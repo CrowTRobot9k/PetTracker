@@ -1,11 +1,10 @@
-import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppTheme from '../Theme/AppTheme';
 import AppAppBar from '../Components/AppAppBar';
 import AppointmentScheduler from '../Components/AppointmentScheduler.tsx'
-import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
+import AuthorizeView from "../Components/AuthorizeView.tsx";
 import SearchProvider from '../Components/SearchProvider.tsx';
-import { Box } from '@mui/material';
+import Container from '@mui/material/Container';
 
 export default function Appointments(props: { disableCustomTheme?: boolean }) {
     return (
@@ -14,12 +13,15 @@ export default function Appointments(props: { disableCustomTheme?: boolean }) {
                 <CssBaseline enableColorScheme />
                 <SearchProvider>
                     <AppAppBar currentPage="appointments" />
-                    {/* Spacer to prevent content from being hidden behind fixed App Bar */}
-                    <Box sx={{ height: '180px' }} />
-                    <AppointmentScheduler></AppointmentScheduler>
+                    <Container
+                        maxWidth="xl"
+                        component="main"
+                        sx={{ display: 'flex', flexDirection: 'column', my: 2, gap: 2 }}
+                    >
+                        <AppointmentScheduler />
+                    </Container>
                 </SearchProvider>
             </AppTheme>
         </AuthorizeView>
-
     );
 }
