@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using PetTracker.Domain.Models;
 using PetTracker.Server.Models;
 using PetTracker.SqlDb.Models;
 using System.ComponentModel.DataAnnotations;
@@ -77,6 +78,14 @@ public static class IdentityApiEndpointRouteBuilderExtensions
             var user = new TUser();
             await userStore.SetUserNameAsync(user, email, CancellationToken.None);
             await emailStore.SetEmailAsync(user, email, CancellationToken.None);
+
+            // Set first and last name if provided
+            if (user is AspNetUser aspNetUser)
+            {
+                aspNetUser.FirstName = registration.FirstName;
+                aspNetUser.LastName = registration.LastName;
+                aspNetUser.CompanyId = registration.CompanyId;
+            }
 
             var result = await userManager.CreateAsync(user, registration.Password);
 
@@ -418,6 +427,8 @@ public static class IdentityApiEndpointRouteBuilderExtensions
 
             var confirmEmailUrl = linkGenerator.GetUriByName(context, confirmEmailEndpointName, routeValues)
                 ?? throw new NotSupportedException($"Could not find endpoint named '{confirmEmailEndpointName}'.");
+
+            confirmEmailUrl = confirmEmailUrl.Replace("confirmEmail", "confirm-email", StringComparison.OrdinalIgnoreCase);
 
             var emailSender = sp.GetRequiredService<IEmailSender<TUser>>();
 

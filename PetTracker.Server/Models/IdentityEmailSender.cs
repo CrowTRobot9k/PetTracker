@@ -10,7 +10,7 @@ namespace PetTracker.Server.Models
     {
         public async Task SendConfirmationLinkAsync(AspNetUser user, string email, string confirmationLink)
         {
-            var fromAddress = new MailAddress("PetTrackerFriend@gmail.com", "Peter Mathieu");
+            var fromAddress = new MailAddress("PetTrackerFriend@gmail.com", "Pet Tracker");
             var toAddress = new MailAddress(email, email);
 
             const string fromPassword = "iqnf aipm gguc mbfx ";
@@ -24,10 +24,13 @@ namespace PetTracker.Server.Models
                 UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
             };
+
+            var body = $"Welcome to PetTracker! Please confirm your account by clicking <a href='{confirmationLink}'>here</a>";
+
             using (var message = new MailMessage(fromAddress, toAddress)
             {
                 Subject = "Pet Tracker User Confirmation",
-                Body = confirmationLink,
+                Body = body,
                 IsBodyHtml = true
             })
             {

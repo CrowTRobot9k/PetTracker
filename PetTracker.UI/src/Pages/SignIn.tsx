@@ -18,7 +18,7 @@ import AppTheme from '../Theme/AppTheme';
 import ColorModeSelect from '../Theme/ColorModeSelect';
 /*import { GoogleIcon, FacebookIcon, SitemarkIcon } from '../Components/CustomIcons';*/
 import Alert from '@mui/material/Alert';
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
 
 
@@ -65,6 +65,7 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
+  const [searchParams] = useSearchParams();
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
@@ -72,7 +73,25 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [submitError, setSubmitError] = React.useState(false);
   const [submitErrorMessage, setSubmitErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const [showActivationMessage, setShowActivationMessage] = React.useState(false);
+  const [activationMessageType, setActivationMessageType] = React.useState<'activation' | 'activated' | null>(null);
   const navigate = useNavigate();
+
+  // Check for activation message on component mount
+  React.useEffect(() => {
+    const message = searchParams.get('message');
+    if (message === 'activation') {
+      setShowActivationMessage(true);
+      setActivationMessageType('activation');
+      // Clear the URL parameter
+      navigate('/signin', { replace: true });
+    } else if (message === 'activated') {
+      setShowActivationMessage(true);
+      setActivationMessageType('activated');
+      // Clear the URL parameter
+      navigate('/signin', { replace: true });
+    }
+  }, [searchParams, navigate]);
 
 
   const handleClickOpen = () => {
@@ -172,6 +191,14 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           >
             Sign in
           </Typography>
+          {showActivationMessage && (
+            <Alert variant="filled" severity="success" sx={{ mb: 2 }}>
+              {activationMessageType === 'activation' 
+                ? 'Account created successfully! Please check your email for an activation link to complete your registration.'
+                : 'Your email has been successfully activated! You can now sign in to your account.'
+              }
+            </Alert>
+          )}
           <Box
             component="form"
             onSubmit={handleSubmit}

@@ -16,6 +16,7 @@ import { styled } from '@mui/material/styles';
 import AppTheme from '../Theme/AppTheme';
 import ColorModeSelect from '../Theme/ColorModeSelect';
 import Alert from '@mui/material/Alert';
+import { useNavigate } from 'react-router';
 //import { GoogleIcon, FacebookIcon, SitemarkIcon } from '../Components/CustomIcons';
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -61,12 +62,15 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignUp(props: { disableCustomTheme?: boolean }) {
+  const navigate = useNavigate();
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [nameError, setNameError] = React.useState(false);
-  const [nameErrorMessage, setNameErrorMessage] = React.useState('');
+  const [firstNameError, setFirstNameError] = React.useState(false);
+  const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
+  const [lastNameError, setLastNameError] = React.useState(false);
+  const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState('');
   const [submitError, setSubmitError] = React.useState(false);
   const [submitErrorMessage, setSubmitErrorMessage] = React.useState('');
 
@@ -74,7 +78,8 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
     const email = document.getElementById('email') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
     const confirmPassword = document.getElementById('confirmPassword') as HTMLInputElement;
-    const name = document.getElementById('name') as HTMLInputElement;
+    const firstName = document.getElementById('firstName') as HTMLInputElement;
+    const lastName = document.getElementById('lastName') as HTMLInputElement;
 
     let isValid = true;
 
@@ -103,13 +108,22 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       setPasswordErrorMessage('');
     }
 
-    if (!name.value || name.value.length < 1) {
-      setNameError(true);
-      setNameErrorMessage('Name is required.');
+    if (!firstName.value || firstName.value.length < 1) {
+      setFirstNameError(true);
+      setFirstNameErrorMessage('First name is required.');
       isValid = false;
     } else {
-      setNameError(false);
-      setNameErrorMessage('');
+      setFirstNameError(false);
+      setFirstNameErrorMessage('');
+    }
+
+    if (!lastName.value || lastName.value.length < 1) {
+      setLastNameError(true);
+      setLastNameErrorMessage('Last name is required.');
+      isValid = false;
+    } else {
+      setLastNameError(false);
+      setLastNameErrorMessage('');
     }
 
     return isValid;
@@ -118,14 +132,15 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
-      if (nameError || emailError || passwordError) {
+      if (firstNameError || lastNameError || emailError || passwordError) {
         event.preventDefault();
         return;
       }
       else {
           // clear error message
           const data = new FormData(event.currentTarget);
-          const name = data.get('name');
+          const firstName = data.get('firstName');
+          const lastName = data.get('lastName');
           const email = data.get('email');
           const password = data.get('password');
           try {
@@ -141,12 +156,15 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                   body: JSON.stringify({
                       email: email,
                       password: password,
+                      firstName: firstName,
+                      lastName: lastName,
                   }),
               })
 
               if (response.status == 200)
               {
-                  window.location.href = '/';
+                  // Navigate to sign in page with activation message
+                  navigate('/signin?message=activation');
               }
               else {
                   const data = await response.json();
@@ -169,7 +187,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
-      <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
       <SignUpContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
           <img src="/PetTrackerLogoWide.png" width="400" height="120" />
@@ -186,17 +203,31 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
             <FormControl>
-              <FormLabel htmlFor="name">Full name</FormLabel>
+              <FormLabel htmlFor="firstName">First name</FormLabel>
               <TextField
-                autoComplete="name"
-                name="name"
+                autoComplete="given-name"
+                name="firstName"
                 required
                 fullWidth
-                id="name"
-                placeholder="Jon Snow"
-                error={nameError}
-                helperText={nameErrorMessage}
-                color={nameError ? 'error' : 'primary'}
+                id="firstName"
+                placeholder="Pet"
+                error={firstNameError}
+                helperText={firstNameErrorMessage}
+                color={firstNameError ? 'error' : 'primary'}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="lastName">Last name</FormLabel>
+              <TextField
+                autoComplete="family-name"
+                name="lastName"
+                required
+                fullWidth
+                id="lastName"
+                placeholder="Friend"
+                error={lastNameError}
+                helperText={lastNameErrorMessage}
+                color={lastNameError ? 'error' : 'primary'}
               />
             </FormControl>
             <FormControl>
@@ -205,7 +236,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 required
                 fullWidth
                 id="email"
-                placeholder="your@email.com"
+                placeholder="petfriend@email.com"
                 name="email"
                 autoComplete="email"
                 variant="outlined"

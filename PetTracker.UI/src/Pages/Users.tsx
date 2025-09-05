@@ -1,10 +1,11 @@
+import React, { useState, useEffect, useContext } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppTheme from '../Theme/AppTheme';
 import AppAppBar from '../Components/AppAppBar';
-import AuthorizeView from "../Components/AuthorizeView.tsx";
+import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
 import ViewUsers from '../Components/Users/ViewUsers.tsx';
 import SearchProvider from '../Components/SearchProvider.tsx';
-import Container from '@mui/material/Container';
+import { Box } from '@mui/material';
 
 export default function Users(props: { disableCustomTheme?: boolean }) {
     return (
@@ -13,15 +14,12 @@ export default function Users(props: { disableCustomTheme?: boolean }) {
                 <CssBaseline enableColorScheme />
                 <SearchProvider>
                     <AppAppBar currentPage="users" />
-                    <Container
-                        maxWidth="lg"
-                        component="main"
-                        sx={{ display: 'flex', flexDirection: 'column', my: 2, gap: 2 }}
-                    >
-                        <ViewUsers />
-                    </Container>
+                    {/* Spacer to prevent content from being hidden behind fixed App Bar */}
+                    <Box sx={{ height: '180px' }} />
+                    <ViewUsers />
                 </SearchProvider>
             </AppTheme>
         </AuthorizeView>
+
     );
 }

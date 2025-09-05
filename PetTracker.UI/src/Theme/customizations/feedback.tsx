@@ -7,6 +7,8 @@ export const feedbackCustomizations: Components<Theme> = {
     styleOverrides: {
       root: ({ theme }) => ({
         borderRadius: 10,
+      }),
+      standardWarning: ({ theme }) => ({
         backgroundColor: orange[100],
         color: (theme.vars || theme).palette.text.primary,
         border: `1px solid ${alpha(orange[300], 0.5)}`,
@@ -16,6 +18,16 @@ export const feedbackCustomizations: Components<Theme> = {
         ...theme.applyStyles('dark', {
           backgroundColor: `${alpha(orange[900], 0.5)}`,
           border: `1px solid ${alpha(orange[800], 0.5)}`,
+        }),
+      }),
+      filledWarning: ({ theme }) => ({
+        backgroundColor: orange[400],
+        color: (theme.vars || theme).palette.text.primary,
+        '& .MuiAlert-icon': {
+          color: (theme.vars || theme).palette.text.primary,
+        },
+        ...theme.applyStyles('dark', {
+          backgroundColor: orange[800],
         }),
       }),
     },
