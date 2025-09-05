@@ -14,8 +14,6 @@ export default function Users(props: { disableCustomTheme?: boolean }) {
                 <CssBaseline enableColorScheme />
                 <SearchProvider>
                     <AppAppBar currentPage="users" />
-                    {/* Spacer to prevent content from being hidden behind fixed App Bar */}
-                    <Box sx={{ height: '180px' }} />
                     <ViewUsers />
                 </SearchProvider>
             </AppTheme>

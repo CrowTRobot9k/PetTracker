@@ -12,4 +12,5 @@
 	CONSTRAINT [FK_FileUploadMappings_Companies] FOREIGN KEY ([CompanyId]) REFERENCES [dbo].[Companies] ([Id]),
 	CONSTRAINT [FK_FileUploadMappings_Pets] FOREIGN KEY ([PetId]) REFERENCES [dbo].[Pets] ([Id]),
 	CONSTRAINT [FK_FileUploadMappings_FileUpload] FOREIGN KEY ([FileUploadId]) REFERENCES [dbo].[FileUploads] ([Id])
+	ON DELETE CASCADE
 )

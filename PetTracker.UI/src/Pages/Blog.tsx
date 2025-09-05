@@ -7,6 +7,7 @@ import Latest from '../Components/Latest';
 import Footer from '../Components/Footer';
 import AuthorizeView from "../Components/AuthorizeView.tsx";
 import SearchProvider from '../Components/SearchProvider.tsx';
+import Box from '@mui/material/Box';
 
 export default function Blog(props: { disableCustomTheme?: boolean }) {
     return (
@@ -18,7 +19,12 @@ export default function Blog(props: { disableCustomTheme?: boolean }) {
                     <Container
                         maxWidth="lg"
                         component="main"
-                        sx={{ display: 'flex', flexDirection: 'column', my: 4, gap: 4 }}
+                        sx={{ 
+                            display: 'flex', 
+                            flexDirection: 'column', 
+                            my: 4, 
+                            gap: 4
+                        }}
                     >
                         <BlogContent />
                         <Latest />

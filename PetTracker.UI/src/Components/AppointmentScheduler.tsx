@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect, useMemo, Fragment } from 'reac
 import moment from 'moment'
 import { momentLocalizer } from 'react-big-calendar'
 import { Calendar, Views } from 'react-big-calendar'
-import { Container } from '@mui/material';
+import { Container, Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import useAppointmentsStore from '../Stores/AppointmentsStore'
@@ -102,10 +102,7 @@ export default function AppointmentScheduler() {
                 <LoadingPlaceholder />
             )}
             {(!showErrors && !loadingAppointments) && (
-                <Container maxWidth="xl" component="main" sx={{
-                    my: 2, alignItems: 'center',
-                    justifyContent: 'center', width: '2000px'
-                }}>
+                <>
                     <Calendar
                         dayLayoutAlgorithm={dayLayoutAlgorithm}
                         defaultDate={defaultDate}
@@ -115,14 +112,13 @@ export default function AppointmentScheduler() {
                         onSelectEvent={handleSelectEvent}
                         onSelectSlot={handleSelectSlot}
                         selectable
-                        style={{ height: 700 }}
+                        style={{ height: 700, width: '100%', minWidth: '100%' }}
                         scrollToTime={scrollToTime}
                         components={{ event: customEvent }}
                     />
                     <AddAppointment open={openAddAppt} handleClose={handleCloseAddAppt} reloadAppointments={reloadAppts} setReloadAppointments={setReloadAppts} startDate={apptStart} endDate={apptEnd} owners={owners} />
                     <ViewAppointment open={openViewAppt} handleClose={handleCloseViewAppt} viewAppointment={selectedAppt } reloadAppointments={reloadAppts} setReloadAppointments={setReloadAppts} startDate={apptStart} endDate={apptEnd} owners={owners} />
-
-                </Container>
+                </>
 
             )}
         </>

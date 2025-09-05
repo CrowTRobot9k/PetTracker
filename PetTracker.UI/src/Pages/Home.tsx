@@ -18,7 +18,12 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                 <Container
                     maxWidth="lg"
                     component="main"
-                    sx={{ display: 'flex', flexDirection: 'column', my: 2, gap: 2 }}
+                    sx={{ 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        my: 4, 
+                        gap: 4
+                    }}
                 >
                     {/* Welcome Message */}
                     <Box sx={{ textAlign: 'center', mb: 4 }}>
@@ -30,7 +35,7 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                             Welcome to Pet Tracker
                         </Typography>
                         <Typography variant="h5" component="h2" color="text.secondary" sx={{ mb: 3 }}>
-                            Your comprehensive solution for managing pets, owners, and appointments
+                            Your solution for managing pets, owners, and appointments
                         </Typography>
                         <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
                             Streamline your pet care business with our platform designed to help you manage 

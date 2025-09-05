@@ -75,9 +75,12 @@ export default function AppAppBar(props: { currentPage:string})
             boxShadow: 0,
             bgcolor: 'transparent',
             backgroundImage: 'none',
+            width: '90%',
+            margin: '0 auto',
+            zIndex: 1,
           }}
       >
-      <Container maxWidth="lg">
+      <Container maxWidth={false} sx={{ width: '100%' }}>
         <Box 
           component="img"
           src="/PetTrackerLogoWideTransparent.png" 
