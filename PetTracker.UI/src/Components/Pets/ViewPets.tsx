@@ -252,8 +252,8 @@ export default function ViewPets(props: { ownerId?: number }) {
                                     lg={3}
                                     xl={2}
                                     sx={{ 
-                                        height: { xs: '320px', sm: '360px', md: '400px' },
-                                        minHeight: '320px'
+                                        height: { xs: '380px', sm: '360px', md: '400px' },
+                                        minHeight: '380px'
                                     }}
                                 >
                                     <Card
