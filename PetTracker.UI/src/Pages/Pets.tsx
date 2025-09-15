@@ -5,7 +5,6 @@ import AuthorizeView from "../Components/AuthorizeView.tsx";
 import ViewPets from '../Components/Pets/ViewPets.tsx';
 import SearchProvider from '../Components/SearchProvider.tsx';
 import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
 
 export default function Pets(props: { disableCustomTheme?: boolean }) {
 
@@ -18,12 +17,7 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                     <Container
                         maxWidth="lg"
                         component="main"
-                        sx={{ 
-                            display: 'flex', 
-                            flexDirection: 'column', 
-                            my: 2, 
-                            gap: 2
-                        }}
+                        sx={{ display: 'flex', flexDirection: 'column', my: 2, gap: 2 }}
                     >
                         <ViewPets />
                     </Container>

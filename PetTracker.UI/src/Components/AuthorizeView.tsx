@@ -1,126 +1,66 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable prefer-const */
-import React, { useState, useEffect, createContext } from 'react';
+import React, { useEffect, createContext } from 'react';
 import { Navigate } from 'react-router';
 import { User } from '../Types/SharedTypes';
 import { useLocation } from 'react-router';
+import { useAuthStore } from '../Stores/AuthStore';
 
-
-//
 const UserContext = createContext({});
 
-
 function AuthorizeView(props: { children: React.ReactNode }) {
-
-    const [authorized, setAuthorized] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(true); // add a loading state
-    let emptyuser: User = { email: "" };
-
-    const [user, setUser] = useState(emptyuser);
-
+    const { isAuthenticated, user, isLoading, initializeAuth, checkAuth } = useAuthStore();
     const location = useLocation();
     const currentRoute = location.pathname;
 
     useEffect(() => {
-        // Get the cookie value
-        let retryCount = 0; // initialize the retry count
-        let maxRetries = 10; // set the maximum number of retries
-        let delay: number = 1000; // set the delay in milliseconds
-
-        // define a delay function that returns a promise
-        function wait(delay: number) {
-            return new Promise((resolve) => setTimeout(resolve, delay));
-        }
-
-        // define a fetch function that retries until status 200 or 401
-        async function fetchWithRetry(url: string, options: any) {
-            try {
-                // make the fetch request
-                let response = await fetch(url, options);
-
-                // check the status code
-                if (response.status == 200) {
-                    console.log("Authorized");
-                    let j: any = await response.json();
-                    setUser({ email: j.email });
-                    setAuthorized(true);
-                    return response;
-                } else if (response.status == 401) {
-                    console.log("Unauthorized");
-                    return response; 
-                } else {
-                    throw new Error("" + response.status);
-                }
-            } catch (error) {
-                retryCount++;
-                if (retryCount > maxRetries) {
-                    throw error;
-                } else {
-                    await wait(delay);
-                    return fetchWithRetry(url, options);
-                }
-            }
-        }
-
-        // call the fetch function with retry logic
-        fetchWithRetry("/getauth", {
-            method: "GET",
-        })
-            .catch((error) => {
-                // handle the final error
-                console.log(error.message);
-            })
-            .finally(() => {
-                setLoading(false);  // set loading to false when the fetch is done
-            });
+        // Initialize auth from localStorage on component mount
+        initializeAuth();
     }, []);
 
-    //return (
-    //    <>
-    //        <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
-    //    </>
-    //);
+    useEffect(() => {
+        // Skip authentication check on sign-in page
+        if (currentRoute === '/signin') {
+            return;
+        }
 
-    if (loading) {
+        // If not authenticated, try to check with server
+        if (!isAuthenticated) {
+            checkAuth();
+        }
+    }, [currentRoute, isAuthenticated, checkAuth]);
+
+    // Show loading state while checking authentication
+    if (isLoading) {
         return (
             <>
                 <p>Loading...</p>
             </>
         );
     }
-    else
-    {
-        if (currentRoute == '/signin')
-        {
-            if (authorized && !loading && currentRoute == '/signin') {
-                return (
-                    <>
-                        <Navigate to="/" />
-                    </>
-                )
-            }
-            else
-            {
-                return (
-                    <>
-                        <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
-                    </>
-                );
-            }
-        }
-        else if (authorized && !loading) {
+
+    // Handle signin page - if authorized, redirect to home
+    if (currentRoute === '/signin') {
+        if (isAuthenticated) {
+            return <Navigate to="/" />;
+        } else {
             return (
                 <>
                     <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
                 </>
             );
-        } else {
-            return (
-                <>
-                    <Navigate to="/signin" />
-                </>
-            )
         }
+    }
+
+    // For all other pages - if authorized, show content, otherwise redirect to signin
+    if (isAuthenticated) {
+        return (
+            <>
+                <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
+            </>
+        );
+    } else {
+        return <Navigate to="/signin" />;
     }
 
 }

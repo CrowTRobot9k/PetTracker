@@ -14,6 +14,7 @@ import { useNavigate } from "react-router";
 import OutlinedInput from '@mui/material/OutlinedInput';
 import { useSearch } from '../Components/SearchProvider';
 import Typography from '@mui/material/Typography';
+import { useAuthStore } from '../Stores/AuthStore';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -36,6 +37,7 @@ export default function AppAppBar(props: { currentPage:string})
     const [open, setOpen] = React.useState(false);
     const navigate = useNavigate();
     const { searchTerm, setSearchTerm } = useSearch() as { searchTerm: string; setSearchTerm: (term: string) => void };
+    const { logout } = useAuthStore();
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
@@ -48,21 +50,28 @@ export default function AppAppBar(props: { currentPage:string})
 
     const navLogout = () =>
     {
+        // Clear localStorage and update store immediately
+        logout();
+        
         fetch("/logout", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: ""
-
         })
         .then((data) => {
             if (data.ok) {
+                navigate("/signin");
+            } else {
+                // Even if server logout fails, we've already cleared local state
                 navigate("/signin");
             }
         })
         .catch((error) => {
             console.error(error);
+            // Even if server logout fails, we've already cleared local state
+            navigate("/signin");
         })
     }
 

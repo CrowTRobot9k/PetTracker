@@ -20,6 +20,7 @@ import ColorModeSelect from '../Theme/ColorModeSelect';
 import Alert from '@mui/material/Alert';
 import { useNavigate, useSearchParams } from "react-router";
 import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
+import { useAuthStore } from '../Stores/AuthStore';
 
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -76,6 +77,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [showActivationMessage, setShowActivationMessage] = React.useState(false);
   const [activationMessageType, setActivationMessageType] = React.useState<'activation' | 'activated' | null>(null);
   const navigate = useNavigate();
+  const { login, setLoading, setError } = useAuthStore();
 
   // Check for activation message on component mount
   React.useEffect(() => {
@@ -102,7 +104,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     setOpen(false);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       if (emailError || passwordError) {
         return;
@@ -113,6 +115,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       const rememberMe = data.get('remember')
 
       setSubmitErrorMessage("");
+      setLoading(true);
+      setError(null);
 
       let loginurl = "";
       if (rememberMe == 'checked')
@@ -120,28 +124,61 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       else
           loginurl = "/login?useSessionCookies=true";
 
-      fetch(loginurl, {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-              email: email,
-              password: password,
-          }),
-      }).then((data) => {
-          if (data.ok) {
-              window.location.href = '/';
-          }
-          else {
+      try {
+          const response = await fetch(loginurl, {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                  email: email,
+                  password: password,
+              }),
+          });
+
+          if (response.ok) {
+              // Get user data from the response or fetch it
+              try {
+                  const authResponse = await fetch("/getauth", {
+                      method: "GET",
+                  });
+                  
+                  if (authResponse.ok) {
+                      const userData = await authResponse.json();
+                      const user = {
+                          id: userData.id || '',
+                          firstName: userData.firstName || '',
+                          lastName: userData.lastName || '',
+                          fullName: userData.fullName || '',
+                          userName: userData.userName || '',
+                          email: userData.email || '',
+                          company: userData.company || null,
+                          roleNames: userData.roleNames || [],
+                          roles: userData.roles || []
+                      };
+                      
+                      // Store user in localStorage and update store
+                      login(user);
+                      navigate('/');
+                  } else {
+                      throw new Error('Failed to get user data');
+                  }
+              } catch (error) {
+                  console.error('Failed to get user data:', error);
+                  // Still redirect but without storing user data
+                  navigate('/');
+              }
+          } else {
               setSubmitError(true);
               setSubmitErrorMessage("Error Logging In.");
           }
-      }).catch((error) => {
-              console.log(error);
+      } catch (error) {
+          console.log(error);
           setSubmitError(true);
           setSubmitErrorMessage("Error Logging In.");
-      });
+      } finally {
+          setLoading(false);
+      }
   };
 
   const validateInputs = () => {

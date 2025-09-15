@@ -195,5 +195,26 @@ export default defineConfig({
             key: fs.readFileSync(keyFilePath),
             cert: fs.readFileSync(certFilePath),
         }
+    },
+    preview: {
+        port: parseInt(env.DEV_SERVER_PORT || '50449'),
+        https: {
+            key: fs.readFileSync(keyFilePath),
+            cert: fs.readFileSync(certFilePath),
+        }
+    },
+    build: {
+        rollupOptions: {
+            input: {
+                main: './index.html'
+            }
+        }
+    },
+    preview: {
+        port: parseInt(env.DEV_SERVER_PORT || '50449'),
+        https: {
+            key: fs.readFileSync(keyFilePath),
+            cert: fs.readFileSync(certFilePath),
+        }
     }
 })

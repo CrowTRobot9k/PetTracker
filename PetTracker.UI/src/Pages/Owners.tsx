@@ -16,12 +16,7 @@ export default function Owners(props: { disableCustomTheme?: boolean }) {
                     <Container
                         maxWidth="lg"
                         component="main"
-                        sx={{ 
-                            display: 'flex', 
-                            flexDirection: 'column', 
-                            my: 2, 
-                            gap: 2
-                        }}
+                        sx={{ display: 'flex', flexDirection: 'column', my: 2, gap: 2 }}
                     >
                         <ViewOwners />
                     </Container>

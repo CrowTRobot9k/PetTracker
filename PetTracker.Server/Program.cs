@@ -18,7 +18,6 @@ try
 
     var connectionString = builder.Configuration.GetConnectionString("PtDbConnection") ?? throw new InvalidOperationException("Connection string 'PtDbConnection' not found.");
 
-
     builder.Services.AddDbContext<PtDbContext>(options =>
     {
         options.UseLazyLoadingProxies();
@@ -49,6 +48,8 @@ try
     builder.Services.AddControllers();
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
     builder.Services.AddOpenApi();
+
+    builder.Services.AddHttpContextAccessor();
 
     var app = builder.Build();
 
