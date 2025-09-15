@@ -20,7 +20,6 @@ try
 
     builder.Services.AddDbContext<PtDbContext>(options =>
     {
-        options.UseLazyLoadingProxies();
         options.UseSqlServer(connectionString, b => b.MigrationsAssembly("PetTracker.Server"));
         options.EnableDetailedErrors();
     });

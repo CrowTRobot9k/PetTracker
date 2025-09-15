@@ -17,6 +17,7 @@ import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import { Pet } from '../../Types/SharedTypes';
 import usePetStore from '../../Stores/PetStore';
+import usePetsStore from '../../Stores/PetsStore';
 import dayjs, { Dayjs } from 'dayjs';
 import ErrorDisplay from '../ErrorDisplay';
 
@@ -39,6 +40,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
 
     const getPetBreeds = usePetStore((state) => state.getPetBreeds);
     const petBreeds = usePetStore((state) => state.petBreeds);
+    const { getPetPhotos } = usePetsStore();
 
     const {
         errorMessage,
@@ -64,17 +66,26 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
     }, [viewPet]);
 
     useEffect(() => {
-        const petPhotos = viewPet.petPhotos?.map(m =>
-        (
-            {
+        // Load pet photos when the dialog opens
+        if (open && viewPet.id) {
+            loadPetPhotos();
+        }
+    }, [open, viewPet.id]);
+
+    const loadPetPhotos = async () => {
+        try {
+            const photos = await getPetPhotos(viewPet.id);
+            const mappedPhotos = photos?.map(m => ({
                 id: m.id,
                 fileName: m.fileName,
                 fileDataBase64: m.fileDataBase64
-            }
-        ));
-
-        setSelectedFiles(petPhotos);
-    }, [viewPet]);
+            })) || [];
+            setSelectedFiles(mappedPhotos);
+        } catch (error) {
+            console.error('Failed to load pet photos:', error);
+            setSelectedFiles([]);
+        }
+    };
 
     useEffect(() => {
         if (editPet.petTypeId) {

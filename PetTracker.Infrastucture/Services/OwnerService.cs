@@ -60,7 +60,10 @@ namespace PetTracker.Infrastucture.Services
                 uploadIds = await new FileUploadService(_logger, _dbContext).CreateFileUploads(owner.OwnerPhotos);
             }
 
-            var existingOwner = await _dbContext.Owners.FirstOrDefaultAsync(p => p.Id == owner.Id);
+            var existingOwner = await _dbContext.Owners
+                .Include(o => o.FileUploadMappings)
+                    .ThenInclude(fum => fum.FileUpload)
+                .FirstOrDefaultAsync(p => p.Id == owner.Id);
             if (existingOwner == null)
             {
                 throw new Exception("Owner not found");
@@ -95,6 +98,14 @@ namespace PetTracker.Infrastucture.Services
         public async Task<List<GetOwnerDto>> GetOwners(int? companyId = null)
         {
             var results = await _dbContext.Owners
+                .Include(o => o.User)
+                .Include(o => o.Pets)
+                    .ThenInclude(p => p.PetType)
+                .Include(o => o.Pets)
+                    .ThenInclude(p => p.PetBreedTypes)
+                        .ThenInclude(pbt => pbt.BreedType)
+                //.Include(o => o.FileUploadMappings)
+                //    .ThenInclude(fum => fum.FileUpload)
                 .Where(w => companyId == null || (w.User != null && w.User.CompanyId == companyId))
                 .ToListAsync();
             if (results == null || !results.Any())
@@ -108,6 +119,14 @@ namespace PetTracker.Infrastucture.Services
         public async Task<List<OwnerDto>> GetOwnerList(int? companyId = null)
         {
             var results = await _dbContext.Owners
+                .Include(o => o.User)
+                .Include(o => o.Pets)
+                    .ThenInclude(p => p.PetType)
+                .Include(o => o.Pets)
+                    .ThenInclude(p => p.PetBreedTypes)
+                        .ThenInclude(pbt => pbt.BreedType)
+                //.Include(o => o.FileUploadMappings)
+                //    .ThenInclude(fum => fum.FileUpload)
                 .Where(w => companyId == null || (w.User != null && w.User.CompanyId == companyId))
                 .ToListAsync();
             if (results == null || !results.Any())
@@ -116,6 +135,24 @@ namespace PetTracker.Infrastucture.Services
             }
 
             return results.Select(s => new OwnerDto(s)).ToList();
+        }
+
+        public async Task<List<FileDownloadDto>> GetOwnerPhotos(int ownerId)
+        {
+            var results = await _dbContext.Owners
+                .Include(o => o.FileUploadMappings)
+                    .ThenInclude(fum => fum.FileUpload)
+                .Where(o => o.Id == ownerId)
+                .SelectMany(o => o.FileUploadMappings)
+                .Select(fum => fum.FileUpload)
+                .ToListAsync();
+
+            if (results == null || !results.Any())
+            {
+                return new List<FileDownloadDto>();
+            }
+
+            return results.Select(s => new FileDownloadDto(s)).ToList();
         }
 
         public async Task<bool> AddExistingPetsToOwner(AddExistingPetsToOwnerDto model)

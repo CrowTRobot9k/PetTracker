@@ -121,6 +121,10 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            '^/api/Pet/GetPetPhotos': {
+                target,
+                secure: false
+            },
             //owner
             '^/owner': {
                 target,
@@ -151,6 +155,10 @@ export default defineConfig({
                 secure: false
             },
             '^/api/Owner/RemoveExistingPetFromOwner': {
+                target,
+                secure: false
+            },
+            '^/api/Owner/GetOwnerPhotos': {
                 target,
                 secure: false
             },
@@ -189,6 +197,10 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            //'/api/**': {
+            //    target,
+            //    secure: false
+            //},
         },
         port: parseInt(env.DEV_SERVER_PORT || '50449'),
         https: {
@@ -208,13 +220,6 @@ export default defineConfig({
             input: {
                 main: './index.html'
             }
-        }
-    },
-    preview: {
-        port: parseInt(env.DEV_SERVER_PORT || '50449'),
-        https: {
-            key: fs.readFileSync(keyFilePath),
-            cert: fs.readFileSync(certFilePath),
         }
     }
 })

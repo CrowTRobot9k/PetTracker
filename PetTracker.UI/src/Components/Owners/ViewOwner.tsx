@@ -16,6 +16,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import ViewPets from '../Pets/ViewPets';
 import ErrorDisplay from '../ErrorDisplay';
+import useOwnersStore from '../../Stores/OwnersStore.tsx';
+
 
 
 interface ViewPetProps {
@@ -34,6 +36,8 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
     const [openStates, setOpenStates] = useState(false);
     const [editOwner, setEditOwner] = useState<Owner>({});
     const [tabIndex, setTabIndex] = React.useState(0);
+    
+    const { getOwnerPhotos } = useOwnersStore();
 
 
     useEffect(() => {
@@ -58,17 +62,26 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
     }, [viewOwner]);
 
     useEffect(() => {
-        const ownerPhotos = viewOwner.ownerPhotos?.map(m =>
-        (
-            {
+        // Load owner photos when the dialog opens
+        if (open && viewOwner.id) {
+            loadOwnerPhotos();
+        }
+    }, [open, viewOwner.id]);
+
+    const loadOwnerPhotos = async () => {
+        try {
+            const photos = await getOwnerPhotos(viewOwner.id);
+            const mappedPhotos = photos?.map(m => ({
                 id: m.id,
                 fileName: m.fileName,
                 fileDataBase64: m.fileDataBase64
-            }
-        ));
-
-        setSelectedFiles(ownerPhotos);
-    }, [viewOwner]);
+            })) || [];
+            setSelectedFiles(mappedPhotos);
+        } catch (error) {
+            console.error('Failed to load owner photos:', error);
+            setSelectedFiles([]);
+        }
+    };
 
     const handleFileInputChange = (newValue: File[]) => {
         setSelectedFiles(newValue);

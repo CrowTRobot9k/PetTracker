@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 import { IconButton } from "@mui/material";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
@@ -7,10 +7,43 @@ import Slide from "@mui/material/Slide";
 import { Fade } from '@mui/material';
 import Stack from "@mui/material/Stack";
 
-export default function Carousel({ cards }) {
+export default function Carousel({ cards, onVisible }) {
     const [currentPage, setCurrentPage] = useState(0);
+    const carouselRef = useRef(null);
+    const [hasTriggered, setHasTriggered] = useState(false);
 
     const cardsPerPage = 1;
+
+    // Intersection Observer for lazy loading
+    useEffect(() => {
+        if (!onVisible || hasTriggered) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting && !hasTriggered) {
+                        onVisible();
+                        setHasTriggered(true);
+                        observer.disconnect();
+                    }
+                });
+            },
+            {
+                threshold: 0.1, // Trigger when 10% of the element is visible
+                rootMargin: '50px' // Start loading 50px before the element comes into view
+            }
+        );
+
+        if (carouselRef.current) {
+            observer.observe(carouselRef.current);
+        }
+
+        return () => {
+            if (carouselRef.current) {
+                observer.unobserve(carouselRef.current);
+            }
+        };
+    }, [onVisible, hasTriggered]);
 
     // these two functions handle changing the pages
     const handleNextPage = () => {
@@ -29,6 +62,7 @@ export default function Carousel({ cards }) {
     return (
         //  outer box that holds the carousel and the buttons
         <Box
+            ref={carouselRef}
             sx={{
                 display: "flex",
                 flexDirection: "row",

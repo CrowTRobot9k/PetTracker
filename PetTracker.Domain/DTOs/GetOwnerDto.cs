@@ -10,8 +10,9 @@ namespace PetTracker.Domain.DTOs
     {
         public GetOwnerDto(Models.Owner owner) : base(owner)
         {
-            OwnerPhotos = owner.FileUploadMappings.Select(s => new FileDownloadDto(s.FileUpload)).ToList();
+            // OwnerPhotos removed to reduce payload - now loaded separately via API
+            // OwnerPhotos = owner.FileUploadMappings.Select(s => new FileDownloadDto(s.FileUpload)).ToList();
         }
-        public List<FileDownloadDto> OwnerPhotos { get; set; } = new List<FileDownloadDto>();
+        // public List<FileDownloadDto> OwnerPhotos { get; set; } = new List<FileDownloadDto>();
     }
 }

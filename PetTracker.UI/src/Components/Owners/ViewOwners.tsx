@@ -34,12 +34,16 @@ const StyledTypography = styled(Typography)({
 export default function ViewOwners() {
     const getOwners = useOwnersStore((state) => state.getOwners);
     const getStates = useOwnersStore((state) => state.getStates);
+    const getOwnerPhotos = useOwnersStore((state) => state.getOwnerPhotos);
+    const getOwnerPhotosSync = useOwnersStore((state) => state.getOwnerPhotosSync);
     const states = useOwnersStore((state) => state.states);
     const { searchTerm } = useSearch();
 
     const {
         owners,
         loadingOwners,
+        loadingOwnerPhotos,
+        ownerPhotos,
         errorMessage,
         showErrors
     } = useOwnersStore();
@@ -65,15 +69,24 @@ export default function ViewOwners() {
         setOpen(false);
     };
 
-    const getOwnerSlides = (images) =>
+    const getOwnerSlides = (ownerId) =>
     {
-        if (!images || images.length === 0) {
+        const photos = getOwnerPhotosSync(ownerId);
+        
+        if (!photos || photos.length === 0) {
             return [<img key="no-image" src="/Owner Placeholder.png"/>];
         }
 
-        return Array.from(images.map((f, index) => (
+        return Array.from(photos.map((f, index) => (
             <img key={`${index}_${f.fileName}`} src={getImageUrlFromBlob(f.fileDataBase64)} />
         )))
+    }
+
+    const loadOwnerPhotos = async (ownerId) => {
+        const existingPhotos = getOwnerPhotosSync(ownerId);
+        if (!existingPhotos || existingPhotos.length === 0) {
+            await getOwnerPhotos(ownerId);
+        }
     }
 
     const handleOpenOwner = (owner) => {
@@ -141,7 +154,10 @@ export default function ViewOwners() {
                                                     flexDirection: 'column',
                                                 }}
                                             >
-                                                <Carousel cards={getOwnerSlides(m.ownerPhotos)} />
+                                                <Carousel 
+                                                    cards={getOwnerSlides(m.id)} 
+                                                    onVisible={() => loadOwnerPhotos(m.id)}
+                                                />
                                                 <SyledCardContent sx={{
                                                     p: { xs: 0.25, sm: 0.5 },
                                                     flexGrow: 1,

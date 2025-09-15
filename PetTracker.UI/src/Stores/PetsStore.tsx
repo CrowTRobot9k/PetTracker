@@ -3,8 +3,10 @@ import { create } from "zustand";
 const usePetsStore = create((set) => ({
     loadingPets: false,
     loadingPetTypes: false,
+    loadingPetPhotos: false,
     pets: [],
     petTypes: [],
+    petPhotos: {}, // Store photos by petId
 
     errorMessage: null,
     showErrors: false,
@@ -45,6 +47,34 @@ const usePetsStore = create((set) => ({
         } catch (e) {
             set({ showErrors: true, errorMessage: e.message, loadingPetTypes: false });
         }
+    },
+    getPetPhotos: async (petId) => {
+        set({ loadingPetPhotos: true });
+        try {
+            const response = await fetch(`/api/Pet/GetPetPhotos?petId=${petId}`);
+            if (!response.ok) {
+                throw new Error(await response.json());
+            }
+
+            if (response.status == 200) {
+                const data = await response.json();
+                set((state) => ({
+                    petPhotos: {
+                        ...state.petPhotos,
+                        [petId]: data
+                    },
+                    loadingPetPhotos: false,
+                }));
+                return data;
+            }
+        } catch (e) {
+            set({ showErrors: true, errorMessage: e.message, loadingPetPhotos: false });
+            return [];
+        }
+    },
+    getPetPhotosSync: (petId) => {
+        const state = usePetsStore.getState();
+        return state.petPhotos[petId] || [];
     }
 }));
 

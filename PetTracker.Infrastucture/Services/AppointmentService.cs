@@ -29,6 +29,12 @@ namespace PetTracker.Infrastucture.Services
         public async Task<List<GetAppointmentDto>> GetAppointments(int? companyId = null)
         {
             var results = await _dbContext.Appointments
+                .Include(a => a.Owner)
+                .Include(a => a.Pet)
+                    .ThenInclude(p => p.PetType)
+                .Include(a => a.Pet)
+                    .ThenInclude(p => p.PetBreedTypes)
+                        .ThenInclude(pbt => pbt.BreedType)
                 .Where(w => companyId == null || w.CompanyId == companyId)
                 .ToListAsync();
 
@@ -42,7 +48,10 @@ namespace PetTracker.Infrastucture.Services
 
         public async Task<int> UpdateAppointment(AppointmentDto appointment)
         { 
-            var existingAppointment = await _dbContext.Appointments.FirstOrDefaultAsync(a => a.Id == appointment.id);
+            var existingAppointment = await _dbContext.Appointments
+                .Include(a => a.Owner)
+                .Include(a => a.Pet)
+                .FirstOrDefaultAsync(a => a.Id == appointment.id);
             if (existingAppointment == null)
             {
                 throw new KeyNotFoundException($"Appointment with ID {appointment.id} not found.");

@@ -102,6 +102,20 @@ namespace PetTracker.Server.Controllers
             return new JsonResult(true);
         }
 
+        [HttpGet("GetOwnerPhotos")]
+        public async Task<IActionResult> GetOwnerPhotos(int ownerId)
+        {
+            try
+            {
+                var result = await _OwnerService.GetOwnerPhotos(ownerId);
+                return new JsonResult(result);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(HandleUIException(ex));
+            }
+        }
+
         [HttpGet("GetStates")]
         public async Task<IActionResult> GetStates()
         {

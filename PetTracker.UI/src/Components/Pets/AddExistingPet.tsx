@@ -41,6 +41,8 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
     const [submitSuccessMessage, setSuccessMessage] = useState('');
     const [submitErrorMessage, setSubmitErrorMessage] = useState('');
     const getExistingPets = useExistingPetsStore((state) => state.getExistingPets);
+    const getPetPhotos = useExistingPetsStore((state) => state.getPetPhotos);
+    const getPetPhotosSync = useExistingPetsStore((state) => state.getPetPhotosSync);
     const { existingPets, loadingExistingPets } = useExistingPetsStore();
     const [searchValue, setSearchValue] = useState('');
     const [ selectedPets, setSelectedPets ] = useState({});
@@ -49,20 +51,29 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
          getExistingPets(ownerId);
      }, [ownerId]);
 
-    const getPetSlides = (images, petType: string) =>
+    const getPetSlides = (petId, petType: string) =>
     {
         const placeholderDict =
         {
             Cat: "/Cat Placeholder.png",
             Dog: "/Dog Placeholder.png",
         }
-        if (!images || images.length === 0) {
-            return [<img src={placeholderDict[petType]} />]
+        const photos = getPetPhotosSync(petId);
+        
+        if (!photos || photos.length === 0) {
+            return [<img key="no-image" src={placeholderDict[petType]} />]
         }
 
-        return Array.from(images.map((f, index) => (
+        return Array.from(photos.map((f, index) => (
             <img key={`${index}_${f.fileName}`} src={getImageUrlFromBlob(f.fileDataBase64)} />
         )))
+    }
+
+    const loadPetPhotos = async (petId) => {
+        const existingPhotos = getPetPhotosSync(petId);
+        if (!existingPhotos || existingPhotos.length === 0) {
+            await getPetPhotos(petId);
+        }
     }
 
     const handleSearchChange = (e) => {
@@ -202,7 +213,10 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
                                             flexDirection: 'column',
                                         }}
                                     >
-                                        <Carousel cards={getPetSlides(m.petPhotos, m.petType?.type)} />
+                                        <Carousel 
+                                            cards={getPetSlides(m.id, m.petType?.type)} 
+                                            onVisible={() => loadPetPhotos(m.id)}
+                                        />
                                         <SyledCardContent sx={{
                                             p: { xs: 0.5, sm: 1 },
                                             flexGrow: 1,
