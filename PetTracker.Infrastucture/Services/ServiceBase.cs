@@ -8,12 +8,12 @@ using PetTracker.SqlDb.Models;
 
 namespace PetTracker.Infrastucture.Services
 {
-    public class ServiceBase
+    public class ServiceBase<T>
     {
-        protected readonly ILogger _logger;
+        protected readonly ILogger<T> _logger;
         protected readonly IPtDbContext _dbContext;
 
-        public ServiceBase(ILogger logger, IPtDbContext dbContext)
+        public ServiceBase(ILogger<T> logger, IPtDbContext dbContext)
         {
             _logger = logger;
             _dbContext = dbContext;

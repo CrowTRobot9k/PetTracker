@@ -11,17 +11,22 @@ using System.Threading.Tasks;
 
 namespace PetTracker.Infrastucture.Services
 {
-    public class OwnerService : ServiceBase, IOwnerService
+    public class OwnerService : ServiceBase<OwnerService>, IOwnerService
     {
-        public OwnerService(ILogger logger, IPtDbContext dbContext) : base(logger, dbContext)
+        private readonly IFileUploadService _fileUploadService;
+        private readonly IImageCompressionService _imageCompressionService;
+
+        public OwnerService(ILogger<OwnerService> logger, IPtDbContext dbContext, IFileUploadService fileUploadService, IImageCompressionService imageCompressionService) : base(logger, dbContext)
         {
+            _fileUploadService = fileUploadService;
+            _imageCompressionService = imageCompressionService;
         }
         public async Task<int> CreateOwner(AddOwnerDto owner)
         {
             var uploadIds = new List<int>();
             if (owner.OwnerPhotos.Any())
             {
-                uploadIds = await new FileUploadService(_logger, _dbContext).CreateFileUploads(owner.OwnerPhotos);
+                uploadIds = await _fileUploadService.CreateFileUploads(owner.OwnerPhotos);
             }
 
             var addOwner = new Owner(owner);
@@ -57,7 +62,7 @@ namespace PetTracker.Infrastucture.Services
             var uploadIds = new List<int>();
             if (owner.OwnerPhotos.Any())
             {
-                uploadIds = await new FileUploadService(_logger, _dbContext).CreateFileUploads(owner.OwnerPhotos);
+                uploadIds = await _fileUploadService.CreateFileUploads(owner.OwnerPhotos);
             }
 
             var existingOwner = await _dbContext.Owners
@@ -152,7 +157,47 @@ namespace PetTracker.Infrastucture.Services
                 return new List<FileDownloadDto>();
             }
 
-            return results.Select(s => new FileDownloadDto(s)).ToList();
+            var compressedResults = new List<FileDownloadDto>();
+            
+            foreach (var fileUpload in results)
+            {
+                if (fileUpload.FileData != null && IsImageFile(fileUpload.FileExtension) && fileUpload.FileData.Length > 200 * 1024) // 200KB
+                {
+                    try
+                    {
+                        // Compress the image with timeout
+                        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30)); // 30 second timeout
+                        var compressedData = await _imageCompressionService.CompressImageAsync(fileUpload.FileData).WaitAsync(cts.Token);
+                        compressedResults.Add(new FileDownloadDto(fileUpload, compressedData));
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        _logger.LogWarning($"Image compression timed out for file {fileUpload.FileName}, using original data");
+                        compressedResults.Add(new FileDownloadDto(fileUpload));
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, $"Error compressing image {fileUpload.FileName}, using original data");
+                        compressedResults.Add(new FileDownloadDto(fileUpload));
+                    }
+                }
+                else
+                {
+                    // Use original data
+                    compressedResults.Add(new FileDownloadDto(fileUpload));
+                }
+            }
+
+            return compressedResults;
+        }
+
+        private bool IsImageFile(string extension)
+        {
+            if (string.IsNullOrEmpty(extension))
+                return false;
+
+            var imageExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" };
+            return imageExtensions.Contains(extension.ToLowerInvariant());
         }
 
         public async Task<bool> AddExistingPetsToOwner(AddExistingPetsToOwnerDto model)

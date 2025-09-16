@@ -10,10 +10,15 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Data.SqlClient;
 namespace PetTracker.Infrastucture.Services
 {
-    public class PetService : ServiceBase, IPetService
+    public class PetService : ServiceBase<PetService>, IPetService
     {
-        public PetService(ILogger logger, IPtDbContext dbContext) : base(logger, dbContext)
+        private readonly IFileUploadService _fileUploadService;
+        private readonly IImageCompressionService _imageCompressionService;
+
+        public PetService(ILogger<PetService> logger, IPtDbContext dbContext, IFileUploadService fileUploadService, IImageCompressionService imageCompressionService) : base(logger, dbContext)
         {
+            _fileUploadService = fileUploadService;
+            _imageCompressionService = imageCompressionService;
         }
 
         public async Task<int> CreatePet(AddPetDto pet)
@@ -21,7 +26,7 @@ namespace PetTracker.Infrastucture.Services
             var uploadIds = new List<int>();
             if (pet.PetPhotos.Any())
             {
-                uploadIds = await new FileUploadService(_logger, _dbContext).CreateFileUploads(pet.PetPhotos);
+                uploadIds = await _fileUploadService.CreateFileUploads(pet.PetPhotos);
             }
 
             var addPet = new Pet(pet);
@@ -70,7 +75,7 @@ namespace PetTracker.Infrastucture.Services
             var uploadIds = new List<int>();
             if (pet.PetPhotos.Any())
             {
-                uploadIds = await new FileUploadService(_logger, _dbContext).CreateFileUploads(pet.PetPhotos);
+                uploadIds = await _fileUploadService.CreateFileUploads(pet.PetPhotos);
             }
 
             var existingPet = await _dbContext.Pets
@@ -206,7 +211,47 @@ namespace PetTracker.Infrastucture.Services
                 return new List<FileDownloadDto>();
             }
 
-            return results.Select(s => new FileDownloadDto(s)).ToList();
+            var compressedResults = new List<FileDownloadDto>();
+            
+            foreach (var fileUpload in results)
+            {
+                if (fileUpload.FileData != null && IsImageFile(fileUpload.FileExtension) && fileUpload.FileData.Length > 200 * 1024) // 200KB
+                {
+                    try
+                    {
+                        // Compress the image with timeout
+                        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30)); // 30 second timeout
+                        var compressedData = await _imageCompressionService.CompressImageAsync(fileUpload.FileData).WaitAsync(cts.Token);
+                        compressedResults.Add(new FileDownloadDto(fileUpload, compressedData));
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        _logger.LogWarning($"Image compression timed out for file {fileUpload.FileName}, using original data");
+                        compressedResults.Add(new FileDownloadDto(fileUpload));
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, $"Error compressing image {fileUpload.FileName}, using original data");
+                        compressedResults.Add(new FileDownloadDto(fileUpload));
+                    }
+                }
+                else
+                {
+                    // Use original data
+                    compressedResults.Add(new FileDownloadDto(fileUpload));
+                }
+            }
+
+            return compressedResults;
+        }
+
+        private bool IsImageFile(string extension)
+        {
+            if (string.IsNullOrEmpty(extension))
+                return false;
+
+            var imageExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" };
+            return imageExtensions.Contains(extension.ToLowerInvariant());
         }
     }
 }

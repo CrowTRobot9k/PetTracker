@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using PetTracker.Domain.Models;
+using PetTracker.Infrastucture.Services;
 using PetTracker.Server.Models;
 using PetTracker.SqlDb.Models;
 using Scalar.AspNetCore;
@@ -43,6 +44,13 @@ try
     // Add services to the container.
     builder.Services.AddScoped<IEmailSender<AspNetUser>, IdentityEmailSender>();
     //builder.Services.AddScoped<IEmailSender, EmailSender>();
+    builder.Services.AddScoped<IImageCompressionService, ImageCompressionService>();
+    builder.Services.AddScoped<IFileUploadService, FileUploadService>();
+    builder.Services.AddScoped<IPetService, PetService>();
+    builder.Services.AddScoped<IOwnerService, OwnerService>();
+    builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+    builder.Services.AddScoped<IUserService, UserService>();
+    builder.Services.AddScoped<ICompanyService, CompanyService>();
 
     builder.Services.AddControllers();
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

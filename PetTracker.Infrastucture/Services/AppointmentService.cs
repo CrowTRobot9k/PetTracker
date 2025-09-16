@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace PetTracker.Infrastucture.Services
 {
-    public class AppointmentService : ServiceBase, IAppointmentService
+    public class AppointmentService : ServiceBase<AppointmentService>, IAppointmentService
     {
-        public AppointmentService(ILogger logger, IPtDbContext dbContext) : base(logger, dbContext)
+        public AppointmentService(ILogger<AppointmentService> logger, IPtDbContext dbContext) : base(logger, dbContext)
         {
         }
 

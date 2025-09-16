@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace PetTracker.Infrastucture.Services
 {
-    public class CompanyService : ServiceBase, ICompanyService
+    public class CompanyService : ServiceBase<CompanyService>, ICompanyService
     {
-        public CompanyService(ILogger logger, IPtDbContext dbContext) : base(logger, dbContext)
+        public CompanyService(ILogger<CompanyService> logger, IPtDbContext dbContext) : base(logger, dbContext)
         {
         }
 

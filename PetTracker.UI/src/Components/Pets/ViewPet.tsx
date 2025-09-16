@@ -40,7 +40,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
 
     const getPetBreeds = usePetStore((state) => state.getPetBreeds);
     const petBreeds = usePetStore((state) => state.petBreeds);
-    const { getPetPhotos } = usePetsStore();
+    const { getPetPhotos, getPetPhotosSync } = usePetsStore();
 
     const {
         errorMessage,
@@ -74,13 +74,27 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
 
     const loadPetPhotos = async () => {
         try {
-            const photos = await getPetPhotos(viewPet.id);
-            const mappedPhotos = photos?.map(m => ({
-                id: m.id,
-                fileName: m.fileName,
-                fileDataBase64: m.fileDataBase64
-            })) || [];
-            setSelectedFiles(mappedPhotos);
+            // First check if photos are already cached
+            const existingPhotos = getPetPhotosSync(viewPet.id);
+            
+            if (existingPhotos && existingPhotos.length > 0) {
+                // Use cached photos
+                const mappedPhotos = existingPhotos.map(m => ({
+                    id: m.id,
+                    fileName: m.fileName,
+                    fileDataBase64: m.fileDataBase64
+                }));
+                setSelectedFiles(mappedPhotos);
+            } else {
+                // Fetch photos from API if not cached
+                const photos = await getPetPhotos(viewPet.id);
+                const mappedPhotos = photos?.map(m => ({
+                    id: m.id,
+                    fileName: m.fileName,
+                    fileDataBase64: m.fileDataBase64
+                })) || [];
+                setSelectedFiles(mappedPhotos);
+            }
         } catch (error) {
             console.error('Failed to load pet photos:', error);
             setSelectedFiles([]);

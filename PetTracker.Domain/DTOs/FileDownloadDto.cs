@@ -22,6 +22,15 @@ namespace PetTracker.Domain.DTOs
             CreatedDate = fu.CreatedDate;
         }
 
+        public FileDownloadDto(FileUpload fu, byte[] compressedData)
+        {
+            Id = fu.Id;
+            FileName = fu.FileName;
+            FileExtension = fu.FileExtension;
+            FileDataBase64 = compressedData != null ? Convert.ToBase64String(compressedData) : null;
+            CreatedDate = fu.CreatedDate;
+        }
+
         public int Id { get; set; }
 
         public string? FileName { get; set; }

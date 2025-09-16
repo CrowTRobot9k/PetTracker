@@ -8,9 +8,9 @@ namespace PetTracker.Server.Controllers
     public class UserController : PetTrackerBaseController
     {
         private readonly IUserService _UserService;
-        public UserController(ILogger<OwnerController> logger, IPtDbContext dbContext) : base(logger, dbContext)
+        public UserController(ILogger<OwnerController> logger, IPtDbContext dbContext, IUserService userService) : base(logger, dbContext)
         {
-            _UserService = new UserService(logger, dbContext);
+            _UserService = userService;
         }
 
         [HttpGet("GetUsers")]

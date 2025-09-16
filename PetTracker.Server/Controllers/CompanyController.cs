@@ -7,9 +7,9 @@ namespace PetTracker.Server.Controllers
     public class CompanyController : PetTrackerBaseController
     {
         private readonly ICompanyService _UserService;
-        public CompanyController(ILogger<CompanyController> logger, IPtDbContext dbContext) : base(logger, dbContext)
+        public CompanyController(ILogger<CompanyController> logger, IPtDbContext dbContext, ICompanyService companyService) : base(logger, dbContext)
         {
-            _UserService = new CompanyService(logger, dbContext);
+            _UserService = companyService;
         }
 
         [HttpGet("GetCompanies")]

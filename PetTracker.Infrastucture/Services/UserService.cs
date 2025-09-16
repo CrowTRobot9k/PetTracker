@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace PetTracker.Infrastucture.Services
 {
-    public class UserService : ServiceBase, IUserService
+    public class UserService : ServiceBase<UserService>, IUserService
     {
-        public UserService(ILogger logger, IPtDbContext dbContext) : base(logger, dbContext)
+        public UserService(ILogger<UserService> logger, IPtDbContext dbContext) : base(logger, dbContext)
         {
         }
 

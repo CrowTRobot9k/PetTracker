@@ -37,7 +37,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
     const [editOwner, setEditOwner] = useState<Owner>({});
     const [tabIndex, setTabIndex] = React.useState(0);
     
-    const { getOwnerPhotos } = useOwnersStore();
+    const { getOwnerPhotos, getOwnerPhotosSync } = useOwnersStore();
 
 
     useEffect(() => {
@@ -70,13 +70,27 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
 
     const loadOwnerPhotos = async () => {
         try {
-            const photos = await getOwnerPhotos(viewOwner.id);
-            const mappedPhotos = photos?.map(m => ({
-                id: m.id,
-                fileName: m.fileName,
-                fileDataBase64: m.fileDataBase64
-            })) || [];
-            setSelectedFiles(mappedPhotos);
+            // First check if photos are already cached
+            const existingPhotos = getOwnerPhotosSync(viewOwner.id);
+            
+            if (existingPhotos && existingPhotos.length > 0) {
+                // Use cached photos
+                const mappedPhotos = existingPhotos.map(m => ({
+                    id: m.id,
+                    fileName: m.fileName,
+                    fileDataBase64: m.fileDataBase64
+                }));
+                setSelectedFiles(mappedPhotos);
+            } else {
+                // Fetch photos from API if not cached
+                const photos = await getOwnerPhotos(viewOwner.id);
+                const mappedPhotos = photos?.map(m => ({
+                    id: m.id,
+                    fileName: m.fileName,
+                    fileDataBase64: m.fileDataBase64
+                })) || [];
+                setSelectedFiles(mappedPhotos);
+            }
         } catch (error) {
             console.error('Failed to load owner photos:', error);
             setSelectedFiles([]);

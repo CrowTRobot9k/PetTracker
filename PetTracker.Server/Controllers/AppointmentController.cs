@@ -10,9 +10,9 @@ namespace PetTracker.Server.Controllers
     {
         private readonly IAppointmentService _AppointmentService;
 
-        public AppointmentController(ILogger<OwnerController> logger, IPtDbContext dbContext) : base(logger, dbContext)
+        public AppointmentController(ILogger<OwnerController> logger, IPtDbContext dbContext, IAppointmentService appointmentService) : base(logger, dbContext)
         {
-            _AppointmentService = new AppointmentService(logger, dbContext);
+            _AppointmentService = appointmentService;
         }
 
         [HttpGet("GetAppointments")]

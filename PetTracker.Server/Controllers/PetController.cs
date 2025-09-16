@@ -11,9 +11,9 @@ namespace PetTracker.Server.Controllers
     {
         private readonly IPetService _PetService;
 
-        public PetController(ILogger<PetController> logger, IPtDbContext dbContext) : base(logger,dbContext)
+        public PetController(ILogger<PetController> logger, IPtDbContext dbContext, IPetService petService) : base(logger,dbContext)
         {
-            _PetService = new PetService(logger, dbContext);
+            _PetService = petService;
         }
         [HttpGet("GetPets")]
         public async Task<IActionResult> GetPets(int? ownerId)
