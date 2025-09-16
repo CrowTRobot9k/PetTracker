@@ -245,6 +245,73 @@ namespace PetTracker.Infrastucture.Services
             return compressedResults;
         }
 
+        public async Task<Dictionary<int, List<FileDownloadDto>>> GetPetPhotosBatch(List<int> petIds)
+        {
+            if (petIds == null || !petIds.Any())
+            {
+                return new Dictionary<int, List<FileDownloadDto>>();
+            }
+
+            var results = await _dbContext.Pets
+                .Include(p => p.FileUploadMappings)
+                    .ThenInclude(fum => fum.FileUpload)
+                .Where(p => petIds.Contains(p.Id))
+                .SelectMany(p => p.FileUploadMappings)
+                .Select(fum => new { fum.PetId, FileUpload = fum.FileUpload })
+                .ToListAsync();
+
+            var groupedResults = results.GroupBy(r => r.PetId)
+                .ToDictionary(g => g.Key, g => g.Select(r => r.FileUpload).ToList());
+
+            var batchResults = new Dictionary<int, List<FileDownloadDto>>();
+
+            foreach (var petId in petIds)
+            {
+                if (groupedResults.ContainsKey(petId))
+                {
+                    var fileUploads = groupedResults[petId];
+                    var compressedResults = new List<FileDownloadDto>();
+
+                    foreach (var fileUpload in fileUploads)
+                    {
+                        if (fileUpload.FileData != null && IsImageFile(fileUpload.FileExtension) && fileUpload.FileData.Length > 200 * 1024) // 200KB
+                        {
+                            try
+                            {
+                                // Compress the image with timeout
+                                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30)); // 30 second timeout
+                                var compressedData = await _imageCompressionService.CompressImageAsync(fileUpload.FileData).WaitAsync(cts.Token);
+                                compressedResults.Add(new FileDownloadDto(fileUpload, compressedData));
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                _logger.LogWarning($"Image compression timed out for file {fileUpload.FileName}, using original data");
+                                compressedResults.Add(new FileDownloadDto(fileUpload));
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex, $"Error compressing image {fileUpload.FileName}, using original data");
+                                compressedResults.Add(new FileDownloadDto(fileUpload));
+                            }
+                        }
+                        else
+                        {
+                            // Use original data
+                            compressedResults.Add(new FileDownloadDto(fileUpload));
+                        }
+                    }
+
+                    batchResults[petId] = compressedResults;
+                }
+                else
+                {
+                    batchResults[petId] = new List<FileDownloadDto>();
+                }
+            }
+
+            return batchResults;
+        }
+
         private bool IsImageFile(string extension)
         {
             if (string.IsNullOrEmpty(extension))

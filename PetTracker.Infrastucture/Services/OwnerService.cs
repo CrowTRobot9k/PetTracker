@@ -166,8 +166,7 @@ namespace PetTracker.Infrastucture.Services
                     try
                     {
                         // Compress the image with timeout
-                        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30)); // 30 second timeout
-                        var compressedData = await _imageCompressionService.CompressImageAsync(fileUpload.FileData).WaitAsync(cts.Token);
+                        var compressedData = await _imageCompressionService.CompressImageAsync(fileUpload.FileData);
                         compressedResults.Add(new FileDownloadDto(fileUpload, compressedData));
                     }
                     catch (OperationCanceledException)
@@ -189,6 +188,73 @@ namespace PetTracker.Infrastucture.Services
             }
 
             return compressedResults;
+        }
+
+        public async Task<Dictionary<int, List<FileDownloadDto>>> GetOwnerPhotosBatch(List<int> ownerIds)
+        {
+            if (ownerIds == null || !ownerIds.Any())
+            {
+                return new Dictionary<int, List<FileDownloadDto>>();
+            }
+
+            var results = await _dbContext.Owners
+                .Include(o => o.FileUploadMappings)
+                    .ThenInclude(fum => fum.FileUpload)
+                .Where(o => ownerIds.Contains(o.Id))
+                .SelectMany(o => o.FileUploadMappings)
+                .Select(fum => new { fum.OwnerId, FileUpload = fum.FileUpload })
+                .ToListAsync();
+
+            var groupedResults = results.GroupBy(r => r.OwnerId)
+                .ToDictionary(g => g.Key, g => g.Select(r => r.FileUpload).ToList());
+
+            var batchResults = new Dictionary<int, List<FileDownloadDto>>();
+
+            foreach (var ownerId in ownerIds)
+            {
+                if (groupedResults.ContainsKey(ownerId))
+                {
+                    var fileUploads = groupedResults[ownerId];
+                    var compressedResults = new List<FileDownloadDto>();
+
+                    foreach (var fileUpload in fileUploads)
+                    {
+                        if (fileUpload.FileData != null && IsImageFile(fileUpload.FileExtension) && fileUpload.FileData.Length > 200 * 1024) // 200KB
+                        {
+                            try
+                            {
+                                // Compress the image with timeout
+                                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30)); // 30 second timeout
+                                var compressedData = await _imageCompressionService.CompressImageAsync(fileUpload.FileData).WaitAsync(cts.Token);
+                                compressedResults.Add(new FileDownloadDto(fileUpload, compressedData));
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                _logger.LogWarning($"Image compression timed out for file {fileUpload.FileName}, using original data");
+                                compressedResults.Add(new FileDownloadDto(fileUpload));
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex, $"Error compressing image {fileUpload.FileName}, using original data");
+                                compressedResults.Add(new FileDownloadDto(fileUpload));
+                            }
+                        }
+                        else
+                        {
+                            // Use original data
+                            compressedResults.Add(new FileDownloadDto(fileUpload));
+                        }
+                    }
+
+                    batchResults[ownerId] = compressedResults;
+                }
+                else
+                {
+                    batchResults[ownerId] = new List<FileDownloadDto>();
+                }
+            }
+
+            return batchResults;
         }
 
         private bool IsImageFile(string extension)

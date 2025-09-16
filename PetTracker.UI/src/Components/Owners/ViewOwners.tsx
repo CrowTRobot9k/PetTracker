@@ -36,6 +36,7 @@ export default function ViewOwners() {
     const getStates = useOwnersStore((state) => state.getStates);
     const getOwnerPhotos = useOwnersStore((state) => state.getOwnerPhotos);
     const getOwnerPhotosSync = useOwnersStore((state) => state.getOwnerPhotosSync);
+    const getOwnerPhotosBatch = useOwnersStore((state) => state.getOwnerPhotosBatch);
     const states = useOwnersStore((state) => state.states);
     const { searchTerm } = useSearch();
 
@@ -56,6 +57,24 @@ export default function ViewOwners() {
     useEffect(() => {
         getOwners();
     }, [reloadOwners]);
+
+    // Load photos in batch when owners are loaded
+    useEffect(() => {
+        if (owners && owners.length > 0) {
+            const ownerIds = owners.map(owner => owner.id).filter(id => id);
+            if (ownerIds.length > 0) {
+                // Check which owners don't have photos loaded yet
+                const ownersNeedingPhotos = ownerIds.filter(ownerId => {
+                    const existingPhotos = getOwnerPhotosSync(ownerId);
+                    return !existingPhotos || existingPhotos.length === 0;
+                });
+                
+                if (ownersNeedingPhotos.length > 0) {
+                    getOwnerPhotosBatch(ownersNeedingPhotos);
+                }
+            }
+        }
+    }, [owners]);
 
     useMemo(() => {
         getStates();

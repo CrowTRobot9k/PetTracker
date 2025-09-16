@@ -77,6 +77,36 @@ const useOwnersStore = create((set) => ({
     getOwnerPhotosSync: (ownerId) => {
         const state = useOwnersStore.getState();
         return state.ownerPhotos[ownerId] || [];
+    },
+    getOwnerPhotosBatch: async (ownerIds) => {
+        set({ loadingOwnerPhotos: true });
+        try {
+            const response = await fetch("/api/Owner/GetOwnerPhotosBatch", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(ownerIds)
+            });
+            if (!response.ok) {
+                throw new Error(await response.json());
+            }
+
+            if (response.status == 200) {
+                const data = await response.json();
+                set((state) => ({
+                    ownerPhotos: {
+                        ...state.ownerPhotos,
+                        ...data
+                    },
+                    loadingOwnerPhotos: false,
+                }));
+                return data;
+            }
+        } catch (e) {
+            set({ showErrors: true, errorMessage: e.message, loadingOwnerPhotos: false });
+            return {};
+        }
     }
 }));
 

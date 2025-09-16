@@ -116,6 +116,20 @@ namespace PetTracker.Server.Controllers
             }
         }
 
+        [HttpPost("GetOwnerPhotosBatch")]
+        public async Task<IActionResult> GetOwnerPhotosBatch([FromBody] List<int> ownerIds)
+        {
+            try
+            {
+                var result = await _OwnerService.GetOwnerPhotosBatch(ownerIds);
+                return new JsonResult(result);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(HandleUIException(ex));
+            }
+        }
+
         [HttpGet("GetStates")]
         public async Task<IActionResult> GetStates()
         {

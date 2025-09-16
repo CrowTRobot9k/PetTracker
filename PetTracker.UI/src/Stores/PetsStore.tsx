@@ -75,6 +75,36 @@ const usePetsStore = create((set) => ({
     getPetPhotosSync: (petId) => {
         const state = usePetsStore.getState();
         return state.petPhotos[petId] || [];
+    },
+    getPetPhotosBatch: async (petIds) => {
+        set({ loadingPetPhotos: true });
+        try {
+            const response = await fetch("/api/Pet/GetPetPhotosBatch", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(petIds)
+            });
+            if (!response.ok) {
+                throw new Error(await response.json());
+            }
+
+            if (response.status == 200) {
+                const data = await response.json();
+                set((state) => ({
+                    petPhotos: {
+                        ...state.petPhotos,
+                        ...data
+                    },
+                    loadingPetPhotos: false,
+                }));
+                return data;
+            }
+        } catch (e) {
+            set({ showErrors: true, errorMessage: e.message, loadingPetPhotos: false });
+            return {};
+        }
     }
 }));
 

@@ -17,5 +17,6 @@ namespace PetTracker.Infrastucture.Services
         Task<List<PetTypeDto>> GetPetTypes();
         Task<List<BreedTypeDto>> GetPetBreeds(int petTypeId);
         Task<List<FileDownloadDto>> GetPetPhotos(int petId);
+        Task<Dictionary<int, List<FileDownloadDto>>> GetPetPhotosBatch(List<int> petIds);
     }
 }

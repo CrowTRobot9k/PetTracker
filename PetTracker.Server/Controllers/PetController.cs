@@ -128,5 +128,19 @@ namespace PetTracker.Server.Controllers
                 return new JsonResult(HandleUIException(ex));
             }
         }
+
+        [HttpPost("GetPetPhotosBatch")]
+        public async Task<IActionResult> GetPetPhotosBatch([FromBody] List<int> petIds)
+        {
+            try
+            {
+                var result = await _PetService.GetPetPhotosBatch(petIds);
+                return new JsonResult(result);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(HandleUIException(ex));
+            }
+        }
     }
 }

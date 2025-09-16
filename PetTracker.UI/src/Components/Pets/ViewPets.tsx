@@ -29,6 +29,7 @@ export default function ViewPets(props: { ownerId?: number }) {
     const getPetTypes = usePetsStore((state) => state.getPetTypes);
     const getPetPhotos = usePetsStore((state) => state.getPetPhotos);
     const getPetPhotosSync = usePetsStore((state) => state.getPetPhotosSync);
+    const getPetPhotosBatch = usePetsStore((state) => state.getPetPhotosBatch);
     const petTypes = usePetsStore((state) => state.petTypes);
     const {
         pets,
@@ -59,6 +60,24 @@ export default function ViewPets(props: { ownerId?: number }) {
     useEffect(() => {
         getPets(props.ownerId);
     }, [reloadPets, props.ownerId]);
+
+    // Load photos in batch when pets are loaded
+    useEffect(() => {
+        if (pets && pets.length > 0) {
+            const petIds = pets.map(pet => pet.id).filter(id => id);
+            if (petIds.length > 0) {
+                // Check which pets don't have photos loaded yet
+                const petsNeedingPhotos = petIds.filter(petId => {
+                    const existingPhotos = getPetPhotosSync(petId);
+                    return !existingPhotos || existingPhotos.length === 0;
+                });
+                
+                if (petsNeedingPhotos.length > 0) {
+                    getPetPhotosBatch(petsNeedingPhotos);
+                }
+            }
+        }
+    }, [pets]);
 
     useMemo(() => {
         getPetTypes();
