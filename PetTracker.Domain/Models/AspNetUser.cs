@@ -24,5 +24,7 @@ public partial class AspNetUser: IdentityUser
 
     public virtual ICollection<Owner> Owners { get; set; } = new List<Owner>();
 
+    public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+
     public virtual ICollection<AspNetRole> Roles { get; set; } = new List<AspNetRole>();
 }

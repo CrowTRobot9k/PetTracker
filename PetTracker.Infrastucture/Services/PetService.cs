@@ -94,8 +94,12 @@ namespace PetTracker.Infrastucture.Services
             var fileMappings = new List<FileUploadMapping>();
             if (uploadIds.Any())
             {
-                _dbContext.FileUploadMappings.RemoveRange(existingPet.FileUploadMappings);
-                _dbContext.FileUploads.RemoveRange(existingPet.FileUploadMappings.Select(s => s.FileUpload));
+                // Delete the existing FileUploadMappings for this pet
+                tasks.Add(_dbContext.FileUploadMappings
+                    .Where(fum => fum.PetId == existingPet.Id)
+                    .ExecuteDeleteAsync());
+                
+                // Create new FileUploadMappings for the new uploadIds
                 fileMappings = uploadIds.Select(s => new FileUploadMapping()
                 {
                     PetId = existingPet.Id,

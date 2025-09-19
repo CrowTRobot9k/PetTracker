@@ -76,6 +76,13 @@ const usePetsStore = create((set) => ({
         const state = usePetsStore.getState();
         return state.petPhotos[petId] || [];
     },
+    updatePet: (updatedPet) => {
+        set((state) => ({
+            pets: state.pets.map(pet => 
+                pet.id === updatedPet.id ? { ...pet, ...updatedPet } : pet
+            )
+        }));
+    },
     getPetPhotosBatch: async (petIds) => {
         set({ loadingPetPhotos: true });
         try {

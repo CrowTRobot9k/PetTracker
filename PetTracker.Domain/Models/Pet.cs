@@ -50,4 +50,6 @@ public partial class Pet
     public virtual ICollection<PetBreedType> PetBreedTypes { get; set; } = new List<PetBreedType>();
 
     public virtual PetType PetType { get; set; } = null!;
+
+    public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 }

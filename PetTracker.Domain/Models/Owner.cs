@@ -62,5 +62,7 @@ public partial class Owner
 
     public virtual ICollection<Pet> Pets { get; set; } = new List<Pet>();
 
+    public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+
     public virtual AspNetUser? User { get; set; }
 }

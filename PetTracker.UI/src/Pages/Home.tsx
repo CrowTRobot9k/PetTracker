@@ -45,7 +45,21 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
 
                     {/* Feature Cards */}
                     <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr', lg: '1fr 1fr 1fr 1fr' }, gap: 3 }}>
-                        <Card sx={{ height: '100%', textAlign: 'center', p: 2 }}>
+                        <Card 
+                            sx={{ 
+                                height: '100%', 
+                                textAlign: 'center', 
+                                p: 2,
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    transform: 'translateY(-4px)',
+                                    boxShadow: 4,
+                                    backgroundColor: 'action.hover'
+                                }
+                            }}
+                            onClick={() => navigate('/owners')}
+                        >
                             <CardContent>
                                 <People sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
                                 <Typography variant="h6" component="h3" gutterBottom>
@@ -57,7 +71,21 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                             </CardContent>
                         </Card>
 
-                        <Card sx={{ height: '100%', textAlign: 'center', p: 2 }}>
+                        <Card 
+                            sx={{ 
+                                height: '100%', 
+                                textAlign: 'center', 
+                                p: 2,
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    transform: 'translateY(-4px)',
+                                    boxShadow: 4,
+                                    backgroundColor: 'action.hover'
+                                }
+                            }}
+                            onClick={() => navigate('/pets')}
+                        >
                             <CardContent>
                                 <Pets sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
                                 <Typography variant="h6" component="h3" gutterBottom>
@@ -69,7 +97,21 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                             </CardContent>
                         </Card>
 
-                        <Card sx={{ height: '100%', textAlign: 'center', p: 2 }}>
+                        <Card 
+                            sx={{ 
+                                height: '100%', 
+                                textAlign: 'center', 
+                                p: 2,
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    transform: 'translateY(-4px)',
+                                    boxShadow: 4,
+                                    backgroundColor: 'action.hover'
+                                }
+                            }}
+                            onClick={() => navigate('/appointments')}
+                        >
                             <CardContent>
                                 <Event sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
                                 <Typography variant="h6" component="h3" gutterBottom>
@@ -81,7 +123,21 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                             </CardContent>
                         </Card>
 
-                        <Card sx={{ height: '100%', textAlign: 'center', p: 2 }}>
+                        <Card 
+                            sx={{ 
+                                height: '100%', 
+                                textAlign: 'center', 
+                                p: 2,
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    transform: 'translateY(-4px)',
+                                    boxShadow: 4,
+                                    backgroundColor: 'action.hover'
+                                }
+                            }}
+                            onClick={() => navigate('/users')}
+                        >
                             <CardContent>
                                 <Person sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
                                 <Typography variant="h6" component="h3" gutterBottom>
@@ -94,23 +150,6 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                         </Card>
                     </Box>
 
-                    {/* Quick Actions */}
-                    <Box sx={{ textAlign: 'center', mt: 4 }}>
-                        <Typography variant="h6" component="h3" gutterBottom sx={{ mb: 3 }}>
-                            Quick Actions
-                        </Typography>
-                        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
-                            <Button variant="contained" color="primary" size="large" onClick={() => navigate('/pets')}>
-                                Add New Pet
-                            </Button>
-                            <Button variant="outlined" color="primary" size="large" onClick={() => navigate('/owners')}>
-                                Add New Owner
-                            </Button>
-                            <Button variant="outlined" color="primary" size="large" onClick={() => navigate('/appointments')}>
-                                Schedule Appointment
-                            </Button>
-                        </Box>
-                    </Box>
                 </Container>
 {/*                <PtFooter />*/}
             </AppTheme>

@@ -47,6 +47,6 @@ namespace PetTracker.Domain.Models
         public DateTime End { get; set; }
         public virtual Owner? Owner { get; set; }
         public virtual Pet? Pet { get; set; }
-        //public virtual AspNetUser? User { get; set; }
+        public virtual AspNetUser? User { get; set; }
     }
 }

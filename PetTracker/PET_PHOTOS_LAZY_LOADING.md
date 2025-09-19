@@ -125,3 +125,4 @@ const photos = getPetPhotosSync(petId);
 - Implement photo preloading for better UX
 - Consider implementing infinite scroll with photo lazy loading
 
+

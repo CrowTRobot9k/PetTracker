@@ -78,6 +78,13 @@ const useOwnersStore = create((set) => ({
         const state = useOwnersStore.getState();
         return state.ownerPhotos[ownerId] || [];
     },
+    updateOwner: (updatedOwner) => {
+        set((state) => ({
+            owners: state.owners.map(owner => 
+                owner.id === updatedOwner.id ? { ...owner, ...updatedOwner } : owner
+            )
+        }));
+    },
     getOwnerPhotosBatch: async (ownerIds) => {
         set({ loadingOwnerPhotos: true });
         try {

@@ -17,6 +17,7 @@ import Tab from '@mui/material/Tab';
 import ViewPets from '../Pets/ViewPets';
 import ErrorDisplay from '../ErrorDisplay';
 import useOwnersStore from '../../Stores/OwnersStore.tsx';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 
@@ -36,8 +37,9 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
     const [openStates, setOpenStates] = useState(false);
     const [editOwner, setEditOwner] = useState<Owner>({});
     const [tabIndex, setTabIndex] = React.useState(0);
+    const [isSaving, setIsSaving] = useState(false);
     
-    const { getOwnerPhotos, getOwnerPhotosSync } = useOwnersStore();
+    const { getOwnerPhotos, getOwnerPhotosSync, getOwnerPhotosBatch, updateOwner } = useOwnersStore();
 
 
     useEffect(() => {
@@ -158,6 +160,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
         event.preventDefault();
         setSuccessMessage("");
         setErrorMessage("");
+        setIsSaving(true);
 
         const editOwnerData = new FormData();
         Array.from(selectedFiles).forEach((f, i) => {
@@ -192,11 +195,22 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
             if (response.status == 200) {
                 setSelectedFiles([]);
                 setReloadOwners(!reloadOwners);
+                
+                // Update owner data in store
+                updateOwner(editOwner);
+                
+                // Refresh owner photos if photos were uploaded
+                if (selectedFiles.length > 0 && editOwner.id) {
+                    await getOwnerPhotos(editOwner.id);
+                }
+                
                 setSuccessMessage("Owner Saved")
                 handleClose();
             }
         } catch (e) {
             setErrorMessage(e.message);
+        } finally {
+            setIsSaving(false);
         }  
     }
 
@@ -436,8 +450,16 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                     </CustomTabPanel>
                 </DialogContent>
                 <DialogActions sx={{ pb: 3, px: 3 }}>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button variant="contained" color="info" type="submit">Save</Button>
+                    <Button onClick={handleClose} disabled={isSaving}>Cancel</Button>
+                    <Button 
+                        variant="contained" 
+                        color="info" 
+                        type="submit"
+                        disabled={isSaving}
+                        startIcon={isSaving ? <CircularProgress size={20} color="inherit" /> : null}
+                    >
+                        {isSaving ? 'Saving...' : 'Save'}
+                    </Button>
                 </DialogActions>
             </form>
         </Dialog>

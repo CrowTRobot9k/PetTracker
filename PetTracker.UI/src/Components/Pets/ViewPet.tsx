@@ -20,6 +20,7 @@ import usePetStore from '../../Stores/PetStore';
 import usePetsStore from '../../Stores/PetsStore';
 import dayjs, { Dayjs } from 'dayjs';
 import ErrorDisplay from '../ErrorDisplay';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 interface ViewPetProps {
@@ -37,10 +38,11 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [openBreeds, setOpenBreeds] = useState(false);
     const [editPet, setEditPet] = useState<Pet>({});
+    const [isSaving, setIsSaving] = useState(false);
 
     const getPetBreeds = usePetStore((state) => state.getPetBreeds);
     const petBreeds = usePetStore((state) => state.petBreeds);
-    const { getPetPhotos, getPetPhotosSync } = usePetsStore();
+    const { getPetPhotos, getPetPhotosSync, getPetPhotosBatch, updatePet } = usePetsStore();
 
     const {
         errorMessage,
@@ -154,6 +156,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
         event.preventDefault();
         setSuccessMessage("");
         setErrorMessage("");
+        setIsSaving(true);
 
         const editPetData = new FormData();
         Array.from(selectedFiles).forEach((f, i) => {
@@ -187,11 +190,22 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
             if (response.status == 200) {
                 setSelectedFiles([]);
                 setReloadPets(!reloadPets);
+                
+                // Update pet data in store
+                updatePet(editPet);
+                
+                // Refresh pet photos if photos were uploaded
+                if (selectedFiles.length > 0 && editPet.id) {
+                    await getPetPhotos(editPet.id);
+                }
+                
                 setSuccessMessage("Pet Saved")
                 handleClose();
             }
         } catch (e) {
             setErrorMessage(e.message);
+        } finally {
+            setIsSaving(false);
         }  
     }
 
@@ -386,8 +400,16 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                     </DialogContent>
                 </DialogContent>
                 <DialogActions sx={{ pb: 3, px: 3 }}>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button variant="contained" color="info" type="submit">Save</Button>
+                    <Button onClick={handleClose} disabled={isSaving}>Cancel</Button>
+                    <Button 
+                        variant="contained" 
+                        color="info" 
+                        type="submit"
+                        disabled={isSaving}
+                        startIcon={isSaving ? <CircularProgress size={20} color="inherit" /> : null}
+                    >
+                        {isSaving ? 'Saving...' : 'Save'}
+                    </Button>
                 </DialogActions>
             </form>
         </Dialog>

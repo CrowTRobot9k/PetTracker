@@ -62,17 +62,20 @@ public partial class PtDbContext : IdentityDbContext<AspNetUser>, IPtDbContext
             entity.Property(e => e.Title).HasMaxLength(500);
             entity.Property(e => e.UserId).HasMaxLength(450);
 
-            //entity.HasOne(d => d.Owner).WithMany(p => p.Appointments)
-            //    .HasForeignKey(d => d.OwnerId)
-            //    .HasConstraintName("FK_Appointments_Owners");
+            entity.HasOne(d => d.Owner).WithMany(p => p.Appointments)
+                .HasForeignKey(d => d.OwnerId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_Appointments_Owners");
 
-            //entity.HasOne(d => d.Pet).WithMany(p => p.Appointments)
-            //    .HasForeignKey(d => d.PetId)
-            //    .HasConstraintName("FK_Appointments_Pets");
+            entity.HasOne(d => d.Pet).WithMany(p => p.Appointments)
+                .HasForeignKey(d => d.PetId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_Appointments_Pets");
 
-            //entity.HasOne(d => d.User).WithMany(p => p.Appointments)
-            //    .HasForeignKey(d => d.UserId)
-            //    .HasConstraintName("FK_Appointments_Users");
+            entity.HasOne(d => d.User).WithMany(p => p.Appointments)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_Appointments_Users");
         });
 
         modelBuilder.Entity<AspNetUserLogin>(entity =>
@@ -121,22 +124,27 @@ public partial class PtDbContext : IdentityDbContext<AspNetUser>, IPtDbContext
 
             entity.HasOne(d => d.AspNetUser).WithMany(p => p.FileUploadMappings)
                 .HasForeignKey(d => d.AspNetUserId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_FileUploadMappings_AspNetUsers");
 
             entity.HasOne(d => d.Company).WithMany(p => p.FileUploadMappings)
                 .HasForeignKey(d => d.CompanyId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_FileUploadMappings_Companies");
 
             entity.HasOne(d => d.FileUpload).WithMany(p => p.FileUploadMappings)
                 .HasForeignKey(d => d.FileUploadId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_FileUploadMappings_FileUpload");
 
             entity.HasOne(d => d.Owner).WithMany(p => p.FileUploadMappings)
                 .HasForeignKey(d => d.OwnerId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_FileUploadMappings_Owners");
 
             entity.HasOne(d => d.Pet).WithMany(p => p.FileUploadMappings)
                 .HasForeignKey(d => d.PetId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_FileUploadMappings_Pets");
         });
 
@@ -158,6 +166,7 @@ public partial class PtDbContext : IdentityDbContext<AspNetUser>, IPtDbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Owners)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Owners_Users");
         });
 
@@ -175,6 +184,7 @@ public partial class PtDbContext : IdentityDbContext<AspNetUser>, IPtDbContext
 
             entity.HasOne(d => d.Owner).WithMany(p => p.Pets)
                 .HasForeignKey(d => d.OwnerId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Pets_Owners");
 
             entity.HasOne(d => d.PetType).WithMany(p => p.Pets)
@@ -192,7 +202,7 @@ public partial class PtDbContext : IdentityDbContext<AspNetUser>, IPtDbContext
 
             entity.HasOne(d => d.Pet).WithMany(p => p.PetBreedTypes)
                 .HasForeignKey(d => d.PetId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_PetBreedTypes_Pets");
         });
 
