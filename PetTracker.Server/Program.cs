@@ -25,7 +25,9 @@ try
         options.EnableDetailedErrors();
     });
 
-    builder.Services.AddDefaultIdentity<AspNetUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<PtDbContext>();
+    builder.Services.AddDefaultIdentity<AspNetUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        .AddRoles<AspNetRole>()
+        .AddEntityFrameworkStores<PtDbContext>();
 
     builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
         builder =>
@@ -39,7 +41,9 @@ try
 
     builder.Services.AddAuthorization();
 
-    builder.Services.AddIdentityCore<AspNetUser>().AddEntityFrameworkStores<PtDbContext>();
+    builder.Services.AddIdentityCore<AspNetUser>()
+        .AddRoles<AspNetRole>()
+        .AddEntityFrameworkStores<PtDbContext>();
 
     // Add services to the container.
     builder.Services.AddScoped<IEmailSender<AspNetUser>, IdentityEmailSender>();

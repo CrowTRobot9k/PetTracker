@@ -14,7 +14,7 @@ namespace PetTracker.SqlDb.Models
     {
         DatabaseFacade Database { get; }
         DbSet<Appointment> Appointments { get; set; }
-        //DbSet<AspNetUser> AspNetUsers { get; set; }
+        DbSet<AspNetUser> AspNetUsers { get; set; }
         //DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         //DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
         //DbSet<AspNetUserToken> AspNetUserTokens { get; set; }

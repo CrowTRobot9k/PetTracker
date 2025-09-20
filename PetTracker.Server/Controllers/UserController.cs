@@ -32,12 +32,12 @@ namespace PetTracker.Server.Controllers
         {
             try
             {
-                //var result = await _UserService.GetUsers();
-                return new JsonResult(true);
+                var result = await _UserService.CreateUser(model);
+                return new JsonResult(new { success = true, userId = result });
             }
             catch (Exception ex)
             {
-                return new JsonResult(HandleUIException(ex));
+                return new JsonResult(HandleUIException(ex, model));
             }
         }
 

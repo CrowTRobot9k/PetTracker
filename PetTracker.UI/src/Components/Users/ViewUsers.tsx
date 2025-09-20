@@ -16,6 +16,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import Fab from '@mui/material/Fab';
 import { styled } from '@mui/material/styles';
 import AddUser from './AddUser.tsx';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 
 
 const SyledCardContent = styled(CardContent)({
@@ -174,6 +176,35 @@ export default function Users() {
                                         >
                                             {m.email}
                                         </StyledTypography>
+                                        {m.roles && m.roles.length > 0 && (
+                                            <Stack 
+                                                direction="row" 
+                                                spacing={0.5} 
+                                                sx={{ 
+                                                    justifyContent: 'center', 
+                                                    flexWrap: 'wrap',
+                                                    gap: 0.5,
+                                                    mb: { xs: 0.25, sm: 0.5 },
+                                                }}
+                                            >
+                                                {m.roles.map((role) => (
+                                                    <Chip
+                                                        key={role.id}
+                                                        label={role.name}
+                                                        size="small"
+                                                        color="primary"
+                                                        variant="outlined"
+                                                        sx={{
+                                                            fontSize: { xs: '0.6rem', sm: '0.7rem' },
+                                                            height: { xs: '20px', sm: '24px' },
+                                                            '& .MuiChip-label': {
+                                                                px: { xs: 0.5, sm: 0.75 },
+                                                            }
+                                                        }}
+                                                    />
+                                                ))}
+                                            </Stack>
+                                        )}
                                     </SyledCardContent>
                                     <SyledCardContent sx={{ 
                                         my: { xs: 0.125, sm: 0 },
