@@ -15,6 +15,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { User, UserRole } from '../../Types/SharedTypes';
 import ErrorDisplay from '../ErrorDisplay';
 import { useAuthStore } from '../../Stores/AuthStore';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface AddUserProps {
     open: boolean;
@@ -34,6 +35,7 @@ export default function AddUser(props: AddUserProps) {
             roleNames:[]
         });
     const [openRoles, setOpenRoles] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     
     // Get current user from auth store
     const { user: currentUser } = useAuthStore();
@@ -99,6 +101,7 @@ export default function AddUser(props: AddUserProps) {
         event.preventDefault();
         setSuccessMessage("");
         setErrorMessage("");
+        setIsSaving(true);
 
         const addUserData = new FormData();
         Array.from(selectedFiles).forEach((f, i) => {
@@ -137,6 +140,8 @@ export default function AddUser(props: AddUserProps) {
             }
         } catch (e) {
             setErrorMessage(e.message);
+        } finally {
+            setIsSaving(false);
         }
     }
 
@@ -262,8 +267,16 @@ export default function AddUser(props: AddUserProps) {
                     </DialogContent>
                 </DialogContent>
                 <DialogActions sx={{ pb: 3, px: 3 }}>
-                    <Button onClick={props.handleClose}>Cancel</Button>
-                    <Button variant="contained" color="info" type="submit">Create</Button>
+                    <Button onClick={props.handleClose} disabled={isSaving}>Cancel</Button>
+                    <Button 
+                        variant="contained" 
+                        color="info" 
+                        type="submit"
+                        disabled={isSaving}
+                        startIcon={isSaving ? <CircularProgress size={20} color="inherit" /> : null}
+                    >
+                        {isSaving ? 'Creating...' : 'Create'}
+                    </Button>
                 </DialogActions>
             </form>
         </Dialog>

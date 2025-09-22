@@ -107,7 +107,7 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                                     Owner Profiles
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    Maintain comprehensive owner information and contact details
+                                    Maintain owner information and contact details
                                 </Typography>
                                 {!hasPermission('owners') && (
                                     <Typography variant="caption" color="text.disabled" sx={{ fontStyle: 'italic', mt: 1, display: 'block' }}>
@@ -139,7 +139,7 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                                     Pet Management
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    Keep detailed records of all pets including breed, age, and medical information
+                                    Keep records of all pets including breed, age, and medical information
                                 </Typography>
                                 {!hasPermission('pets') && (
                                     <Typography variant="caption" color="text.disabled" sx={{ fontStyle: 'italic', mt: 1, display: 'block' }}>

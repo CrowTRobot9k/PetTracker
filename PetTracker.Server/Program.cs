@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PetTracker.Domain.Models;
 using PetTracker.Infrastucture.Services;
 using PetTracker.Server.Models;
+using PetTracker.Server.HealthChecks;
 using PetTracker.SqlDb.Models;
 using Scalar.AspNetCore;
 using System.Security.Claims;
@@ -15,19 +16,54 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     // =============================================================================
-    // DATABASE CONFIGURATION
+    // DATABASE CONFIGURATION WITH CONNECTION POOLING
     // =============================================================================
     
     var connectionString = builder.Configuration.GetConnectionString("PtDbConnection") 
         ?? throw new InvalidOperationException("Connection string 'PtDbConnection' not found.");
 
+    // Configure database settings
+    var databaseSettings = builder.Configuration.GetSection(DatabaseSettings.SectionName)
+        .Get<DatabaseSettings>() ?? new DatabaseSettings();
+
+    builder.Services.Configure<DatabaseSettings>(
+        builder.Configuration.GetSection(DatabaseSettings.SectionName));
+
     builder.Services.AddDbContext<PtDbContext>(options =>
     {
-        options.UseSqlServer(connectionString, b => b.MigrationsAssembly("PetTracker.Server"));
+        var sqlServerOptions = options.UseSqlServer(connectionString, b => 
+        {
+            b.MigrationsAssembly("PetTracker.Server");
+            
+            // Connection pooling configuration
+            if (databaseSettings.ConnectionPooling.Enabled)
+            {
+                b.EnableRetryOnFailure(
+                    maxRetryCount: databaseSettings.ConnectionPooling.MaxRetryCount,
+                    maxRetryDelay: databaseSettings.ConnectionPooling.MaxRetryDelay,
+                    errorNumbersToAdd: null);
+            }
+            
+            // Command timeout
+            b.CommandTimeout(databaseSettings.ConnectionPooling.CommandTimeout);
+        });
+
+        // Entity Framework configuration
         options.EnableDetailedErrors();
+        options.EnableSensitiveDataLogging(builder.Environment.IsDevelopment());
+        
+        // Connection pooling is handled at the SQL Server driver level
+        // Configure connection lifetime and other settings
+        if (databaseSettings.ConnectionPooling.Enabled)
+        {
+            options.ConfigureWarnings(warnings => warnings
+                .Log(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.MultipleCollectionIncludeWarning));
+        }
     });
 
-    builder.Services.AddTransient<IPtDbContext, PtDbContext>();
+    // Configure DbContext lifetime for optimal connection pooling
+    // Scoped lifetime ensures one context per request, allowing connection reuse
+    builder.Services.AddScoped<IPtDbContext, PtDbContext>();
 
     // =============================================================================
     // IDENTITY CONFIGURATION
@@ -68,6 +104,14 @@ try
     builder.Services.AddScoped<IAppointmentService, AppointmentService>();
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<ICompanyService, CompanyService>();
+    builder.Services.AddScoped<IConnectionPoolMonitoringService, ConnectionPoolMonitoringService>();
+
+    // =============================================================================
+    // HEALTH CHECKS
+    // =============================================================================
+    
+    builder.Services.AddHealthChecks()
+        .AddCheck<ConnectionPoolHealthCheck>("database_connection_pool", tags: new[] { "db", "connection_pool" });
 
     // =============================================================================
     // API CONFIGURATION
@@ -145,6 +189,51 @@ try
             roles = user.Roles ?? new List<RoleDto>()
         });
     }).RequireAuthorization();
+
+    // Health Check Endpoints
+    app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+    {
+        ResponseWriter = async (context, report) =>
+        {
+            context.Response.ContentType = "application/json";
+            var response = new
+            {
+                status = report.Status.ToString(),
+                checks = report.Entries.Select(entry => new
+                {
+                    name = entry.Key,
+                    status = entry.Value.Status.ToString(),
+                    exception = entry.Value.Exception?.Message,
+                    duration = entry.Value.Duration.ToString(),
+                    tags = entry.Value.Tags
+                }),
+                totalDuration = report.TotalDuration.ToString()
+            };
+            await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(response));
+        }
+    });
+    
+    app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+    {
+        Predicate = check => check.Tags.Contains("ready"),
+        ResponseWriter = async (context, report) =>
+        {
+            context.Response.ContentType = "application/json";
+            var response = new { status = report.Status.ToString() };
+            await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(response));
+        }
+    });
+    
+    app.MapHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+    {
+        Predicate = _ => false, // No checks for liveness
+        ResponseWriter = async (context, report) =>
+        {
+            context.Response.ContentType = "application/json";
+            var response = new { status = "Healthy" };
+            await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(response));
+        }
+    });
 
     // API Controllers
     app.MapControllers();

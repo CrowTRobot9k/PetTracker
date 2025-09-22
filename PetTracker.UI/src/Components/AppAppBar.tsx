@@ -37,7 +37,7 @@ export default function AppAppBar(props: { currentPage:string})
     const [open, setOpen] = React.useState(false);
     const navigate = useNavigate();
     const { searchTerm, setSearchTerm } = useSearch() as { searchTerm: string; setSearchTerm: (term: string) => void };
-    const { logout, user, isAuthenticated } = useAuthStore();
+    const { logout, user, isAuthenticated, setLoggingOut } = useAuthStore();
 
     // Helper function to check if user has permission to see a menu item
     const hasPermission = (menuItem: string): boolean => {
@@ -86,31 +86,32 @@ export default function AppAppBar(props: { currentPage:string})
             setOpen(newOpen||!open);
     };
 
-    const navLogout = () =>
+    const navLogout = async () =>
     {
-        // Clear localStorage and update store immediately
-        logout();
+        // Set logging out state to prevent AuthorizeView from redirecting
+        setLoggingOut(true);
         
-        fetch("/logout", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: ""
-        })
-        .then((data) => {
-            if (data.ok) {
-                navigate("/signin");
-            } else {
-                // Even if server logout fails, we've already cleared local state
-                navigate("/signin");
-            }
-        })
-        .catch((error) => {
-            console.error(error);
-            // Even if server logout fails, we've already cleared local state
+        try {
+            // Wait for server logout to complete before clearing local state
+            await fetch("/logout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: ""
+            });
+            
+            // Clear localStorage and update store after server logout
+            logout();
+            
+            // Navigate to signin after server logout completes
             navigate("/signin");
-        })
+        } catch (error) {
+            console.error("Server logout failed:", error);
+            // Clear local state and navigate even if server logout fails
+            logout();
+            navigate("/signin");
+        }
     }
 
     return (
@@ -205,10 +206,10 @@ export default function AppAppBar(props: { currentPage:string})
                   fontWeight: 500
                 }}
               >
-                Welcome, {user.firstName || user.fullName || user.email}
+                Welcome, {user.fullName || user.email}
               </Typography>
             )}
-            <Button onClick={navLogout} color="primary" variant="contained" size="small">
+            <Button onClick={navLogout} color="info" variant="contained" size="small">
                 Logout
             </Button>
           </Box>
@@ -290,7 +291,7 @@ export default function AppAppBar(props: { currentPage:string})
                 <Divider sx={{ my: 2 }} />
                 
                 <MenuItem sx={{ p: 0 }}>
-                  <Button onClick={() => { navLogout(); toggleDrawer(false); }} color="primary" variant="outlined" fullWidth>
+                  <Button onClick={() => { navLogout(); toggleDrawer(false); }} color="info" variant="outlined" fullWidth>
                     Logout
                   </Button>
                 </MenuItem>

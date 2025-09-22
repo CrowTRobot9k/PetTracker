@@ -6,12 +6,14 @@ interface AuthState {
     isAuthenticated: boolean;
     isLoading: boolean;
     error: string | null;
+    isLoggingOut: boolean;
     
     // Actions
     login: (user: User) => void;
     logout: () => void;
     setLoading: (loading: boolean) => void;
     setError: (error: string | null) => void;
+    setLoggingOut: (loggingOut: boolean) => void;
     initializeAuth: () => void;
     checkAuth: () => Promise<boolean>;
 }
@@ -52,6 +54,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     isAuthenticated: false,
     isLoading: false,
     error: null,
+    isLoggingOut: false,
 
     login: (user: User) => {
         set({ user, isAuthenticated: true, error: null });
@@ -60,9 +63,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     },
 
     logout: () => {
-        set({ user: null, isAuthenticated: false, error: null });
+        set({ user: null, isAuthenticated: false, error: null, isLoggingOut: false });
         removeFromStorage(AUTH_STORAGE_KEY);
         removeFromStorage(USER_STORAGE_KEY);
+    },
+
+    setLoggingOut: (loggingOut: boolean) => {
+        set({ isLoggingOut: loggingOut });
     },
 
     setLoading: (loading: boolean) => {

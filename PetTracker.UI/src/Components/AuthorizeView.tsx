@@ -2,14 +2,14 @@
 /* eslint-disable prefer-const */
 import React, { useEffect, createContext } from 'react';
 import { Navigate } from 'react-router';
-import { User } from '../Types/SharedTypes';
+// import { User } from '../Types/SharedTypes';
 import { useLocation } from 'react-router';
 import { useAuthStore } from '../Stores/AuthStore';
 
 const UserContext = createContext({});
 
 function AuthorizeView(props: { children: React.ReactNode }) {
-    const { isAuthenticated, user, isLoading, initializeAuth, checkAuth } = useAuthStore();
+    const { isAuthenticated, user, isLoading, isLoggingOut, initializeAuth, checkAuth } = useAuthStore();
     const location = useLocation();
     const currentRoute = location.pathname;
 
@@ -24,11 +24,16 @@ function AuthorizeView(props: { children: React.ReactNode }) {
             return;
         }
 
+        // Skip authentication check if user is currently logging out
+        if (isLoggingOut) {
+            return;
+        }
+
         // If not authenticated, try to check with server
         if (!isAuthenticated) {
             checkAuth();
         }
-    }, [currentRoute, isAuthenticated, checkAuth]);
+    }, [currentRoute, isAuthenticated, isLoggingOut, checkAuth]);
 
     // Show loading state while checking authentication
     if (isLoading) {
@@ -46,7 +51,7 @@ function AuthorizeView(props: { children: React.ReactNode }) {
         } else {
             return (
                 <>
-                    <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
+                    <UserContext.Provider value={user || {}}>{props.children}</UserContext.Provider>
                 </>
             );
         }
@@ -56,7 +61,7 @@ function AuthorizeView(props: { children: React.ReactNode }) {
     if (isAuthenticated) {
         return (
             <>
-                <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
+                <UserContext.Provider value={user || {}}>{props.children}</UserContext.Provider>
             </>
         );
     } else {

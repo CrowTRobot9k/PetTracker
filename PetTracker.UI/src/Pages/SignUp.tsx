@@ -285,6 +285,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               type="submit"
               fullWidth
               variant="contained"
+              color="info"
               onClick={validateInputs}
             >
               Sign up

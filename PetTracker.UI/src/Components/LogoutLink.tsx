@@ -4,34 +4,35 @@ import { useAuthStore } from '../Stores/AuthStore';
 
 function LogoutLink(props: { children: React.ReactNode }) {
     const navigate = useNavigate();
-    const { logout } = useAuthStore();
+    const { logout, setLoggingOut } = useAuthStore();
 
-    const handleSubmit = (e: React.FormEvent<HTMLAnchorElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         
-        // Clear localStorage and update store immediately
-        logout();
+        // Set logging out state to prevent AuthorizeView from redirecting
+        setLoggingOut(true);
         
-        fetch("/logout", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: ""
-        })
-            .then((data) => {
-                if (data.ok) {
-                    navigate("/signin");
-                } else {
-                    // Even if server logout fails, we've already cleared local state
-                    navigate("/signin");
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-                // Even if server logout fails, we've already cleared local state
-                navigate("/signin");
+        try {
+            // Wait for server logout to complete before clearing local state
+            await fetch("/logout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: ""
             });
+            
+            // Clear localStorage and update store after server logout
+            logout();
+            
+            // Navigate to signin after server logout completes
+            navigate("/signin");
+        } catch (error) {
+            console.error("Server logout failed:", error);
+            // Clear local state and navigate even if server logout fails
+            logout();
+            navigate("/signin");
+        }
     };
 
     return (

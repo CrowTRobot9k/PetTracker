@@ -18,6 +18,7 @@ import AppTheme from '../Theme/AppTheme';
 import ColorModeSelect from '../Theme/ColorModeSelect';
 /*import { GoogleIcon, FacebookIcon, SitemarkIcon } from '../Components/CustomIcons';*/
 import Alert from '@mui/material/Alert';
+import PersonIcon from '@mui/icons-material/Person';
 import { useNavigate, useSearchParams } from "react-router";
 import AuthorizeView, { AuthorizedUser } from "../Components/AuthorizeView.tsx";
 import { useAuthStore } from '../Stores/AuthStore';
@@ -212,6 +213,68 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       navigate("/signup");
   }
 
+  const handleGuestLogin = async () => {
+    setEmailError(false);
+    setEmailErrorMessage('');
+    setPasswordError(false);
+    setPasswordErrorMessage('');
+    setSubmitErrorMessage("");
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/login?useSessionCookies=true", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: 'peter_mathieu@yahoo.com',
+          password: 'LISKfYZ7mDLM6d0dwI4@',
+        }),
+      });
+
+      if (response.ok) {
+        // Get user data from the response or fetch it
+        try {
+          const authResponse = await fetch("/getauth", {
+            method: "GET",
+          });
+          
+          if (authResponse.ok) {
+            const userData = await authResponse.json();
+            const user = {
+              id: userData.id || '',
+              firstName: userData.firstName || '',
+              lastName: userData.lastName || '',
+              fullName: userData.fullName || '',
+              userName: userData.userName || '',
+              email: userData.email || '',
+              company: userData.company || null,
+              roleNames: userData.roleNames || [],
+              roles: userData.roles || []
+            };
+            
+            login(user);
+            navigate("/");
+          } else {
+            throw new Error("Failed to get user data");
+          }
+        } catch (error) {
+          console.error("Error getting user data:", error);
+          setSubmitErrorMessage("Guest login failed. Please try again.");
+        }
+      } else {
+        const errorData = await response.json();
+        setSubmitErrorMessage(errorData || 'Guest login failed');
+      }
+    } catch (error) {
+      setSubmitErrorMessage('Guest login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
 
   return (
       <AuthorizeView>
@@ -290,6 +353,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               type="submit"
               fullWidth
               variant="contained"
+              color="info"
               onClick={validateInputs}
             >
               Sign in
@@ -297,24 +361,50 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             <Button
                 fullWidth
                 variant="outlined"
+                color="info"
                 onClick={navSignUp}
             >
                 Sign Up
+                          </Button>
+                          <Link
+                              component="button"
+                              type="button"
+                              onClick={handleClickOpen}
+                              variant="body2"
+                              sx={{ alignSelf: 'center' }}
+                          >
+                              Forgot your password?
+                          </Link>
+            <Button
+                fullWidth
+                variant="contained"
+                color="secondary"
+                onClick={handleGuestLogin}
+                startIcon={<PersonIcon />}
+                sx={{ 
+                    mt: 2, 
+                    mb: 1,
+                    fontWeight: 'bold',
+                    fontSize: '1rem',
+                    py: 1.5,
+                    backgroundColor: '#ff9800',
+                    boxShadow: '0 4px 8px rgba(255, 152, 0, 0.3)',
+                    border: '2px solid #ff9800',
+                    '&:hover': {
+                        backgroundColor: '#f57c00',
+                        boxShadow: '0 6px 12px rgba(255, 152, 0, 0.4)',
+                        transform: 'translateY(-1px)',
+                    },
+                    transition: 'all 0.2s ease-in-out'
+                }}
+            >
+                Continue as Guest
             </Button>
              {submitError && (
                           <Alert variant="filled" severity="error">
                               {submitErrorMessage}
                           </Alert>
                           )}
-            <Link
-              component="button"
-              type="button"
-              onClick={handleClickOpen}
-              variant="body2"
-              sx={{ alignSelf: 'center' }}
-            >
-              Forgot your password?
-            </Link>
             </Box>
           <ForgotPassword open={open} handleClose={handleClose} />
         </Card>
