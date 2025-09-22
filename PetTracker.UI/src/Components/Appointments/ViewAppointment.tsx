@@ -10,12 +10,14 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import Typography from '@mui/material/Typography';
 import ErrorDisplay from '../ErrorDisplay';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import useAppointmentStore from '../../Stores/AppointmentStore';
 import dayjs, { Dayjs } from 'dayjs';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface ViewAppointmentProps {
     open: boolean;
@@ -24,11 +26,13 @@ interface ViewAppointmentProps {
     reloadAppointments: boolean;
     setReloadAppointments: React.Dispatch<React.SetStateAction<boolean>>;
     owners: [];
+    hasWriteAccess?: boolean;
 }
 
-export default function ViewAppointment({ open, handleClose, viewAppointment, reloadAppointments, setReloadAppointments, owners }: ViewAppointmentProps) {
+export default function ViewAppointment({ open, handleClose, viewAppointment, reloadAppointments, setReloadAppointments, owners, hasWriteAccess = true }: ViewAppointmentProps) {
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
+    const [isSaving, setIsSaving] = useState(false);
     const [start, setStart] = React.useState<Dayjs>(dayjs());
     const [end, setEnd] = React.useState<Dayjs>(dayjs());
     const [editAppointment, setEditAppointment] = useState<Appointment>(
@@ -107,6 +111,7 @@ export default function ViewAppointment({ open, handleClose, viewAppointment, re
         event.preventDefault();
         setSuccessMessage("");
         setErrorMessage("");
+        setIsSaving(true);
 
         const editAppointmentModel = {
             id: editAppointment.id,
@@ -142,6 +147,8 @@ export default function ViewAppointment({ open, handleClose, viewAppointment, re
             }
         } catch (e) {
             setErrorMessage(e.message);
+        } finally {
+            setIsSaving(false);
         }
     }
 
@@ -191,12 +198,16 @@ export default function ViewAppointment({ open, handleClose, viewAppointment, re
                 <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', width: '100%', alignItems: 'center' }}
                 >
-                    <DialogTitle>View Appointment</DialogTitle>
-                    {showErrors && (
-                        <ErrorDisplay error={errorMessage} />
-                    )}
+                    <DialogTitle sx={{ p: 0 }}>
+                        {hasWriteAccess ? 'View Appointment' : 'View Appointment (Read Only)'}
+                    </DialogTitle>
                     {submitErrorMessage?.length > 0 && (
                         <ErrorDisplay error={submitErrorMessage} />
+                    )}
+                    {!hasWriteAccess && (
+                        <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', mt: 1, fontStyle: 'italic' }}>
+                            This form is read-only. You need write permissions to edit appointment information.
+                        </Typography>
                     )}
                 </DialogContent>
                 <DialogContent
@@ -216,6 +227,7 @@ export default function ViewAppointment({ open, handleClose, viewAppointment, re
                         fullWidth
                         value={editAppointment.title}
                         onChange={handleChange}
+                        disabled={!hasWriteAccess}
                     />
                     <DialogContentText>
                         Description
@@ -233,6 +245,7 @@ export default function ViewAppointment({ open, handleClose, viewAppointment, re
                         fullWidth
                         value={editAppointment.description}
                         onChange={handleChange}
+                        disabled={!hasWriteAccess}
                     />
                 </DialogContent>
                 <DialogContent
@@ -252,6 +265,7 @@ export default function ViewAppointment({ open, handleClose, viewAppointment, re
                                 value={editAppointment.owner}
                                 label="Owner"
                                 onChange={handleChangeOwner}
+                                disabled={!hasWriteAccess}
                                 renderValue={(selected) => {
                                     if (!selected) {
                                         return <em>Select</em>;
@@ -290,7 +304,7 @@ export default function ViewAppointment({ open, handleClose, viewAppointment, re
                                     return selected;
                                 }}
 
-                                disabled={pets?.length > 0 ? false : true}
+                                disabled={pets?.length > 0 ? !hasWriteAccess : true}
                             >
                                 {pets?.length > 0 && (pets.map(m =>
 
@@ -311,6 +325,7 @@ export default function ViewAppointment({ open, handleClose, viewAppointment, re
                                 value={editAppointment.start}
                                 onChange={handleChangeStartDate}
                                 slotProps={{ textField: { size: 'small' } }}
+                                disabled={!hasWriteAccess}
                             />
                         </LocalizationProvider>
                         <DialogContentText>
@@ -322,15 +337,36 @@ export default function ViewAppointment({ open, handleClose, viewAppointment, re
                                 value={editAppointment.end}
                                 onChange={handleChangeEndDate}
                                 slotProps={{ textField: { size: 'small' } }}
+                                disabled={!hasWriteAccess}
                             />
                         </LocalizationProvider>
                     </DialogContent>
                 </DialogContent>
                 <DialogActions sx={{ pb: 3, px: 3 }}>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button variant="contained" color="info" type="submit">Save Appointment</Button>
-                    <Button variant="contained" color="error" onClick={handleDelete}>Delete</Button>
-
+                    <Button onClick={handleClose} disabled={isSaving}>
+                        {hasWriteAccess ? 'Cancel' : 'Close'}
+                    </Button>
+                    {hasWriteAccess && (
+                        <Button 
+                            variant="contained" 
+                            color="info" 
+                            type="submit"
+                            disabled={isSaving}
+                            startIcon={isSaving ? <CircularProgress size={20} color="inherit" /> : null}
+                        >
+                            {isSaving ? 'Saving...' : 'Save Appointment'}
+                        </Button>
+                    )}
+                    {hasWriteAccess && (
+                        <Button 
+                            variant="contained" 
+                            color="error" 
+                            onClick={handleDelete}
+                            disabled={isSaving}
+                        >
+                            Delete
+                        </Button>
+                    )}
                 </DialogActions>
             </form>
         </Dialog>

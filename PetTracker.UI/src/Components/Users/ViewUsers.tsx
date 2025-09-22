@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import useUsersStore from '../../Stores/UsersStore.tsx';
+import { useAuthStore } from '../../Stores/AuthStore';
 import Box from '@mui/material/Box';
 import LoadingPlaceholder from '../LoadingPlaceholder.tsx';
 import ErrorDisplay from '../ErrorDisplay.tsx';
@@ -16,9 +17,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import Fab from '@mui/material/Fab';
 import { styled } from '@mui/material/styles';
 import AddUser from './AddUser.tsx';
+import ViewUser from './ViewUser.tsx';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
+import { User } from '../../Types/SharedTypes';
 
 
 const SyledCardContent = styled(CardContent)({
@@ -41,10 +44,22 @@ const StyledTypography = styled(Typography)({
 });
 
 export default function Users() {
+    const { user } = useAuthStore();
+    
     const getUsers = useUsersStore((state) => state.getUsers);
     const getRoles = useUsersStore((state) => state.getRoles);
     const getCompanies = useUsersStore((state) => state.getCompanies);
     const { searchTerm } = useSearch();
+
+    // Check if user has read access to users
+    const hasReadAccess = user?.roles?.some(role => 
+        role.name === 'Administrator' || role.name === 'Users Read' || role.name === 'Users Write'
+    ) ?? false;
+
+    // Check if user has write or admin privileges for users
+    const hasWriteAccess = user?.roles?.some(role => 
+        role.name === 'Administrator' || role.name === 'Users Write'
+    ) ?? false;
 
 
     const {
@@ -60,7 +75,7 @@ export default function Users() {
 
     const [open, setOpen] = React.useState(false);
     const [openViewUser, setOpenViewUser] = React.useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [reloadUsers, setReloadUsers] = React.useState(false);
 
     useEffect(() => {
@@ -79,7 +94,7 @@ export default function Users() {
         setOpen(false);
     };
 
-    const handleOpenUser = (user) => {
+    const handleOpenUser = (user: User) => {
         const copiedUser = JSON.parse(JSON.stringify(user));
         setSelectedUser(copiedUser);
         setOpenViewUser(true);
@@ -87,12 +102,24 @@ export default function Users() {
 
     const handleCloseUser = () => {
         setOpenViewUser(false);
+        setSelectedUser(null);
     };
 
     const getUserSlides = (images) => {
         return Array.from(images.map((f, index) => (
             <img key={`${index}_${f.fileName}`} src={getImageUrlFromBlob(f.fileDataBase64)} />
         )))
+    }
+
+    // Check if user has read access to users
+    if (!hasReadAccess) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 400 }}>
+                <Typography variant="h6" color="text.secondary">
+                    You do not have permission to access the users page.
+                </Typography>
+            </Box>
+        );
     }
 
     return (<>
@@ -106,31 +133,31 @@ export default function Users() {
             <>
                 {(!loadingUsers) && (
                     <>
-                        <Box sx={{ display: 'flex', gap: 2, mb: 1, mt: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
-                            <Button 
-                                onClick={handleClickOpen} 
-                                variant="contained" 
-                                color="info" 
-                                endIcon={<AddIcon />}
-                                size="medium"
-                                sx={{ 
-                                    fontSize: { xs: '0.875rem', sm: '1rem' }
-                                }}
-                            >
-                                Add User
-                            </Button>
-                        </Box>
-                        <Grid container spacing={2} sx={{
-                            height: '100%',
-                            display: 'flex',
-                            flexDirection: 'row',
-                        }}>
-                        <AddUser
-                            open={open}
-                            handleClose={handleClose}
-                            roles={roles}
-                            reloadUsers={reloadUsers}
-                            setReloadUsers={setReloadUsers} />
+                        {hasWriteAccess && (
+                            <Box sx={{ display: 'flex', gap: 2, mb: 1, mt: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
+                                <Button 
+                                    onClick={handleClickOpen} 
+                                    variant="contained" 
+                                    color="info" 
+                                    endIcon={<AddIcon />}
+                                    size="medium"
+                                    sx={{ 
+                                        fontSize: { xs: '0.875rem', sm: '1rem' }
+                                    }}
+                                >
+                                    Add User
+                                </Button>
+                            </Box>
+                        )}
+                        <Grid container spacing={2} sx={{ width: '100%' }}>
+                        {hasWriteAccess && (
+                            <AddUser
+                                open={open}
+                                handleClose={handleClose}
+                                roles={roles}
+                                reloadUsers={reloadUsers}
+                                setReloadUsers={setReloadUsers} />
+                        )}
                         {users?.filter(f => (
                             (searchTerm ?? '') == '' ||
                             ((f.firstName + " " + f.lastName).toLowerCase().indexOf(searchTerm?.toLowerCase()) > -1)
@@ -144,13 +171,15 @@ export default function Users() {
                                 xl={2}
                                 sx={{ 
                                     height: { xs: '380px', sm: '360px', md: '400px' },
-                                    minHeight: '380px'
+                                    minHeight: '380px',
+                                    display: 'flex'
                                 }}
                             >
                                 <Card
                                     variant="outlined"
                                     sx={{
                                         height: '100%',
+                                        width: '100%',
                                         display: 'flex',
                                         flexDirection: 'column',
                                     }}
@@ -177,8 +206,12 @@ export default function Users() {
                                         </Avatar>
                                     </Box>
                                     <SyledCardContent sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
                                         p: { xs: 0.25, sm: 0.5 },
-                                        flexGrow: 1,
+                                        flexGrow: 0,
                                     }}>
                                         <Typography 
                                             gutterBottom 
@@ -220,53 +253,72 @@ export default function Users() {
                                                 {m.company.name}
                                             </StyledTypography>
                                         )}
-                                        {m.roles && m.roles.length > 0 && (
-                                            <Stack 
-                                                direction="row" 
-                                                spacing={0.5} 
-                                                sx={{ 
-                                                    justifyContent: 'center', 
-                                                    flexWrap: 'wrap',
-                                                    gap: 0.5,
-                                                    mb: { xs: 0.25, sm: 0.5 },
-                                                }}
-                                            >
-                                                {m.roles.map((role) => (
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                flexWrap: 'wrap',
+                                                bgcolor: 'background.paper',
+                                                borderRadius: 1,
+                                                mx: 'auto',
+                                                p: { xs: 0.125, sm: 0.25 },
+                                                justifyContent: 'center',
+                                                mb: { xs: 0.125, sm: 0.25 },
+                                                minHeight: { xs: '20px', sm: '24px' }, // Ensure consistent height
+                                                width: '100%', // Ensure full width
+                                            }}
+                                        >
+                                            {m.roles && m.roles.length > 0 ? (
+                                                m.roles.map((role) => (
                                                     <Chip
                                                         key={role.id}
-                                                        label={role.name}
-                                                        size="small"
-                                                        color="primary"
-                                                        variant="outlined"
                                                         sx={{
-                                                            fontSize: { xs: '0.6rem', sm: '0.7rem' },
-                                                            height: { xs: '20px', sm: '24px' },
-                                                            '& .MuiChip-label': {
-                                                                px: { xs: 0.5, sm: 0.75 },
-                                                            }
-                                                        }}
+                                                            m: { xs: 0.0625, sm: 0.125 },
+                                                            fontSize: { xs: '0.65rem', sm: '0.75rem' },
+                                                            height: { xs: '18px', sm: '24px' },
+                                                        }} 
+                                                        label={role.name} 
                                                     />
-                                                ))}
-                                            </Stack>
-                                        )}
+                                                ))
+                                            ) : (
+                                                <Typography 
+                                                    variant="body2" 
+                                                    color="text.disabled"
+                                                    sx={{
+                                                        fontSize: { xs: '0.65rem', sm: '0.75rem' },
+                                                        fontStyle: 'italic',
+                                                        textAlign: 'center',
+                                                        m: { xs: 0.0625, sm: 0.125 },
+                                                        width: '100%',
+                                                    }}
+                                                >
+                                                    No roles assigned
+                                                </Typography>
+                                            )}
+                                        </Box>
                                     </SyledCardContent>
-                                    <SyledCardContent sx={{ 
-                                        my: { xs: 0.125, sm: 0 },
+                                    <SyledCardContent sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        my: { xs: 0.125, sm: 0.25 },
                                         p: { xs: 0.25, sm: 0.5 },
                                     }}>
-                                        <Fab 
-                                            size="small" 
-                                            color="primary" 
-                                            sx={{ 
-                                                alignSelf: 'center',
-                                                width: { xs: '36px', sm: '44px' },
-                                                height: { xs: '36px', sm: '44px' },
-                                            }} 
-                                            onClick={() => handleOpenUser(m)} 
-                                            aria-label="edit"
-                                        >
-                                            <EditIcon sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
-                                        </Fab>
+                                        {hasReadAccess && (
+                                            <Fab 
+                                                size="small" 
+                                                color="primary" 
+                                                sx={{ 
+                                                    width: { xs: '36px', sm: '44px' },
+                                                    height: { xs: '36px', sm: '44px' },
+                                                }} 
+                                                onClick={() => handleOpenUser(m)} 
+                                                aria-label={hasWriteAccess ? "edit user" : "view user"}
+                                            >
+                                                <EditIcon sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
+                                            </Fab>
+                                        )}
                                     </SyledCardContent>
                                 </Card>
                             </Grid>
@@ -274,8 +326,13 @@ export default function Users() {
                         </Grid>
                     </>
                 )}
-            {/*    <ViewOwner open={openViewOwner} viewOwner={selectedOwner} handleClose={handleCloseOwner} ownerStates={states} reloadOwners={reloadOwners} setReloadOwners={setReloadOwners} />*/}
-            </>
+                <ViewUser
+                    open={openViewUser}
+                    handleClose={handleCloseUser}
+                    user={selectedUser}
+                    roles={roles}
+                    setReloadUsers={setReloadUsers}
+                    hasWriteAccess={hasWriteAccess} />            </>
         )}
     </>);
 }

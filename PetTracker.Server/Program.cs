@@ -7,6 +7,8 @@ using PetTracker.Server.Models;
 using PetTracker.SqlDb.Models;
 using Scalar.AspNetCore;
 using System.Security.Claims;
+using System.Linq;
+using PetTracker.Domain.DTOs;
 
 try
 {
@@ -114,12 +116,34 @@ try
         return Results.Ok();
     }).RequireAuthorization();
 
-    app.MapGet("/getauth", (ClaimsPrincipal claimsPrincipal) =>
+    app.MapGet("/getauth", async (ClaimsPrincipal claimsPrincipal, IUserService userService) =>
     {
-        var email = claimsPrincipal.FindFirstValue(ClaimTypes.Email);
-        var userName = claimsPrincipal.FindFirstValue(ClaimTypes.Name);
+        var userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Results.Unauthorized();
+        }
 
-        return Results.Json(new { Email = email, UserName = userName });
+        var user = await userService.GetUserById(userId);
+        
+        if (user == null)
+        {
+            return Results.NotFound();
+        }
+
+        // Return user data in the format expected by AuthStore
+        return Results.Json(new {
+            id = user.Id,
+            firstName = user.FirstName,
+            lastName = user.LastName,
+            fullName = user.FullName,
+            userName = user.UserName,
+            email = user.Email,
+            company = user.Company,
+            roleNames = user.Roles?.Select(r => r.Name).ToArray() ?? new string[0],
+            roles = user.Roles ?? new List<RoleDto>()
+        });
     }).RequireAuthorization();
 
     // API Controllers

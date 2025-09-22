@@ -37,7 +37,45 @@ export default function AppAppBar(props: { currentPage:string})
     const [open, setOpen] = React.useState(false);
     const navigate = useNavigate();
     const { searchTerm, setSearchTerm } = useSearch() as { searchTerm: string; setSearchTerm: (term: string) => void };
-    const { logout } = useAuthStore();
+    const { logout, user, isAuthenticated } = useAuthStore();
+
+    // Helper function to check if user has permission to see a menu item
+    const hasPermission = (menuItem: string): boolean => {
+        if (!user || !user.roles) {
+            return false;
+        }
+
+        const userRoles = user.roles.map(role => role.name);
+
+        switch (menuItem) {
+            case 'owners':
+                return userRoles.some(role => 
+                    role === 'Administrator' || 
+                    role === 'Owners Read' || 
+                    role === 'Owners Write'
+                );
+            case 'pets':
+                return userRoles.some(role => 
+                    role === 'Administrator' || 
+                    role === 'Pets Read' || 
+                    role === 'Pets Write'
+                );
+            case 'appointments':
+                return userRoles.some(role => 
+                    role === 'Administrator' || 
+                    role === 'Appointments Read' || 
+                    role === 'Appointments Write'
+                );
+            case 'users':
+                return userRoles.some(role => 
+                    role === 'Administrator' || 
+                    role === 'Users Read' || 
+                    role === 'Users Write'
+                );
+            default:
+                return false;
+        }
+    };
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
@@ -112,18 +150,26 @@ export default function AppAppBar(props: { currentPage:string})
                       <Button onClick={() => navigate('/')} variant={props.currentPage == "home" ? "contained" : "text"} color="info" size="small">
                           Home
                       </Button>
-                      <Button onClick={() => navigate('/owners')} variant={props.currentPage == "owners" ? "contained" : "text"} color="info" size="small">
-                          Owners
-                      </Button>
-                      <Button onClick={() => navigate('/pets')} variant={props.currentPage == "pets" ? "contained" : "text"} color="info" size="small">
-                          Pets
-                      </Button>
-                      <Button onClick={() => navigate('/appointments')} variant={props.currentPage == "appointments" ? "contained" : "text"} color="info" size="small">
-                          Appointments
-                      </Button>
-                      <Button onClick={() => navigate('/users')} variant={props.currentPage == "users" ? "contained" : "text"} color="info" size="small">
-                          Users
-                      </Button>
+                      {hasPermission('owners') && (
+                          <Button onClick={() => navigate('/owners')} variant={props.currentPage == "owners" ? "contained" : "text"} color="info" size="small">
+                              Owners
+                          </Button>
+                      )}
+                      {hasPermission('pets') && (
+                          <Button onClick={() => navigate('/pets')} variant={props.currentPage == "pets" ? "contained" : "text"} color="info" size="small">
+                              Pets
+                          </Button>
+                      )}
+                      {hasPermission('appointments') && (
+                          <Button onClick={() => navigate('/appointments')} variant={props.currentPage == "appointments" ? "contained" : "text"} color="info" size="small">
+                              Appointments
+                          </Button>
+                      )}
+                      {hasPermission('users') && (
+                          <Button onClick={() => navigate('/users')} variant={props.currentPage == "users" ? "contained" : "text"} color="info" size="small">
+                              Users
+                          </Button>
+                      )}
                   </Box>
                   <Box
                       sx={{
@@ -150,6 +196,18 @@ export default function AppAppBar(props: { currentPage:string})
               alignItems: 'center',
             }}
           >
+            {isAuthenticated && user && (
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  color: 'text.secondary',
+                  mr: 1,
+                  fontWeight: 500
+                }}
+              >
+                Welcome, {user.firstName || user.fullName || user.email}
+              </Typography>
+            )}
             <Button onClick={navLogout} color="primary" variant="contained" size="small">
                 Logout
             </Button>
@@ -185,28 +243,48 @@ export default function AppAppBar(props: { currentPage:string})
                 <Box
                   sx={{
                     display: 'flex',
-                    justifyContent: 'flex-end',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                     mb: 2
                   }}
                 >
+                  {isAuthenticated && user && (
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        color: 'text.secondary',
+                        fontWeight: 500
+                      }}
+                    >
+                      Welcome, {user.firstName || user.fullName || user.email}
+                    </Typography>
+                  )}
                 </Box>
                 
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                   <MenuItem onClick={() => { navigate('/'); toggleDrawer(false); }}>
                     <Typography>Home</Typography>
                   </MenuItem>
-                  <MenuItem onClick={() => { navigate('/owners'); toggleDrawer(false); }}>
-                    <Typography>Owners</Typography>
-                  </MenuItem>
-                  <MenuItem onClick={() => { navigate('/pets'); toggleDrawer(false); }}>
-                    <Typography>Pets</Typography>
-                  </MenuItem>
-                  <MenuItem onClick={() => { navigate('/appointments'); toggleDrawer(false); }}>
-                    <Typography>Appointments</Typography>
-                  </MenuItem>
-                  <MenuItem onClick={() => { navigate('/users'); toggleDrawer(false); }}>
-                    <Typography>Users</Typography>
-                  </MenuItem>
+                  {hasPermission('owners') && (
+                    <MenuItem onClick={() => { navigate('/owners'); toggleDrawer(false); }}>
+                      <Typography>Owners</Typography>
+                    </MenuItem>
+                  )}
+                  {hasPermission('pets') && (
+                    <MenuItem onClick={() => { navigate('/pets'); toggleDrawer(false); }}>
+                      <Typography>Pets</Typography>
+                    </MenuItem>
+                  )}
+                  {hasPermission('appointments') && (
+                    <MenuItem onClick={() => { navigate('/appointments'); toggleDrawer(false); }}>
+                      <Typography>Appointments</Typography>
+                    </MenuItem>
+                  )}
+                  {hasPermission('users') && (
+                    <MenuItem onClick={() => { navigate('/users'); toggleDrawer(false); }}>
+                      <Typography>Users</Typography>
+                    </MenuItem>
+                  )}
                 </Box>
                 
                 <Divider sx={{ my: 2 }} />

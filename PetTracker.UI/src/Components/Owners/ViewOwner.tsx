@@ -11,6 +11,7 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { Owner } from '../../Types/SharedTypes';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -28,9 +29,10 @@ interface ViewPetProps {
     ownerStates: [];
     reloadOwners: boolean,
     setReloadOwners: React.Dispatch<React.SetStateAction<boolean>>;
+    hasWriteAccess: boolean;
 }
 
-export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, reloadOwners, setReloadOwners }: ViewPetProps) {
+export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, reloadOwners, setReloadOwners, hasWriteAccess }: ViewPetProps) {
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -233,11 +235,13 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                             p:0
                         }}
                     >
-                        <DialogTitle sx={{ p: 0 }} >View Owner</DialogTitle>
+                        <DialogTitle sx={{ p: 0 }} >
+                            View Owner
+                        </DialogTitle>
                         {submitErrorMessage?.length > 0 && (
                             <ErrorDisplay error={submitErrorMessage} />
                         )}
-                        <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} />
+                        <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} readonly={!hasWriteAccess} />
                     </DialogContent>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={tabIndex} onChange={handleTabChange}>
@@ -266,6 +270,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                     type="text"
                                     value={editOwner.firstName}
                                     onChange={handleChange}
+                                    disabled={!hasWriteAccess}
                                 />
                                 <DialogContentText>
                                     Address
@@ -281,6 +286,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                     type="text"
                                     value={editOwner.address}
                                     onChange={handleChange}
+                                    disabled={!hasWriteAccess}
                                 />
                                 <DialogContentText>
                                     State
@@ -293,6 +299,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                         value={editOwner.state}
                                         label="Pet Type"
                                         onChange={handleChangeState}
+                                        disabled={!hasWriteAccess}
                                         renderValue={(selected) => {
                                             if (!selected) {
                                                 return <em>Select</em>;
@@ -320,6 +327,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                     fullWidth
                                     value={editOwner.email}
                                     onChange={handleChange}
+                                    disabled={!hasWriteAccess}
                                 />
                                 <DialogContentText>
                                     Primary Phone
@@ -334,6 +342,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                     fullWidth
                                     value={editOwner.primaryPhone}
                                     onChange={handleChange}
+                                    disabled={!hasWriteAccess}
                                 />
                                 <DialogContentText>
                                     Veterinarian
@@ -348,6 +357,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                     fullWidth
                                     value={editOwner.vet}
                                     onChange={handleChange}
+                                    disabled={!hasWriteAccess}
                                 />
                             </DialogContent>
                             <DialogContent
@@ -367,6 +377,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                     type="text"
                                     value={editOwner.lastName}
                                     onChange={handleChange}
+                                    disabled={!hasWriteAccess}
                                 />
                                 <DialogContentText>
                                     City
@@ -382,6 +393,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                     type="text"
                                     value={editOwner.city}
                                     onChange={handleChange}
+                                    disabled={!hasWriteAccess}
                                 />
                                 <DialogContentText>
                                     Zip Code
@@ -396,6 +408,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                     fullWidth
                                     value={editOwner.zipCode}
                                     onChange={handleChange}
+                                    disabled={!hasWriteAccess}
                                 />
                                 <DialogContentText>
                                     Referred By
@@ -410,6 +423,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                     fullWidth
                                     value={editOwner.referredBy}
                                     onChange={handleChange}
+                                    disabled={!hasWriteAccess}
                                 />
                                 <DialogContentText>
                                     Secondary Phone
@@ -424,6 +438,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                     fullWidth
                                     value={editOwner.secondaryPhone}
                                     onChange={handleChange}
+                                    disabled={!hasWriteAccess}
                                 />
                                 <DialogContentText>
                                     Veterinarian Phone
@@ -438,6 +453,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                     fullWidth
                                     value={editOwner.vetPhone}
                                     onChange={handleChange}
+                                    disabled={!hasWriteAccess}
                                 />
 
                             </DialogContent>
@@ -445,21 +461,25 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                     </CustomTabPanel>
                     <CustomTabPanel value={tabIndex} index={1}>
                         <DialogContent>
-                            <ViewPets ownerId={viewOwner.id} />
+                            <ViewPets ownerId={viewOwner.id} hasWriteAccess={hasWriteAccess} />
                         </DialogContent>
                     </CustomTabPanel>
                 </DialogContent>
                 <DialogActions sx={{ pb: 3, px: 3 }}>
-                    <Button onClick={handleClose} disabled={isSaving}>Cancel</Button>
-                    <Button 
-                        variant="contained" 
-                        color="info" 
-                        type="submit"
-                        disabled={isSaving}
-                        startIcon={isSaving ? <CircularProgress size={20} color="inherit" /> : null}
-                    >
-                        {isSaving ? 'Saving...' : 'Save'}
+                    <Button onClick={handleClose} disabled={isSaving}>
+                        {hasWriteAccess ? 'Cancel' : 'Close'}
                     </Button>
+                    {hasWriteAccess && (
+                        <Button 
+                            variant="contained" 
+                            color="info" 
+                            type="submit"
+                            disabled={isSaving}
+                            startIcon={isSaving ? <CircularProgress size={20} color="inherit" /> : null}
+                        >
+                            {isSaving ? 'Saving...' : 'Save'}
+                        </Button>
+                    )}
                 </DialogActions>
             </form>
         </Dialog>

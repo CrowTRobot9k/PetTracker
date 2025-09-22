@@ -2,22 +2,34 @@ import React, { useCallback, useState, useEffect, useMemo, Fragment } from 'reac
 import moment from 'moment'
 import { momentLocalizer } from 'react-big-calendar'
 import { Calendar, Views } from 'react-big-calendar'
-import { Container, Box } from '@mui/material';
+import { Container, Box, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import useAppointmentsStore from '../Stores/AppointmentsStore'
+import { useAuthStore } from '../Stores/AuthStore'
 import LoadingPlaceholder from '../Components/LoadingPlaceholder.tsx';
 import ErrorDisplay from '../Components/ErrorDisplay.tsx';
 import AddAppointment from '../Components/Appointments/AddAppointment.tsx';
 import ViewAppointment from '../Components/Appointments/ViewAppointment.tsx'
 import { Appointment } from '../Types/SharedTypes.tsx'
 export default function AppointmentScheduler() {
+    const { user } = useAuthStore();
 
     const localizer = new momentLocalizer(moment);
     const dayLayoutAlgorithm = 'no-overlap';
 
     const getAppointments = useAppointmentsStore((state) => state.getAppointments);
     const getOwnerList = useAppointmentsStore((state) => state.getOwnerList);
+
+    // Check if user has read access to appointments
+    const hasReadAccess = user?.roles?.some(role => 
+        role.name === 'Administrator' || role.name === 'Appointments Read' || role.name === 'Appointments Write'
+    ) ?? false;
+
+    // Check if user has write or admin privileges for appointments
+    const hasWriteAccess = user?.roles?.some(role => 
+        role.name === 'Administrator' || role.name === 'Appointments Write'
+    ) ?? false;
 
     const {
         appointments,
@@ -57,21 +69,25 @@ export default function AppointmentScheduler() {
     const handleSelectSlot = useCallback(
         ({ start, end }) =>
         {
-            setOpenAddAppt(true);
-            setApptStart(start);
-            setApptEnd(end);
+            if (hasWriteAccess) {
+                setOpenAddAppt(true);
+                setApptStart(start);
+                setApptEnd(end);
+            }
         },
-        []
+        [hasWriteAccess]
     )
 
     const handleSelectEvent = useCallback(
         (event) => {
-            setOpenViewAppt(true);
-            setSelectedAppt(event);
-            setApptStart(event.start);
-            setApptEnd(event.end);
+            if (hasReadAccess) {
+                setOpenViewAppt(true);
+                setSelectedAppt(event);
+                setApptStart(event.start);
+                setApptEnd(event.end);
+            }
         },
-        []
+        [hasReadAccess]
     )
 
     const { defaultDate, scrollToTime } = useMemo(
@@ -93,6 +109,17 @@ export default function AppointmentScheduler() {
         )
     }
 
+    // Check if user has read access to appointments (only applies when not used within owner context)
+    if (!hasReadAccess) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 400 }}>
+                <Typography variant="h6" color="text.secondary">
+                    You do not have permission to access the appointments page.
+                </Typography>
+            </Box>
+        );
+    }
+
     return (
         <>
             {showErrors && (
@@ -111,13 +138,15 @@ export default function AppointmentScheduler() {
                         localizer={localizer}
                         onSelectEvent={handleSelectEvent}
                         onSelectSlot={handleSelectSlot}
-                        selectable
+                        selectable={hasWriteAccess}
                         style={{ height: 700, width: '100%', minWidth: '100%' }}
                         scrollToTime={scrollToTime}
                         components={{ event: customEvent }}
                     />
-                    <AddAppointment open={openAddAppt} handleClose={handleCloseAddAppt} reloadAppointments={reloadAppts} setReloadAppointments={setReloadAppts} startDate={apptStart} endDate={apptEnd} owners={owners} />
-                    <ViewAppointment open={openViewAppt} handleClose={handleCloseViewAppt} viewAppointment={selectedAppt } reloadAppointments={reloadAppts} setReloadAppointments={setReloadAppts} startDate={apptStart} endDate={apptEnd} owners={owners} />
+                    {hasWriteAccess && (
+                        <AddAppointment open={openAddAppt} handleClose={handleCloseAddAppt} reloadAppointments={reloadAppts} setReloadAppointments={setReloadAppts} startDate={apptStart} endDate={apptEnd} owners={owners} />
+                    )}
+                    <ViewAppointment open={openViewAppt} handleClose={handleCloseViewAppt} viewAppointment={selectedAppt} reloadAppointments={reloadAppts} setReloadAppointments={setReloadAppts} startDate={apptStart} endDate={apptEnd} owners={owners} hasWriteAccess={hasWriteAccess} />
                 </>
 
             )}

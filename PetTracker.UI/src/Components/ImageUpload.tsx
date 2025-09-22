@@ -10,9 +10,10 @@ interface FileUploadProps {
     label: string;
     selectedFiles: File[],
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    readonly?: boolean;
 }
 
-export default function ImageUpload({ label, selectedFiles, onChange }: FileUploadProps) {
+export default function ImageUpload({ label, selectedFiles, onChange, readonly = false }: FileUploadProps) {
     const [slides, setSlides] = useState<React.ReactElement[]>([]);
     const [errorMessage, setErrorMessage] = React.useState('');
 
@@ -76,25 +77,27 @@ export default function ImageUpload({ label, selectedFiles, onChange }: FileUplo
 
     return (
         <>
-            <Container
-                maxWidth="xs"
-                sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', my: 1, gap: 0 }}
-            >
-                <Button
-                    variant="contained"
-                    component="label"
-                    color="info"
-                    endIcon={<FileUploadIcon />}
+            {!readonly && (
+                <Container
+                    maxWidth="xs"
+                    sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', my: 1, gap: 0 }}
                 >
-                    {label}
-                    <input
-                        type="file"
-                        hidden
-                        multiple
-                        onChange={handleFileChange}
-                    />
-                </Button>
-            </Container>
+                    <Button
+                        variant="contained"
+                        component="label"
+                        color="info"
+                        endIcon={<FileUploadIcon />}
+                    >
+                        {label}
+                        <input
+                            type="file"
+                            hidden
+                            multiple
+                            onChange={handleFileChange}
+                        />
+                    </Button>
+                </Container>
+            )}
             <Container
                 maxWidth="sm"
                 sx={{ display: 'flex', flexDirection: 'column', my: 1, gap: 0 }}

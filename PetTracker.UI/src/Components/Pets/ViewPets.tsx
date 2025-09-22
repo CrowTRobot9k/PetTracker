@@ -21,10 +21,24 @@ import usePetsStore from '../../Stores/PetsStore.tsx';
 import ConfirmDialog from '../ConfirmDialog.tsx';
 import ErrorDisplay from '../ErrorDisplay.tsx';
 import { useSearch } from '../SearchProvider.tsx';
-
+import { useAuthStore } from '../../Stores/AuthStore';
 import { Pet } from '../../Types/SharedTypes.tsx';
 
-export default function ViewPets(props: { ownerId?: number }) {
+export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boolean }) {
+    const { user } = useAuthStore();
+    
+    // Determine access level based on user roles when not explicitly provided
+    const hasReadAccess = user?.roles?.some(role => 
+        role.name === 'Administrator' || role.name === 'Pets Read' || role.name === 'Pets Write'
+    ) ?? false;
+    
+    const hasWriteAccessByRole = user?.roles?.some(role => 
+        role.name === 'Administrator' || role.name === 'Pets Write'
+    ) ?? false;
+    
+    // Use explicit hasWriteAccess prop if provided, otherwise use role-based access
+    const hasWriteAccess = props.hasWriteAccess !== undefined ? props.hasWriteAccess : hasWriteAccessByRole;
+    
     const getPets = usePetsStore((state) => state.getPets);
     const getPetTypes = usePetsStore((state) => state.getPetTypes);
     const getPetPhotos = usePetsStore((state) => state.getPetPhotos);
@@ -221,6 +235,17 @@ export default function ViewPets(props: { ownerId?: number }) {
         },
     });
 
+    // Check if user has read access to pets (only applies when not used within owner context)
+    if (props.ownerId === undefined && !hasReadAccess) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 400 }}>
+                <Typography variant="h6" color="text.secondary">
+                    You do not have permission to access the pets page.
+                </Typography>
+            </Box>
+        );
+    }
+
     return (
         <>
             {showErrors && (
@@ -236,23 +261,11 @@ export default function ViewPets(props: { ownerId?: number }) {
                 <>
                     {(!loadingPets) && (
                         <>
-                            <Box sx={{ display: 'flex', gap: 2, mb: 1, mt: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
-                                <Button 
-                                    onClick={handleClickOpen} 
-                                    variant="contained" 
-                                    color="info" 
-                                    endIcon={<AddIcon />}
-                                    size="medium"
-                                    sx={{ 
-                                        fontSize: { xs: '0.875rem', sm: '1rem' }
-                                    }}
-                                >
-                                    Add New Pet
-                                </Button>
-                                {props.ownerId != null && (
+                            {hasWriteAccess && (
+                                <Box sx={{ display: 'flex', gap: 2, mb: 1, mt: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
                                     <Button 
-                                        onClick={handleClickOpenAddExisting} 
-                                        variant="outlined" 
+                                        onClick={handleClickOpen} 
+                                        variant="contained" 
                                         color="info" 
                                         endIcon={<AddIcon />}
                                         size="medium"
@@ -260,10 +273,24 @@ export default function ViewPets(props: { ownerId?: number }) {
                                             fontSize: { xs: '0.875rem', sm: '1rem' }
                                         }}
                                     >
-                                        Add/Move Existing Pets
+                                        Add New Pet
                                     </Button>
-                                )}
-                            </Box>
+                                    {props.ownerId != null && (
+                                        <Button 
+                                            onClick={handleClickOpenAddExisting} 
+                                            variant="outlined" 
+                                            color="info" 
+                                            endIcon={<AddIcon />}
+                                            size="medium"
+                                            sx={{ 
+                                                fontSize: { xs: '0.875rem', sm: '1rem' }
+                                            }}
+                                        >
+                                            Add/Move Existing Pets
+                                        </Button>
+                                    )}
+                                </Box>
+                            )}
                             <Grid container spacing={2} sx={{
                                 height: '100%',
                                 display: 'flex',
@@ -365,11 +392,11 @@ export default function ViewPets(props: { ownerId?: number }) {
                                                     height: { xs: '36px', sm: '44px' },
                                                 }} 
                                                 onClick={() => handleOpenPet(m)} 
-                                                aria-label="edit"
+                                                aria-label={hasWriteAccess ? "edit" : "view"}
                                             >
                                                 <EditIcon sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
                                             </Fab>
-                                            {props.ownerId != null && (
+                                            {hasWriteAccess && props.ownerId != null && (
                                                 <Fab 
                                                     size="small" 
                                                     color="warning" 
@@ -385,7 +412,7 @@ export default function ViewPets(props: { ownerId?: number }) {
                                                     <RemoveCircleIcon sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
                                                 </Fab>
                                             )}
-                                            {props.ownerId == null && (
+                                            {hasWriteAccess && props.ownerId == null && (
                                                 <Fab 
                                                     size="small" 
                                                     color="error" 
@@ -408,7 +435,7 @@ export default function ViewPets(props: { ownerId?: number }) {
                             </Grid>
                         </>
                     )}
-                    <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} />
+                    <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} hasWriteAccess={hasWriteAccess} />
                     <ConfirmDialog open={openConfirmRemove} handleClose={handleConfirmCloseRemove} handleConfirm={handleConfirmRemovePet} confirmTitle={"Remove Pet"} confirmDescription={"Remove pet from this owner?"} confirmbuttonText="Yes" />
                     <ConfirmDialog open={openConfirmDelete} handleClose={handleConfirmCloseDelete} handleConfirm={handleConfirmDeletePet} confirmTitle={"Delete Pet"} confirmDescription={"Are you sure you want to delete this pet?"} confirmbuttonText="Yes" />
                 </>

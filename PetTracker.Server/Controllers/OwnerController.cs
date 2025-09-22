@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetTracker.Domain.DTOs;
 using PetTracker.Infrastucture.Services;
 using PetTracker.SqlDb.Models;
@@ -14,6 +15,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpGet("GetOwners")]
+        [Authorize(Roles = "Administrator,Owners Read,Owners Write")]
         public async Task<IActionResult> GetOwners()
         {
             try
@@ -28,6 +30,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpGet("GetOwnerList")]
+        [Authorize(Roles = "Administrator,Owners Read,Owners Write")]
         public async Task<IActionResult> GetOwnerList()
         {
             try
@@ -42,6 +45,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpPost("CreateOwner")]
+        [Authorize(Roles = "Administrator,Owners Write")]
         public async Task<IActionResult> CreateOwner([FromForm] AddOwnerDto model)
 
         {
@@ -58,6 +62,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpPost("UpdateOwner")]
+        [Authorize(Roles = "Administrator,Owners Write")]
         public async Task<IActionResult> UpdateOwner([FromForm] AddOwnerDto model)
         {
             try
@@ -73,6 +78,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpPost("AddExistingPetsToOwner")]
+        [Authorize(Roles = "Administrator,Owners Write")]
         public async Task<IActionResult> AddExistingPetsToOwner(AddExistingPetsToOwnerDto model)
         {
             try
@@ -88,6 +94,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpPost("RemoveExistingPetFromOwner")]
+        [Authorize(Roles = "Administrator,Owners Write")]
         public async Task<IActionResult> RemoveExistingPetFromOwner(AddExistingPetsToOwnerDto model)
         {
             try
@@ -103,6 +110,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpGet("GetOwnerPhotos")]
+        [Authorize(Roles = "Administrator,Owners Read,Owners Write")]
         public async Task<IActionResult> GetOwnerPhotos(int ownerId)
         {
             try
@@ -117,6 +125,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpPost("GetOwnerPhotosBatch")]
+        [Authorize(Roles = "Administrator,Owners Read,Owners Write")]
         public async Task<IActionResult> GetOwnerPhotosBatch([FromBody] List<int> ownerIds)
         {
             try
@@ -131,6 +140,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpGet("GetStates")]
+        [Authorize(Roles = "Administrator,Owners Read,Owners Write")]
         public async Task<IActionResult> GetStates()
         {
             var ret = new List<USState>();

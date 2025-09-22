@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetTracker.Domain.DTOs;
 using PetTracker.Domain.Models;
 using PetTracker.Infrastucture.Services;
@@ -16,6 +17,7 @@ namespace PetTracker.Server.Controllers
             _PetService = petService;
         }
         [HttpGet("GetPets")]
+        [Authorize(Roles = "Administrator,Pets Read,Pets Write")]
         public async Task<IActionResult> GetPets(int? ownerId)
         {
             try
@@ -30,6 +32,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpGet("GetPetList")]
+        [Authorize(Roles = "Administrator,Pets Read,Pets Write")]
         public async Task<IActionResult> GetPetList(int? ownerId)
         {
             try
@@ -44,6 +47,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpPost("CreatePet")]
+        [Authorize(Roles = "Administrator,Pets Write")]
         public async Task<IActionResult> CreatePet([FromForm] AddPetDto model)
         {
             try
@@ -60,6 +64,7 @@ namespace PetTracker.Server.Controllers
 
 
         [HttpPost("UpdatePet")]
+        [Authorize(Roles = "Administrator,Pets Write")]
         public async Task<IActionResult> UpdatePet([FromForm] AddPetDto model)
         {
             try
@@ -75,6 +80,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpPost("DeletePet")]
+        [Authorize(Roles = "Administrator,Pets Write")]
         public async Task<IActionResult> DeletePet([FromBody]int id)
         {
             try
@@ -90,6 +96,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpGet("GetPetTypes")]
+        [Authorize(Roles = "Administrator,Pets Read,Pets Write")]
         public async Task<IActionResult> GetPetTypes()
         {
             try
@@ -103,6 +110,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpGet("GetPetBreeds")]
+        [Authorize(Roles = "Administrator,Pets Read,Pets Write")]
         public async Task<IActionResult> GetPetBreeds(int petTypeId)
         {
             try
@@ -116,6 +124,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpGet("GetPetPhotos")]
+        [Authorize(Roles = "Administrator,Pets Read,Pets Write")]
         public async Task<IActionResult> GetPetPhotos(int petId)
         {
             try
@@ -130,6 +139,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpPost("GetPetPhotosBatch")]
+        [Authorize(Roles = "Administrator,Pets Read,Pets Write")]
         public async Task<IActionResult> GetPetPhotosBatch([FromBody] List<int> petIds)
         {
             try

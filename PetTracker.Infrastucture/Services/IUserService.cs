@@ -11,8 +11,10 @@ namespace PetTracker.Infrastucture.Services
     public interface IUserService
     {
         Task<List<GetUserDto>> GetUsers(int? companyId = null);
+        Task<GetUserDto?> GetUserById(string userId);
         Task<List<RoleDto>> GetRoles();
         Task<List<RoleDto>> GetUserRoles(string userId);
         Task<string> CreateUser(AddUserDto user, string? currentUserId = null);
+        Task<string> UpdateUser(AddUserDto user, string? currentUserId = null);
     }
 }

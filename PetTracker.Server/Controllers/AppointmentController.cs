@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PetTracker.Domain.DTOs;
 using PetTracker.Infrastucture.Services;
@@ -16,6 +17,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpGet("GetAppointments")]
+        [Authorize(Roles = "Administrator,Appointments Read,Appointments Write")]
         public async Task<IActionResult> GetAppointments(int? companyId)
         {
             try
@@ -31,6 +33,7 @@ namespace PetTracker.Server.Controllers
         }
 
         [HttpPost("CreateAppointment")]
+        [Authorize(Roles = "Administrator,Appointments Write")]
         public async Task<IActionResult> CreateAppointment(AppointmentDto model)
 
         {
@@ -48,6 +51,7 @@ namespace PetTracker.Server.Controllers
 
 
         [HttpPost("UpdateAppointment")]
+        [Authorize(Roles = "Administrator,Appointments Write")]
         public async Task<IActionResult> UpdateAppointment(AppointmentDto model)
 
         {
@@ -65,6 +69,7 @@ namespace PetTracker.Server.Controllers
 
 
         [HttpPost("DeleteAppointment")]
+        [Authorize(Roles = "Administrator,Appointments Write")]
         public async Task<IActionResult> DeleteAppointment([FromBody] int id)
         {
             try

@@ -22,7 +22,9 @@ using (
 		('00000000-0000-0000-0000-000000000004','Pets Read','Pets Read',''),
 		('00000000-0000-0000-0000-000000000005','Pets Write','Pets Write',''),
 		('00000000-0000-0000-0000-000000000006','Appointments Read','Appointments Read',''),
-		('00000000-0000-0000-0000-000000000007','Appointments Write','Appointments Write','')
+		('00000000-0000-0000-0000-000000000007','Appointments Write','Appointments Write',''),
+		('00000000-0000-0000-0000-000000000008','Users Read','Users Read',''),
+		('00000000-0000-0000-0000-000000000009','Users Write','Users Write','')
 ) as S (Id,[Name],[NormalizedName],[ConcurrencyStamp])
 on T.Id = S.Id
 when not matched then

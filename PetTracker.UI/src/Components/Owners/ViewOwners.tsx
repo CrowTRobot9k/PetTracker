@@ -17,6 +17,7 @@ import { getImageUrlFromBlob } from '../../Util/CommonFunctions.tsx'
 import LoadingPlaceholder from '../LoadingPlaceholder.tsx';
 import ErrorDisplay from '../ErrorDisplay.tsx';
 import { useSearch } from '../SearchProvider.tsx';
+import { useAuthStore } from '../../Stores/AuthStore';
 
 const SyledCardContent = styled(CardContent)({
     display: 'flex',
@@ -39,6 +40,17 @@ export default function ViewOwners() {
     const getOwnerPhotosBatch = useOwnersStore((state) => state.getOwnerPhotosBatch);
     const states = useOwnersStore((state) => state.states);
     const { searchTerm } = useSearch();
+    const { user } = useAuthStore();
+
+    // Check if user has read access to owners
+    const hasReadAccess = user?.roles?.some(role => 
+        role.name === 'Administrator' || role.name === 'Owners Read' || role.name === 'Owners Write'
+    ) ?? false;
+
+    // Check if user has write or admin privileges for owners
+    const hasWriteAccess = user?.roles?.some(role => 
+        role.name === 'Administrator' || role.name === 'Owners Write'
+    ) ?? false;
 
     const {
         owners,
@@ -130,20 +142,22 @@ export default function ViewOwners() {
                         <>
                             {(!loadingOwners) && (
                                 <>
-                                    <Box sx={{ display: 'flex', gap: 2, mb: 1, mt: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
-                                        <Button 
-                                            onClick={handleClickOpen} 
-                                            variant="contained" 
-                                            color="info" 
-                                            endIcon={<AddIcon />}
-                                            size="medium"
-                                            sx={{ 
-                                                fontSize: { xs: '0.875rem', sm: '1rem' }
-                                            }}
-                                        >
-                                            Add Owner
-                                        </Button>
-                                    </Box>
+                                    {hasWriteAccess && (
+                                        <Box sx={{ display: 'flex', gap: 2, mb: 1, mt: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
+                                            <Button 
+                                                onClick={handleClickOpen} 
+                                                variant="contained" 
+                                                color="info" 
+                                                endIcon={<AddIcon />}
+                                                size="medium"
+                                                sx={{ 
+                                                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                                                }}
+                                            >
+                                                Add Owner
+                                            </Button>
+                                        </Box>
+                                    )}
                                     <Grid container spacing={2} sx={{
                                         display: 'flex',
                                         flexDirection: 'row',
@@ -219,31 +233,33 @@ export default function ViewOwners() {
                                                         {m.city} {m.state} {m.zipCode}
                                                     </StyledTypography>
                                                 </SyledCardContent>
-                                                <SyledCardContent sx={{ 
-                                                    my: { xs: 0.125, sm: 0 },
-                                                    p: { xs: 0.25, sm: 0.5 },
-                                                }}>
-                                                    <Fab 
-                                                        size="small" 
-                                                        color="primary" 
-                                                        sx={{ 
-                                                            alignSelf: 'center',
-                                                            width: { xs: '36px', sm: '44px' },
-                                                            height: { xs: '36px', sm: '44px' },
-                                                        }} 
-                                                        onClick={() => handleOpenOwner(m)} 
-                                                        aria-label="edit"
-                                                    >
-                                                        <EditIcon sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
-                                                    </Fab>
-                                                </SyledCardContent>
+                                                {hasReadAccess && (
+                                                    <SyledCardContent sx={{ 
+                                                        my: { xs: 0.125, sm: 0 },
+                                                        p: { xs: 0.25, sm: 0.5 },
+                                                    }}>
+                                                        <Fab 
+                                                            size="small" 
+                                                            color="primary" 
+                                                            sx={{ 
+                                                                alignSelf: 'center',
+                                                                width: { xs: '36px', sm: '44px' },
+                                                                height: { xs: '36px', sm: '44px' },
+                                                            }} 
+                                                            onClick={() => handleOpenOwner(m)} 
+                                                            aria-label="view"
+                                                        >
+                                                            <EditIcon sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
+                                                        </Fab>
+                                                    </SyledCardContent>
+                                                )}
                                             </Card>
                                         </Grid>
                                     )}
                                     </Grid>
                                 </>
                             )}
-                            <ViewOwner open={openViewOwner} viewOwner={selectedOwner} handleClose={handleCloseOwner} ownerStates={states} reloadOwners={reloadOwners} setReloadOwners={setReloadOwners} />
+                            <ViewOwner open={openViewOwner} viewOwner={selectedOwner} handleClose={handleCloseOwner} ownerStates={states} reloadOwners={reloadOwners} setReloadOwners={setReloadOwners} hasWriteAccess={hasWriteAccess} />
                         </>
                     )}
         </>

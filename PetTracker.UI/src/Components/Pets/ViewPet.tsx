@@ -15,6 +15,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
+import Typography from '@mui/material/Typography';
 import { Pet } from '../../Types/SharedTypes';
 import usePetStore from '../../Stores/PetStore';
 import usePetsStore from '../../Stores/PetsStore';
@@ -30,9 +31,10 @@ interface ViewPetProps {
     petTypes: [];
     reloadPets: boolean,
     setReloadPets: React.Dispatch<React.SetStateAction<boolean>>;
+    hasWriteAccess?: boolean;
 }
 
-export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPets, setReloadPets }: ViewPetProps) {
+export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPets, setReloadPets, hasWriteAccess = true }: ViewPetProps) {
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -220,11 +222,13 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                 <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', width: '100%', alignItems: 'center' }}
                 >
-                    <DialogTitle>View Pet</DialogTitle>
+                    <DialogTitle>
+                        View Pet
+                    </DialogTitle>
                     {submitErrorMessage?.length > 0 && (
                         <ErrorDisplay error={submitErrorMessage} />
                     )}
-                    <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} />
+                    <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} readonly={!hasWriteAccess} />
                 </DialogContent>
                 <DialogContent
                     sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width: '100%' }}
@@ -246,6 +250,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                             type="text"
                             value={editPet.name}
                             onChange={handleChange}
+                            disabled={!hasWriteAccess}
                         />
                         <DialogContentText>
                             Pet Type
@@ -258,6 +263,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                                 value={editPet.petType}
                                 label="Pet Type"
                                 onChange={handleChangePetType}
+                                disabled={!hasWriteAccess}
                                 renderValue={(selected) => {
                                     if (!selected) {
                                         return <em>Select</em>;
@@ -302,7 +308,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                                         </Box>)
                                 }}
 
-                                disabled={petBreeds?.length > 0 ? false : true}
+                                disabled={petBreeds?.length > 0 ? !hasWriteAccess : true}
                             >
                                 {petBreeds?.length > 0 && (petBreeds.map(m =>
 
@@ -325,6 +331,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                             fullWidth
                             value={editPet.color}
                             onChange={handleChange}
+                            disabled={!hasWriteAccess}
                         />
                     </DialogContent>
                     <DialogContent
@@ -339,6 +346,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                                 value={editPet.birthDate}
                                 onChange={handleChangeDate}
                                 slotProps={{ textField: { size: 'small' } }}
+                                disabled={!hasWriteAccess}
                             />
                         </LocalizationProvider>
                         <DialogContentText>
@@ -355,6 +363,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                             fullWidth
                             value={editPet.weight}
                             onChange={handleChange}
+                            disabled={!hasWriteAccess}
                         />
                         <DialogContentText>
                             Sex
@@ -366,6 +375,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                             value={editPet.sex}
                             label="Pet Sex"
                             onChange={handleChangePetSex}
+                            disabled={!hasWriteAccess}
                             renderValue={(selected) => {
                                 if (!selected) {
                                     return <em>Select Sex</em>;
@@ -396,20 +406,25 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                             fullWidth
                             value={editPet.medicalProblems}
                             onChange={handleChange}
+                            disabled={!hasWriteAccess}
                         />
                     </DialogContent>
                 </DialogContent>
                 <DialogActions sx={{ pb: 3, px: 3 }}>
-                    <Button onClick={handleClose} disabled={isSaving}>Cancel</Button>
-                    <Button 
-                        variant="contained" 
-                        color="info" 
-                        type="submit"
-                        disabled={isSaving}
-                        startIcon={isSaving ? <CircularProgress size={20} color="inherit" /> : null}
-                    >
-                        {isSaving ? 'Saving...' : 'Save'}
+                    <Button onClick={handleClose} disabled={isSaving}>
+                        {hasWriteAccess ? 'Cancel' : 'Close'}
                     </Button>
+                    {hasWriteAccess && (
+                        <Button 
+                            variant="contained" 
+                            color="info" 
+                            type="submit"
+                            disabled={isSaving}
+                            startIcon={isSaving ? <CircularProgress size={20} color="inherit" /> : null}
+                        >
+                            {isSaving ? 'Saving...' : 'Save'}
+                        </Button>
+                    )}
                 </DialogActions>
             </form>
         </Dialog>

@@ -6,9 +6,49 @@ import AuthorizeView from "../Components/AuthorizeView.tsx";
 import { Button, Typography, Box, Card, CardContent } from '@mui/material';
 import { Pets, People, Event, Person } from '@mui/icons-material';
 import { useNavigate } from 'react-router';
+import { useAuthStore } from '../Stores/AuthStore';
 
 export default function Home(props: { disableCustomTheme?: boolean }) {
     const navigate = useNavigate();
+    const { user } = useAuthStore();
+
+    // Helper function to check if user has permission to see a menu item
+    const hasPermission = (menuItem: string): boolean => {
+        if (!user || !user.roles) {
+            return false;
+        }
+
+        const userRoles = user.roles.map(role => role.name);
+
+        switch (menuItem) {
+            case 'owners':
+                return userRoles.some(role => 
+                    role === 'Administrator' || 
+                    role === 'Owners Read' || 
+                    role === 'Owners Write'
+                );
+            case 'pets':
+                return userRoles.some(role => 
+                    role === 'Administrator' || 
+                    role === 'Pets Read' || 
+                    role === 'Pets Write'
+                );
+            case 'appointments':
+                return userRoles.some(role => 
+                    role === 'Administrator' || 
+                    role === 'Appointments Read' || 
+                    role === 'Appointments Write'
+                );
+            case 'users':
+                return userRoles.some(role => 
+                    role === 'Administrator' || 
+                    role === 'Users Read' || 
+                    role === 'Users Write'
+                );
+            default:
+                return false;
+        }
+    };
     
     return (
         <AuthorizeView>
@@ -50,24 +90,30 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                                 height: '100%', 
                                 textAlign: 'center', 
                                 p: 2,
-                                cursor: 'pointer',
+                                cursor: hasPermission('owners') ? 'pointer' : 'default',
                                 transition: 'all 0.3s ease-in-out',
-                                '&:hover': {
+                                opacity: hasPermission('owners') ? 1 : 0.6,
+                                '&:hover': hasPermission('owners') ? {
                                     transform: 'translateY(-4px)',
                                     boxShadow: 4,
                                     backgroundColor: 'action.hover'
-                                }
+                                } : {}
                             }}
-                            onClick={() => navigate('/owners')}
+                            onClick={hasPermission('owners') ? () => navigate('/owners') : undefined}
                         >
                             <CardContent>
-                                <People sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
+                                <People sx={{ fontSize: 48, color: hasPermission('owners') ? 'primary.main' : 'text.disabled', mb: 2 }} />
                                 <Typography variant="h6" component="h3" gutterBottom>
                                     Owner Profiles
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
                                     Maintain comprehensive owner information and contact details
                                 </Typography>
+                                {!hasPermission('owners') && (
+                                    <Typography variant="caption" color="text.disabled" sx={{ fontStyle: 'italic', mt: 1, display: 'block' }}>
+                                        Access required
+                                    </Typography>
+                                )}
                             </CardContent>
                         </Card>
 
@@ -76,24 +122,30 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                                 height: '100%', 
                                 textAlign: 'center', 
                                 p: 2,
-                                cursor: 'pointer',
+                                cursor: hasPermission('pets') ? 'pointer' : 'default',
                                 transition: 'all 0.3s ease-in-out',
-                                '&:hover': {
+                                opacity: hasPermission('pets') ? 1 : 0.6,
+                                '&:hover': hasPermission('pets') ? {
                                     transform: 'translateY(-4px)',
                                     boxShadow: 4,
                                     backgroundColor: 'action.hover'
-                                }
+                                } : {}
                             }}
-                            onClick={() => navigate('/pets')}
+                            onClick={hasPermission('pets') ? () => navigate('/pets') : undefined}
                         >
                             <CardContent>
-                                <Pets sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
+                                <Pets sx={{ fontSize: 48, color: hasPermission('pets') ? 'primary.main' : 'text.disabled', mb: 2 }} />
                                 <Typography variant="h6" component="h3" gutterBottom>
                                     Pet Management
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
                                     Keep detailed records of all pets including breed, age, and medical information
                                 </Typography>
+                                {!hasPermission('pets') && (
+                                    <Typography variant="caption" color="text.disabled" sx={{ fontStyle: 'italic', mt: 1, display: 'block' }}>
+                                        Access required
+                                    </Typography>
+                                )}
                             </CardContent>
                         </Card>
 
@@ -102,24 +154,30 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                                 height: '100%', 
                                 textAlign: 'center', 
                                 p: 2,
-                                cursor: 'pointer',
+                                cursor: hasPermission('appointments') ? 'pointer' : 'default',
                                 transition: 'all 0.3s ease-in-out',
-                                '&:hover': {
+                                opacity: hasPermission('appointments') ? 1 : 0.6,
+                                '&:hover': hasPermission('appointments') ? {
                                     transform: 'translateY(-4px)',
                                     boxShadow: 4,
                                     backgroundColor: 'action.hover'
-                                }
+                                } : {}
                             }}
-                            onClick={() => navigate('/appointments')}
+                            onClick={hasPermission('appointments') ? () => navigate('/appointments') : undefined}
                         >
                             <CardContent>
-                                <Event sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
+                                <Event sx={{ fontSize: 48, color: hasPermission('appointments') ? 'primary.main' : 'text.disabled', mb: 2 }} />
                                 <Typography variant="h6" component="h3" gutterBottom>
                                     Appointment Scheduling
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
                                     Efficiently manage appointments and track scheduling conflicts
                                 </Typography>
+                                {!hasPermission('appointments') && (
+                                    <Typography variant="caption" color="text.disabled" sx={{ fontStyle: 'italic', mt: 1, display: 'block' }}>
+                                        Access required
+                                    </Typography>
+                                )}
                             </CardContent>
                         </Card>
 
@@ -128,24 +186,30 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                                 height: '100%', 
                                 textAlign: 'center', 
                                 p: 2,
-                                cursor: 'pointer',
+                                cursor: hasPermission('users') ? 'pointer' : 'default',
                                 transition: 'all 0.3s ease-in-out',
-                                '&:hover': {
+                                opacity: hasPermission('users') ? 1 : 0.6,
+                                '&:hover': hasPermission('users') ? {
                                     transform: 'translateY(-4px)',
                                     boxShadow: 4,
                                     backgroundColor: 'action.hover'
-                                }
+                                } : {}
                             }}
-                            onClick={() => navigate('/users')}
+                            onClick={hasPermission('users') ? () => navigate('/users') : undefined}
                         >
                             <CardContent>
-                                <Person sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
+                                <Person sx={{ fontSize: 48, color: hasPermission('users') ? 'primary.main' : 'text.disabled', mb: 2 }} />
                                 <Typography variant="h6" component="h3" gutterBottom>
                                     User Management
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
                                     Control access and manage user roles within your organization
                                 </Typography>
+                                {!hasPermission('users') && (
+                                    <Typography variant="caption" color="text.disabled" sx={{ fontStyle: 'italic', mt: 1, display: 'block' }}>
+                                        Access required
+                                    </Typography>
+                                )}
                             </CardContent>
                         </Card>
                     </Box>
