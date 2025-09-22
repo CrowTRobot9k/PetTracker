@@ -85,6 +85,7 @@ public static class IdentityApiEndpointRouteBuilderExtensions
                 aspNetUser.FirstName = registration.FirstName;
                 aspNetUser.LastName = registration.LastName;
                 aspNetUser.CompanyId = registration.CompanyId;
+                aspNetUser.MustChangePassword = true;
             }
 
             var result = await userManager.CreateAsync(user, registration.Password);
@@ -169,6 +170,13 @@ public static class IdentityApiEndpointRouteBuilderExtensions
                 return TypedResults.Unauthorized();
             }
 
+            // Check if user must change password - if so, return a special response indicating password change is required
+            if (user is AspNetUser aspNetUser && aspNetUser.MustChangePassword == true)
+            {
+                // Return a JSON response indicating password change is required
+                return TypedResults.Content("{\"requiresPasswordChange\": true}", "application/json");
+            }
+
             IdentityResult result;
 
             if (string.IsNullOrEmpty(changedEmail))
@@ -199,6 +207,51 @@ public static class IdentityApiEndpointRouteBuilderExtensions
             var finalPattern = ((RouteEndpointBuilder)endpointBuilder).RoutePattern.RawText;
             confirmEmailEndpointName = $"{nameof(MapCustomizedIdentityApi)}-{finalPattern}";
             endpointBuilder.Metadata.Add(new EndpointNameMetadata(confirmEmailEndpointName));
+        });
+
+        routeGroup.MapPost("/confirmEmailWithPasswordChange", async Task<Results<ContentHttpResult, UnauthorizedHttpResult>>
+            ([FromBody] ConfirmEmailWithPasswordChangeRequest request, [FromServices] IServiceProvider sp) =>
+        {
+            var userManager = sp.GetRequiredService<UserManager<TUser>>();
+            if (await userManager.FindByIdAsync(request.UserId) is not { } user)
+            {
+                return TypedResults.Unauthorized();
+            }
+
+            try
+            {
+                request.Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
+            }
+            catch (FormatException)
+            {
+                return TypedResults.Unauthorized();
+            }
+
+            // Verify the user must change password
+            if (user is not AspNetUser aspNetUser || aspNetUser.MustChangePassword != true)
+            {
+                return TypedResults.Unauthorized();
+            }
+
+            // Confirm the email first
+            var confirmResult = await userManager.ConfirmEmailAsync(user, request.Code);
+            if (!confirmResult.Succeeded)
+            {
+                return TypedResults.Unauthorized();
+            }
+
+            // Change the password
+            var passwordChangeResult = await userManager.ChangePasswordAsync(user, request.TemporaryPassword, request.NewPassword);
+            if (!passwordChangeResult.Succeeded)
+            {
+                return TypedResults.Unauthorized();
+            }
+
+            // Clear the MustChangePassword flag
+            aspNetUser.MustChangePassword = false;
+            await userManager.UpdateAsync(user);
+
+            return TypedResults.Text("Email confirmed and password changed successfully.");
         });
 
         routeGroup.MapPost("/resendConfirmationEmail", async Task<Ok>
@@ -504,5 +557,20 @@ public static class IdentityApiEndpointRouteBuilderExtensions
     private sealed class FromQueryAttribute : Attribute, IFromQueryMetadata
     {
         public string? Name => null;
+    }
+
+    public sealed class ConfirmEmailWithPasswordChangeRequest
+    {
+        [Required]
+        public string UserId { get; set; } = default!;
+
+        [Required]
+        public string Code { get; set; } = default!;
+
+        [Required]
+        public string TemporaryPassword { get; set; } = default!;
+
+        [Required]
+        public string NewPassword { get; set; } = default!;
     }
 }

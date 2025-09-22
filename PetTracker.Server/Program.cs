@@ -1,9 +1,6 @@
-//using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Hosting.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using PetTracker.Domain.Models;
 using PetTracker.Infrastucture.Services;
 using PetTracker.Server.Models;
@@ -15,9 +12,12 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Services.AddTransient<IPtDbContext, PtDbContext>();
-
-    var connectionString = builder.Configuration.GetConnectionString("PtDbConnection") ?? throw new InvalidOperationException("Connection string 'PtDbConnection' not found.");
+    // =============================================================================
+    // DATABASE CONFIGURATION
+    // =============================================================================
+    
+    var connectionString = builder.Configuration.GetConnectionString("PtDbConnection") 
+        ?? throw new InvalidOperationException("Connection string 'PtDbConnection' not found.");
 
     builder.Services.AddDbContext<PtDbContext>(options =>
     {
@@ -25,29 +25,40 @@ try
         options.EnableDetailedErrors();
     });
 
-    builder.Services.AddDefaultIdentity<AspNetUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    builder.Services.AddTransient<IPtDbContext, PtDbContext>();
+
+    // =============================================================================
+    // IDENTITY CONFIGURATION
+    // =============================================================================
+    
+    builder.Services.AddDefaultIdentity<AspNetUser>(options => 
+        options.SignIn.RequireConfirmedAccount = true)
         .AddRoles<AspNetRole>()
         .AddEntityFrameworkStores<PtDbContext>();
-
-    builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
-        builder =>
-        {
-            builder
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader();
-            // .AllowCredentials();
-        }));
 
     builder.Services.AddAuthorization();
 
-    builder.Services.AddIdentityCore<AspNetUser>()
-        .AddRoles<AspNetRole>()
-        .AddEntityFrameworkStores<PtDbContext>();
+    // =============================================================================
+    // CORS CONFIGURATION
+    // =============================================================================
+    
+    builder.Services.AddCors(options => options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    }));
 
-    // Add services to the container.
+    // =============================================================================
+    // APPLICATION SERVICES
+    // =============================================================================
+    
+    // Email Services
     builder.Services.AddScoped<IEmailSender<AspNetUser>, IdentityEmailSender>();
-    //builder.Services.AddScoped<IEmailSender, EmailSender>();
+    builder.Services.AddScoped<ICustomEmailSender, IdentityEmailSender>();
+    
+    // Business Services
     builder.Services.AddScoped<IImageCompressionService, ImageCompressionService>();
     builder.Services.AddScoped<IFileUploadService, FileUploadService>();
     builder.Services.AddScoped<IPetService, PetService>();
@@ -56,56 +67,88 @@ try
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<ICompanyService, CompanyService>();
 
+    // =============================================================================
+    // API CONFIGURATION
+    // =============================================================================
+    
     builder.Services.AddControllers();
-    // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
     builder.Services.AddOpenApi();
-
     builder.Services.AddHttpContextAccessor();
 
+    // =============================================================================
+    // APPLICATION BUILDING
+    // =============================================================================
+    
     var app = builder.Build();
 
+    // =============================================================================
+    // MIDDLEWARE PIPELINE
+    // =============================================================================
+    
+    // Static Files
     app.UseDefaultFiles();
     app.UseStaticFiles();
-    //app.MapIdentityApi<AspNetUser>();
-    app.MapCustomizedIdentityApi<AspNetUser>();
     app.MapStaticAssets();
 
+    // CORS
+    app.UseCors();
+
+    // HTTPS Redirection
+    app.UseHttpsRedirection();
+
+    // Authentication & Authorization
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    // =============================================================================
+    // API ENDPOINTS
+    // =============================================================================
+    
+    // Identity API
+    app.MapCustomizedIdentityApi<AspNetUser>();
+
+    // Custom Authentication Endpoints
     app.MapPost("/logout", async (SignInManager<AspNetUser> signInManager) =>
     {
-
         await signInManager.SignOutAsync();
         return Results.Ok();
-
     }).RequireAuthorization();
 
-
-    app.MapGet("/getauth", (ClaimsPrincipal claimsP) =>
+    app.MapGet("/getauth", (ClaimsPrincipal claimsPrincipal) =>
     {
-        var email = claimsP.FindFirstValue(ClaimTypes.Email); // get the user's email from the claim
-        var userName = claimsP.FindFirstValue(ClaimTypes.Name);
+        var email = claimsPrincipal.FindFirstValue(ClaimTypes.Email);
+        var userName = claimsPrincipal.FindFirstValue(ClaimTypes.Name);
 
-        return Results.Json(new { Email = email, UserName = userName }); ; // return the email as a plain text response
+        return Results.Json(new { Email = email, UserName = userName });
     }).RequireAuthorization();
 
-    // Configure the HTTP request pipeline.
+    // API Controllers
+    app.MapControllers();
+
+    // =============================================================================
+    // DEVELOPMENT TOOLS
+    // =============================================================================
+    
     if (app.Environment.IsDevelopment())
     {
         app.MapOpenApi();
         app.MapScalarApiReference();
     }
 
-    app.UseHttpsRedirection();
-
-    app.UseAuthorization();
-
-    app.MapControllers();
-
+    // =============================================================================
+    // FALLBACK ROUTING
+    // =============================================================================
+    
     app.MapFallbackToFile("/index.html");
-    app.UseCors();
 
+    // =============================================================================
+    // APPLICATION STARTUP
+    // =============================================================================
+    
     app.Run();
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"An error occurred: {ex.Message}");
+    Console.WriteLine($"An error occurred during application startup: {ex.Message}");
+    throw;
 }

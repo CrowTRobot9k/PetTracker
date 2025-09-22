@@ -12,6 +12,8 @@ public partial class AspNetUser: IdentityUser
 
     public int? CompanyId { get; set; }
 
+    public bool? MustChangePassword { get; set; }
+
     public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; } = new List<AspNetUserClaim>();
 
     public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; } = new List<AspNetUserLogin>();

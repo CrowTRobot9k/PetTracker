@@ -7,6 +7,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import MuiCard from '@mui/material/Card';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -60,6 +62,11 @@ export default function EmailConfirmation(props: { disableCustomTheme?: boolean 
   const [isLoading, setIsLoading] = React.useState(true);
   const [isSuccess, setIsSuccess] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
+  const [requiresPasswordChange, setRequiresPasswordChange] = React.useState(false);
+  const [temporaryPassword, setTemporaryPassword] = React.useState('');
+  const [newPassword, setNewPassword] = React.useState('');
+  const [confirmPassword, setConfirmPassword] = React.useState('');
+  const [isChangingPassword, setIsChangingPassword] = React.useState(false);
 
   React.useEffect(() => {
     const confirmEmail = async () => {
@@ -77,6 +84,17 @@ export default function EmailConfirmation(props: { disableCustomTheme?: boolean 
         const response = await fetch(`/confirmEmail?userId=${userId}&code=${code}`);
 
         if (response.ok) {
+          // Check if the response indicates password change is required
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            const data = await response.json();
+            if (data.requiresPasswordChange) {
+              setRequiresPasswordChange(true);
+              setIsLoading(false);
+              return;
+            }
+          }
+          
           setIsSuccess(true);
           // Redirect to sign in page with success message after a short delay
           setTimeout(() => {
@@ -96,6 +114,53 @@ export default function EmailConfirmation(props: { disableCustomTheme?: boolean 
     confirmEmail();
   }, [searchParams, navigate]);
 
+  const handlePasswordChange = async () => {
+    if (newPassword !== confirmPassword) {
+      setErrorMessage('New passwords do not match');
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setErrorMessage('New password must be at least 6 characters long');
+      return;
+    }
+
+    setIsChangingPassword(true);
+    setErrorMessage('');
+
+    try {
+      const userId = searchParams.get('userId');
+      const code = searchParams.get('code');
+
+      const response = await fetch('/confirmEmailWithPasswordChange', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          code,
+          temporaryPassword,
+          newPassword,
+        }),
+      });
+
+      if (response.ok) {
+        setIsSuccess(true);
+        setTimeout(() => {
+          navigate('/signin?message=activated');
+        }, 1000);
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || 'Password change failed. Please check your temporary password and try again.');
+      }
+    } catch (error) {
+      setErrorMessage('An error occurred while changing your password. Please try again.');
+    } finally {
+      setIsChangingPassword(false);
+    }
+  };
+
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
@@ -112,6 +177,68 @@ export default function EmailConfirmation(props: { disableCustomTheme?: boolean 
             </Box>
           )}
 
+          {requiresPasswordChange && (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Typography variant="h6" color="primary" sx={{ textAlign: 'center' }}>
+                Password Change Required
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
+                To complete your email confirmation, please enter the temporary password sent to your email and create a new password.
+              </Typography>
+              
+              <TextField
+                label="Temporary Password"
+                type="password"
+                value={temporaryPassword}
+                onChange={(e) => setTemporaryPassword(e.target.value)}
+                fullWidth
+                required
+              />
+              
+              <TextField
+                label="New Password"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                fullWidth
+                required
+                helperText="Password must be at least 6 characters long"
+              />
+              
+              <TextField
+                label="Confirm New Password"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                fullWidth
+                required
+              />
+              
+              <Button
+                variant="contained"
+                onClick={handlePasswordChange}
+                disabled={isChangingPassword || !temporaryPassword || !newPassword || !confirmPassword}
+                fullWidth
+                sx={{ mt: 2 }}
+              >
+                {isChangingPassword ? (
+                  <>
+                    <CircularProgress size={20} sx={{ mr: 1 }} />
+                    Changing Password...
+                  </>
+                ) : (
+                  'Confirm Email & Change Password'
+                )}
+              </Button>
+              
+              {errorMessage && (
+                <Alert variant="filled" severity="error">
+                  {errorMessage}
+                </Alert>
+              )}
+            </Box>
+          )}
+
           {isSuccess && (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <Alert variant="filled" severity="success">
@@ -120,7 +247,7 @@ export default function EmailConfirmation(props: { disableCustomTheme?: boolean 
             </Box>
           )}
 
-          {!isLoading && !isSuccess && errorMessage && (
+          {!isLoading && !isSuccess && !requiresPasswordChange && errorMessage && (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <Alert variant="filled" severity="error">
                 {errorMessage}

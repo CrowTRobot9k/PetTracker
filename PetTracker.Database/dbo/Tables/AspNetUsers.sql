@@ -17,6 +17,7 @@
     [LockoutEnabled]       BIT                NOT NULL,
     [AccessFailedCount]    INT                NOT NULL,
     [CompanyId] INT NULL,
+    [MustChangePassword]       BIT            NULL,
     CONSTRAINT [PK_AspNetUsers] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_AspNetUsers_Company] FOREIGN KEY ([CompanyId]) REFERENCES [dbo].[Companies] ([Id]),
 

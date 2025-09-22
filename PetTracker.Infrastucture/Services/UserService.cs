@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PetTracker.Domain.DTOs;
 using PetTracker.Domain.Models;
+using PetTracker.Infrastucture.Utilities;
 using PetTracker.SqlDb.Models;
 using System;
 using System.Collections.Generic;
@@ -17,12 +20,16 @@ namespace PetTracker.Infrastucture.Services
         private readonly UserManager<AspNetUser> _userManager;
         private readonly RoleManager<AspNetRole> _roleManager;
         private readonly IFileUploadService _fileUploadService;
+        private readonly ICustomEmailSender _emailSender;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(ILogger<UserService> logger, IPtDbContext dbContext, UserManager<AspNetUser> userManager, RoleManager<AspNetRole> roleManager, IFileUploadService fileUploadService) : base(logger, dbContext)
+        public UserService(ILogger<UserService> logger, IPtDbContext dbContext, UserManager<AspNetUser> userManager, RoleManager<AspNetRole> roleManager, IFileUploadService fileUploadService, ICustomEmailSender emailSender, IHttpContextAccessor httpContextAccessor) : base(logger, dbContext)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _fileUploadService = fileUploadService;
+            _emailSender = emailSender;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<List<GetUserDto>> GetUsers(int? companyId = null)
@@ -30,20 +37,38 @@ namespace PetTracker.Infrastucture.Services
             try
             {
                 _logger.LogInformation("GetUsers method called");
-
-                var query = _dbContext.AspNetUsers.AsQueryable();
-
+                
+                var query = _dbContext.AspNetUsers
+                    .Include(u => u.Company)
+                    .AsQueryable();
+                
                 // Filter by company if specified
                 if (companyId.HasValue)
                 {
                     query = query.Where(u => u.CompanyId == companyId.Value);
                 }
-
+                
                 var users = await query.ToListAsync();
-
-                _logger.LogInformation($"Retrieved {users.Count} users from database");
-
-                return users.Select(u => new GetUserDto(u)).ToList();
+                
+                // Get roles for each user using UserManager
+                var userDtos = new List<GetUserDto>();
+                foreach (var user in users)
+                {
+                    var roles = await _userManager.GetRolesAsync(user);
+                    var roleEntities = await _roleManager.Roles
+                        .Where(r => roles.Contains(r.Name!))
+                        .ToListAsync();
+                    
+                    user.Roles = roleEntities;
+                    
+                    var dto = new GetUserDto(user);
+                    dto.UserPhotos = new List<FileDownloadDto>(); // Override to exclude file uploads
+                    userDtos.Add(dto);
+                }
+                
+                _logger.LogInformation($"Retrieved {users.Count} users from database with roles");
+                
+                return userDtos;
             }
             catch (Exception ex)
             {
@@ -52,17 +77,84 @@ namespace PetTracker.Infrastucture.Services
             }
         }
 
-        public async Task<List<RoleDto>> GetRoles()
-        {
-            // Use Identity's RoleManager to get roles
-            var roles = _roleManager.Roles.ToList();
-            return roles.Select(r => new RoleDto(r)).ToList();
-        }
 
-        public async Task<string> CreateUser(AddUserDto userDto)
+        public async Task<List<RoleDto>> GetRoles()
         {
             try
             {
+                _logger.LogInformation("GetRoles method called - using RoleManager");
+                
+                var roles = await _roleManager.Roles.ToListAsync();
+                
+                _logger.LogInformation($"Retrieved {roles.Count} roles from database");
+                
+                return roles.Select(r => new RoleDto(r)).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetRoles method");
+                throw;
+            }
+        }
+
+        public async Task<List<RoleDto>> GetUserRoles(string userId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return new List<RoleDto>();
+                }
+
+                var roles = await _userManager.GetRolesAsync(user);
+                var roleEntities = await _roleManager.Roles
+                    .Where(r => roles.Contains(r.Name!))
+                    .ToListAsync();
+
+                return roleEntities.Select(r => new RoleDto(r)).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetUserRoles method");
+                throw;
+            }
+        }
+
+        public async Task<string> CreateUser(AddUserDto userDto, string? currentUserId = null)
+        {
+            try
+            {
+                // Get current user's roles for authorization
+                var currentUserRoles = new List<string>();
+                if (!string.IsNullOrEmpty(currentUserId))
+                {
+                    var currentUser = await _userManager.FindByIdAsync(currentUserId);
+                    if (currentUser != null)
+                    {
+                        currentUserRoles = (await _userManager.GetRolesAsync(currentUser)).ToList();
+                    }
+                }
+
+                // Validate role assignments - users can only assign roles they have
+                if (userDto.Roles?.Any() == true)
+                {
+                    var requestedRoleNames = userDto.Roles.Select(r => r.Name).Where(name => !string.IsNullOrEmpty(name)).ToList();
+                    
+                    // If current user has no roles, they cannot assign any roles
+                    if (!currentUserRoles.Any() && requestedRoleNames.Any())
+                    {
+                        throw new UnauthorizedAccessException("You do not have permission to assign roles to users.");
+                    }
+                    
+                    // Check if user is trying to assign roles they don't have
+                    var unauthorizedRoles = requestedRoleNames.Except(currentUserRoles).ToList();
+                    if (unauthorizedRoles.Any())
+                    {
+                        throw new UnauthorizedAccessException($"You do not have permission to assign the following roles: {string.Join(", ", unauthorizedRoles)}");
+                    }
+                }
+
                 // Create new user
                 var user = new AspNetUser
                 {
@@ -70,11 +162,12 @@ namespace PetTracker.Infrastucture.Services
                     Email = userDto.Email,
                     FirstName = userDto.FirstName,
                     LastName = userDto.LastName,
-                    CompanyId = userDto.Company?.Id
+                    CompanyId = userDto.Company?.Id,
+                    MustChangePassword = true
                 };
 
-                // Generate a temporary password - in a real app, you'd send this via email
-                var tempPassword = "TempPassword123!";
+                // Generate a temporary password
+                var tempPassword = PasswordGenerator.GenerateTemporaryPassword();
                 
                 // Create the user
                 var result = await _userManager.CreateAsync(user, tempPassword);
@@ -85,7 +178,7 @@ namespace PetTracker.Infrastucture.Services
                     throw new InvalidOperationException($"Failed to create user: {errors}");
                 }
 
-                // Assign roles
+                // Assign roles (already validated above)
                 if (userDto.Roles?.Any() == true)
                 {
                     var roleNames = userDto.Roles.Select(r => r.Name).Where(name => !string.IsNullOrEmpty(name)).ToArray();
@@ -98,6 +191,34 @@ namespace PetTracker.Infrastucture.Services
                             _logger.LogWarning($"Failed to assign roles to user {user.Email}: {roleErrors}");
                         }
                     }
+                }
+
+                // Generate email confirmation link using the same approach as IdentityApiEndpointRouteBuilderExtensions
+                var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(emailConfirmationToken));
+
+                // Create a simple confirmation link that matches the frontend route
+                var context = _httpContextAccessor.HttpContext;
+                if (context != null)
+                {
+                    var baseUrl = $"{context.Request.Scheme}://{context.Request.Host}";
+                    var confirmationLink = $"{baseUrl}/confirm-email?userId={user.Id}&code={encodedToken}";
+                    
+                    // Send email with temporary password and confirmation link
+                    try
+                    {
+                        await _emailSender.SendTemporaryPasswordAsync(user, user.Email, tempPassword, confirmationLink);
+                        _logger.LogInformation($"Temporary password email sent to {user.Email}");
+                    }
+                    catch (Exception emailEx)
+                    {
+                        _logger.LogError(emailEx, $"Failed to send temporary password email to {user.Email}");
+                        // Don't throw here - user creation succeeded, email failure is logged
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning($"HttpContext is null, cannot generate confirmation link for user {user.Email}");
                 }
 
                 // Handle file uploads

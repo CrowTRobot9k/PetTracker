@@ -18,7 +18,7 @@ namespace PetTracker.SqlDb.Models;
 /// </summary>
 /// 
 
-public partial class PtDbContext : IdentityDbContext<AspNetUser>, IPtDbContext
+public partial class PtDbContext : IdentityDbContext<AspNetUser, AspNetRole, string>, IPtDbContext
 {
     public PtDbContext()
     {
@@ -29,11 +29,11 @@ public partial class PtDbContext : IdentityDbContext<AspNetUser>, IPtDbContext
     {
     }
     public virtual DbSet<Appointment> Appointments { get; set; }
-    public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+    public virtual DbSet<AspNetUser> AspNetUsers { get; set; } 
     //public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
     //public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
     //public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
-   // public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+    public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
     //public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
 
     public virtual DbSet<BreedType> BreedTypes { get; set; }
@@ -91,6 +91,17 @@ public partial class PtDbContext : IdentityDbContext<AspNetUser>, IPtDbContext
             entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
 
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
+        });
+
+        modelBuilder.Entity<AspNetUser>(entity =>
+        {
+            entity.Property(e => e.MustChangePassword).HasColumnType("bit");
+        });
+
+        // Configure the IdentityUserRole entity to use the correct table name
+        modelBuilder.Entity<IdentityUserRole<string>>(entity =>
+        {
+            entity.ToTable("AspNetUserRoles");
         });
         modelBuilder.Entity<BreedType>(entity =>
         {
@@ -215,6 +226,7 @@ public partial class PtDbContext : IdentityDbContext<AspNetUser>, IPtDbContext
         });
 
         base.OnModelCreating(modelBuilder);
+
 
         OnModelCreatingPartial(modelBuilder);
     }

@@ -18,11 +18,18 @@ import { styled } from '@mui/material/styles';
 import AddUser from './AddUser.tsx';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
+import Avatar from '@mui/material/Avatar';
 
 
 const SyledCardContent = styled(CardContent)({
     display: 'flex',
     flexDirection: 'column',
+    gap: 1,
+    padding: 2,
+    flexGrow: 1,
+    '&:last-child': {
+        paddingBottom: 2,
+    },
 });
 
 const StyledTypography = styled(Typography)({
@@ -113,7 +120,8 @@ export default function Users() {
                                 Add User
                             </Button>
                         </Box>
-                        <Grid container spacing={2} columns={12} sx={{
+                        <Grid container spacing={2} sx={{
+                            height: '100%',
                             display: 'flex',
                             flexDirection: 'row',
                         }}>
@@ -147,6 +155,27 @@ export default function Users() {
                                         flexDirection: 'column',
                                     }}
                                 >
+                                    {/* Avatar placeholder to match carousel space in pet/owner cards */}
+                                    <Box sx={{ 
+                                        height: { xs: '200px', sm: '180px', md: '220px' },
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        backgroundColor: 'grey.50',
+                                        borderBottom: '1px solid',
+                                        borderColor: 'divider'
+                                    }}>
+                                        <Avatar 
+                                            sx={{ 
+                                                width: { xs: 80, sm: 90, md: 100 },
+                                                height: { xs: 80, sm: 90, md: 100 },
+                                                fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+                                                bgcolor: 'primary.main'
+                                            }}
+                                        >
+                                            {m.firstName?.charAt(0)?.toUpperCase()}{m.lastName?.charAt(0)?.toUpperCase()}
+                                        </Avatar>
+                                    </Box>
                                     <SyledCardContent sx={{
                                         p: { xs: 0.25, sm: 0.5 },
                                         flexGrow: 1,
@@ -176,6 +205,21 @@ export default function Users() {
                                         >
                                             {m.email}
                                         </StyledTypography>
+                                        {m.company && (
+                                            <StyledTypography 
+                                                variant="body2" 
+                                                color="text.secondary" 
+                                                gutterBottom
+                                                sx={{
+                                                    fontSize: { xs: '0.7rem', sm: '0.8rem' },
+                                                    textAlign: 'center',
+                                                    mb: { xs: 0.125, sm: 0.25 },
+                                                    fontStyle: 'italic'
+                                                }}
+                                            >
+                                                {m.company.name}
+                                            </StyledTypography>
+                                        )}
                                         {m.roles && m.roles.length > 0 && (
                                             <Stack 
                                                 direction="row" 
