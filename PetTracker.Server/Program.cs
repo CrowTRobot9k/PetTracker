@@ -29,7 +29,8 @@ try
     builder.Services.Configure<DatabaseSettings>(
         builder.Configuration.GetSection(DatabaseSettings.SectionName));
 
-    builder.Services.AddDbContext<PtDbContext>(options =>
+    // Configure DbContext pooling for improved performance
+    builder.Services.AddDbContextPool<PtDbContext>(options =>
     {
         var sqlServerOptions = options.UseSqlServer(connectionString, b => 
         {
@@ -52,17 +53,16 @@ try
         options.EnableDetailedErrors();
         options.EnableSensitiveDataLogging(builder.Environment.IsDevelopment());
         
-        // Connection pooling is handled at the SQL Server driver level
-        // Configure connection lifetime and other settings
+        // Configure warnings for better debugging
         if (databaseSettings.ConnectionPooling.Enabled)
         {
             options.ConfigureWarnings(warnings => warnings
                 .Log(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.MultipleCollectionIncludeWarning));
         }
-    });
+    }, poolSize: databaseSettings.ConnectionPooling.DbContextPoolSize);
 
-    // Configure DbContext lifetime for optimal connection pooling
-    // Scoped lifetime ensures one context per request, allowing connection reuse
+    // Register the interface for dependency injection
+    // DbContext pooling automatically handles the lifetime management
     builder.Services.AddScoped<IPtDbContext, PtDbContext>();
 
     // =============================================================================
@@ -89,6 +89,18 @@ try
     }));
 
     // =============================================================================
+    // CACHING CONFIGURATION
+    // =============================================================================
+    
+    // Add in-memory caching
+    builder.Services.AddMemoryCache(options =>
+    {
+        options.SizeLimit = 1000; // Maximum number of cache entries
+        options.CompactionPercentage = 0.25; // Remove 25% of entries when limit is reached
+        options.ExpirationScanFrequency = TimeSpan.FromMinutes(5); // Scan for expired entries every 5 minutes
+    });
+
+    // =============================================================================
     // APPLICATION SERVICES
     // =============================================================================
     
@@ -100,6 +112,7 @@ try
     builder.Services.AddScoped<IImageCompressionService, ImageCompressionService>();
     builder.Services.AddScoped<IFileUploadService, FileUploadService>();
     builder.Services.AddScoped<IPetService, PetService>();
+    builder.Services.AddScoped<ICachingService, CachingService>();
     builder.Services.AddScoped<IOwnerService, OwnerService>();
     builder.Services.AddScoped<IAppointmentService, AppointmentService>();
     builder.Services.AddScoped<IUserService, UserService>();

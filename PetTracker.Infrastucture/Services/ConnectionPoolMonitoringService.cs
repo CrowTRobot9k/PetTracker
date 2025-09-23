@@ -33,7 +33,17 @@ namespace PetTracker.Infrastucture.Services
                     MinPoolSize = _databaseSettings.ConnectionPooling.MinPoolSize,
                     MaxPoolSize = _databaseSettings.ConnectionPooling.MaxPoolSize,
                     ConnectionLifetime = TimeSpan.FromSeconds(_databaseSettings.ConnectionPooling.ConnectionLifetime),
-                    LastUpdated = DateTime.UtcNow
+                    LastUpdated = DateTime.UtcNow,
+                    
+                    // DbContext Pooling Configuration
+                    DbContextPoolSize = _databaseSettings.ConnectionPooling.DbContextPoolSize,
+                    DbContextPoolMinSize = _databaseSettings.ConnectionPooling.DbContextPoolMinSize,
+                    DbContextPoolingEnabled = _databaseSettings.ConnectionPooling.Enabled,
+                    
+                    // Note: EF Core doesn't expose real-time DbContext pool statistics
+                    // These values represent the configuration, not actual usage
+                    DbContextInstancesInUse = 0, // Not available from EF Core
+                    DbContextInstancesAvailable = 0 // Not available from EF Core
                 };
 
                 // Get connection pool statistics from SQL Server
@@ -64,8 +74,11 @@ namespace PetTracker.Infrastucture.Services
                     await connection.CloseAsync();
                 }
 
-                // Determine health status
-                stats.IsHealthy = stats.TotalConnections <= stats.MaxPoolSize && stats.TotalConnections >= stats.MinPoolSize;
+                // Determine health status (consider both connection pooling and DbContext pooling)
+                var connectionPoolHealthy = stats.TotalConnections <= stats.MaxPoolSize && stats.TotalConnections >= stats.MinPoolSize;
+                var dbContextPoolHealthy = stats.DbContextPoolingEnabled; // DbContext pooling is healthy if enabled
+                
+                stats.IsHealthy = connectionPoolHealthy && dbContextPoolHealthy;
                 stats.Status = stats.IsHealthy ? "Healthy" : "Unhealthy";
 
                 return stats;
@@ -77,7 +90,10 @@ namespace PetTracker.Infrastucture.Services
                 {
                     IsHealthy = false,
                     Status = $"Error: {ex.Message}",
-                    LastUpdated = DateTime.UtcNow
+                    LastUpdated = DateTime.UtcNow,
+                    DbContextPoolSize = _databaseSettings.ConnectionPooling.DbContextPoolSize,
+                    DbContextPoolMinSize = _databaseSettings.ConnectionPooling.DbContextPoolMinSize,
+                    DbContextPoolingEnabled = _databaseSettings.ConnectionPooling.Enabled
                 };
             }
         }

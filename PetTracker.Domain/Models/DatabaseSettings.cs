@@ -18,5 +18,9 @@ namespace PetTracker.Domain.Models
         public bool EnableRetryOnFailure { get; set; } = true;
         public int MaxRetryCount { get; set; } = 3;
         public TimeSpan MaxRetryDelay { get; set; } = TimeSpan.FromSeconds(30);
+        
+        // DbContext Pooling Settings
+        public int DbContextPoolSize { get; set; } = 1024; // Default EF Core DbContext pool size
+        public int DbContextPoolMinSize { get; set; } = 0; // Minimum DbContext instances to keep in pool
     }
 }

@@ -20,5 +20,12 @@ namespace PetTracker.Infrastucture.Services
         public DateTime LastUpdated { get; set; }
         public bool IsHealthy { get; set; }
         public string Status { get; set; } = string.Empty;
+        
+        // DbContext Pooling Statistics
+        public int DbContextPoolSize { get; set; }
+        public int DbContextPoolMinSize { get; set; }
+        public int DbContextInstancesInUse { get; set; }
+        public int DbContextInstancesAvailable { get; set; }
+        public bool DbContextPoolingEnabled { get; set; }
     }
 }

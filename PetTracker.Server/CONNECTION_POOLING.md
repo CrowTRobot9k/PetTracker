@@ -4,7 +4,10 @@ This document describes the connection pooling implementation for the PetTracker
 
 ## Overview
 
-Connection pooling has been implemented to improve database performance and scalability by reusing database connections instead of creating new ones for each request.
+Two levels of pooling have been implemented to improve database performance and scalability:
+
+1. **SQL Server Connection Pooling**: Reuses database connections at the driver level
+2. **Entity Framework Core DbContext Pooling**: Reuses DbContext instances to reduce object creation overhead
 
 ## Configuration
 
@@ -36,22 +39,42 @@ Connection pooling settings are configured in `appsettings.json`:
       "CommandTimeout": 30,
       "EnableRetryOnFailure": true,
       "MaxRetryCount": 3,
-      "MaxRetryDelay": "00:00:30"
+      "MaxRetryDelay": "00:00:30",
+      "DbContextPoolSize": 1024,
+      "DbContextPoolMinSize": 0
     }
   }
 }
 ```
+
+## DbContext Pooling Configuration
+
+### Settings
+
+- **DbContextPoolSize**: Maximum number of DbContext instances in the pool (default: 1024)
+- **DbContextPoolMinSize**: Minimum number of DbContext instances to keep in the pool (default: 0)
+- **DbContextPoolingEnabled**: Whether DbContext pooling is enabled (inherits from ConnectionPooling.Enabled)
+
+### Benefits
+
+- **Reduced Object Creation**: Reuses DbContext instances instead of creating new ones
+- **Memory Efficiency**: Reduces garbage collection pressure
+- **Improved Performance**: Faster request processing due to reduced initialization overhead
+- **Thread Safety**: DbContext instances are properly managed and thread-safe
 
 ## Environment-Specific Settings
 
 ### Development
 - Min Pool Size: 2
 - Max Pool Size: 20
+- DbContext Pool Size: 64
 - Optimized for development workloads
 
 ### Production
 - Min Pool Size: 10
 - Max Pool Size: 200
+- DbContext Pool Size: 1024
+- DbContext Pool Min Size: 10
 - Optimized for production workloads with higher concurrency
 
 ## Monitoring

@@ -11,10 +11,12 @@ namespace PetTracker.Server.Controllers
     public class PetController : PetTrackerBaseController
     {
         private readonly IPetService _PetService;
+        private readonly ICachingService _cachingService;
 
-        public PetController(ILogger<PetController> logger, IPtDbContext dbContext, IPetService petService) : base(logger,dbContext)
+        public PetController(ILogger<PetController> logger, IPtDbContext dbContext, IPetService petService, ICachingService cachingService) : base(logger,dbContext)
         {
             _PetService = petService;
+            _cachingService = cachingService;
         }
         [HttpGet("GetPets")]
         [Authorize(Roles = "Administrator,Pets Read,Pets Write")]
@@ -115,7 +117,23 @@ namespace PetTracker.Server.Controllers
         {
             try
             {
-                return new JsonResult(await _PetService.GetPetBreeds(petTypeId));
+                // Create cache key based on petTypeId parameter
+                var cacheKey = $"pet_breeds_{petTypeId}";
+                
+                // Try to get from cache first
+                var cachedResult = await _cachingService.GetAsync<object>(cacheKey);
+                if (cachedResult != null)
+                {
+                    return new JsonResult(cachedResult);
+                }
+                
+                // If not in cache, fetch from database
+                var result = await _PetService.GetPetBreeds(petTypeId);
+                
+                // Cache the result for 1 hour (breeds don't change frequently)
+                await _cachingService.SetAsync(cacheKey, result, TimeSpan.FromHours(1));
+                
+                return new JsonResult(result);
             }
             catch (Exception ex)
             {
