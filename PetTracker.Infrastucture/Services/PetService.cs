@@ -148,6 +148,7 @@ namespace PetTracker.Infrastucture.Services
         public async Task<List<GetPetDto>> GetPets(int? ownerId = null)
         {
             var results = await _dbContext.Pets
+                .AsNoTracking()
                 .Include(p => p.Owner)
                 .Include(p => p.PetType)
                 .Include(p => p.PetBreedTypes)
@@ -162,6 +163,7 @@ namespace PetTracker.Infrastucture.Services
         public async Task<List<PetDto>> GetPetList(int? ownerId = null)
         {
             var results = await _dbContext.Pets
+                .AsNoTracking()
                 .Include(p => p.Owner)
                 .Include(p => p.PetType)
                 .Include(p => p.PetBreedTypes)
@@ -177,7 +179,9 @@ namespace PetTracker.Infrastucture.Services
         {
             try
             {
-                var petTypes = await _dbContext.PetTypes.ToListAsync();
+                var petTypes = await _dbContext.PetTypes
+                    .AsNoTracking()
+                    .ToListAsync();
                 return petTypes.Select(s=>new PetTypeDto(s)).ToList();
             }
             catch (Exception ex)
@@ -190,7 +194,10 @@ namespace PetTracker.Infrastucture.Services
         {
             try
             {
-                var petTypes = await _dbContext.BreedTypes.Where(i=>i.PetTypeId == petTypeId).ToListAsync();
+                var petTypes = await _dbContext.BreedTypes
+                    .AsNoTracking()
+                    .Where(i=>i.PetTypeId == petTypeId)
+                    .ToListAsync();
                 return petTypes.Select(s => new BreedTypeDto(s)).ToList();
             }
             catch (Exception ex)
@@ -203,6 +210,7 @@ namespace PetTracker.Infrastucture.Services
         public async Task<List<FileDownloadDto>> GetPetPhotos(int petId)
         {
             var results = await _dbContext.Pets
+                .AsNoTracking()
                 .Include(p => p.FileUploadMappings)
                     .ThenInclude(fum => fum.FileUpload)
                 .Where(p => p.Id == petId)
@@ -257,6 +265,7 @@ namespace PetTracker.Infrastucture.Services
             }
 
             var results = await _dbContext.Pets
+                .AsNoTracking()
                 .Include(p => p.FileUploadMappings)
                     .ThenInclude(fum => fum.FileUpload)
                 .Where(p => petIds.Contains(p.Id))

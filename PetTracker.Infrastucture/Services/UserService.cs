@@ -39,6 +39,7 @@ namespace PetTracker.Infrastucture.Services
                 _logger.LogInformation("GetUsers method called");
                 
                 var query = _dbContext.AspNetUsers
+                    .AsNoTracking()
                     .Include(u => u.Company)
                     .AsQueryable();
                 
@@ -84,6 +85,7 @@ namespace PetTracker.Infrastucture.Services
                 _logger.LogInformation($"GetUserById method called for userId: {userId}");
                 
                 var user = await _dbContext.AspNetUsers
+                    .AsNoTracking()
                     .Include(u => u.Company)
                     .FirstOrDefaultAsync(u => u.Id == userId);
                 
@@ -122,7 +124,9 @@ namespace PetTracker.Infrastucture.Services
             {
                 _logger.LogInformation("GetRoles method called - using RoleManager");
                 
-                var roles = await _roleManager.Roles.ToListAsync();
+                var roles = await _roleManager.Roles
+                    .AsNoTracking()
+                    .ToListAsync();
                 
                 _logger.LogInformation($"Retrieved {roles.Count} roles from database");
                 

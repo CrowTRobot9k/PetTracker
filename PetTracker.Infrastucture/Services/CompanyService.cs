@@ -19,6 +19,7 @@ namespace PetTracker.Infrastucture.Services
         public async Task<List<Company>> GetCompanies(int? companyId)
         {
             return await _dbContext.Companies
+                .AsNoTracking()
                 .Where(w => companyId == null || w.Id == companyId)
                 .ToListAsync();
         }

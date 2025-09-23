@@ -29,6 +29,7 @@ namespace PetTracker.Infrastucture.Services
         public async Task<List<GetAppointmentDto>> GetAppointments(int? companyId = null)
         {
             var results = await _dbContext.Appointments
+                .AsNoTracking()
                 .Include(a => a.Owner)
                 .Include(a => a.Pet)
                     .ThenInclude(p => p.PetType)

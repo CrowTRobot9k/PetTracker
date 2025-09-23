@@ -108,6 +108,7 @@ namespace PetTracker.Infrastucture.Services
         public async Task<List<GetOwnerDto>> GetOwners(int? companyId = null)
         {
             var results = await _dbContext.Owners
+                .AsNoTracking()
                 .Include(o => o.User)
                 .Include(o => o.Pets)
                     .ThenInclude(p => p.PetType)
@@ -129,6 +130,7 @@ namespace PetTracker.Infrastucture.Services
         public async Task<List<OwnerDto>> GetOwnerList(int? companyId = null)
         {
             var results = await _dbContext.Owners
+                .AsNoTracking()
                 .Include(o => o.User)
                 .Include(o => o.Pets)
                     .ThenInclude(p => p.PetType)
@@ -150,6 +152,7 @@ namespace PetTracker.Infrastucture.Services
         public async Task<List<FileDownloadDto>> GetOwnerPhotos(int ownerId)
         {
             var results = await _dbContext.Owners
+                .AsNoTracking()
                 .Include(o => o.FileUploadMappings)
                     .ThenInclude(fum => fum.FileUpload)
                 .Where(o => o.Id == ownerId)
@@ -203,6 +206,7 @@ namespace PetTracker.Infrastucture.Services
             }
 
             var results = await _dbContext.Owners
+                .AsNoTracking()
                 .Include(o => o.FileUploadMappings)
                     .ThenInclude(fum => fum.FileUpload)
                 .Where(o => ownerIds.Contains(o.Id))
