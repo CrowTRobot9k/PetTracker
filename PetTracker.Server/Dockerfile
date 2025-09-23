@@ -4,6 +4,14 @@
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
 WORKDIR /app
+
+# Set environment variables for better memory management in containers
+ENV DOTNET_GCHeapHardLimit=0x10000000
+ENV DOTNET_GCHeapHardLimitPercent=0
+ENV DOTNET_GCAllowVeryLargeObjects=1
+ENV DOTNET_gcServer=1
+ENV DOTNET_gcConcurrent=1
+
 EXPOSE 8080
 EXPOSE 8081
 

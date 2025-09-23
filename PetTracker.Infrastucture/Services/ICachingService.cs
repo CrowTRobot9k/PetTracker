@@ -11,3 +11,4 @@ namespace PetTracker.Infrastucture.Services
         Task<bool> ExistsAsync(string key);
     }
 }
+

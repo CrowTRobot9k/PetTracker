@@ -111,6 +111,7 @@ try
     // Business Services
     builder.Services.AddScoped<IImageCompressionService, ImageCompressionService>();
     builder.Services.AddScoped<IFileUploadService, FileUploadService>();
+    builder.Services.AddScoped<IPayloadSizeService, PayloadSizeService>();
     builder.Services.AddScoped<IPetService, PetService>();
     builder.Services.AddScoped<ICachingService, CachingService>();
     builder.Services.AddScoped<IOwnerService, OwnerService>();

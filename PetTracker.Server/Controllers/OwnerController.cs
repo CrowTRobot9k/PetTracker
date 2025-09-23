@@ -9,9 +9,12 @@ namespace PetTracker.Server.Controllers
     public class OwnerController : PetTrackerBaseController
     {
         private readonly IOwnerService _OwnerService;
-        public OwnerController(ILogger<OwnerController> logger, IPtDbContext dbContext, IOwnerService ownerService) : base(logger, dbContext)
+        private readonly IPayloadSizeService _payloadSizeService;
+        
+        public OwnerController(ILogger<OwnerController> logger, IPtDbContext dbContext, IOwnerService ownerService, IPayloadSizeService payloadSizeService) : base(logger, dbContext)
         {
             _OwnerService = ownerService;
+            _payloadSizeService = payloadSizeService;
         }
 
         [HttpGet("GetOwners")]
@@ -116,7 +119,19 @@ namespace PetTracker.Server.Controllers
             try
             {
                 var result = await _OwnerService.GetOwnerPhotos(ownerId);
+                
+                // Add payload size information to response headers
+                var payloadSize = _payloadSizeService.CalculatePayloadSize(result);
+                Response.Headers.Add("X-Payload-Size-Bytes", payloadSize.ToString());
+                Response.Headers.Add("X-Payload-Size-KB", (payloadSize / 1024).ToString());
+                Response.Headers.Add("X-Photo-Count", result.Count.ToString());
+                
                 return new JsonResult(result);
+            }
+            catch (OutOfMemoryException ex)
+            {
+                _logger.LogError(ex, $"Out of memory error when getting owner photos for ownerId: {ownerId}");
+                return new JsonResult(HandleUIException(ex));
             }
             catch (Exception ex)
             {

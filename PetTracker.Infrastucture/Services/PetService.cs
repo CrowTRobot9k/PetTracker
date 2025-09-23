@@ -14,11 +14,13 @@ namespace PetTracker.Infrastucture.Services
     {
         private readonly IFileUploadService _fileUploadService;
         private readonly IImageCompressionService _imageCompressionService;
+        private readonly IPayloadSizeService _payloadSizeService;
 
-        public PetService(ILogger<PetService> logger, IPtDbContext dbContext, IFileUploadService fileUploadService, IImageCompressionService imageCompressionService) : base(logger, dbContext)
+        public PetService(ILogger<PetService> logger, IPtDbContext dbContext, IFileUploadService fileUploadService, IImageCompressionService imageCompressionService, IPayloadSizeService payloadSizeService) : base(logger, dbContext)
         {
             _fileUploadService = fileUploadService;
             _imageCompressionService = imageCompressionService;
+            _payloadSizeService = payloadSizeService;
         }
 
         public async Task<int> CreatePet(AddPetDto pet)
@@ -209,37 +211,64 @@ namespace PetTracker.Infrastucture.Services
 
         public async Task<List<FileDownloadDto>> GetPetPhotos(int petId)
         {
-            var results = await _dbContext.Pets
-                .AsNoTracking()
-                .Include(p => p.FileUploadMappings)
-                    .ThenInclude(fum => fum.FileUpload)
-                .Where(p => p.Id == petId)
-                .SelectMany(p => p.FileUploadMappings)
-                .Select(fum => fum.FileUpload)
-                .ToListAsync();
-
-            if (results == null || !results.Any())
+            try
             {
-                return new List<FileDownloadDto>();
-            }
+                var results = await _dbContext.Pets
+                    .AsNoTracking()
+                    .Include(p => p.FileUploadMappings)
+                        .ThenInclude(fum => fum.FileUpload)
+                    .Where(p => p.Id == petId)
+                    .SelectMany(p => p.FileUploadMappings)
+                    .Select(fum => fum.FileUpload)
+                    .ToListAsync();
 
-            var compressedResults = new List<FileDownloadDto>();
-            
-            foreach (var fileUpload in results)
-            {
-                if (fileUpload.FileData != null && IsImageFile(fileUpload.FileExtension) && fileUpload.FileData.Length > 200 * 1024) // 200KB
+                if (results == null || !results.Any())
+                {
+                    return new List<FileDownloadDto>();
+                }
+
+                var compressedResults = new List<FileDownloadDto>();
+                
+                // Process images one at a time to manage memory in container environments
+                foreach (var fileUpload in results)
                 {
                     try
                     {
-                        // Compress the image with timeout
-                        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30)); // 30 second timeout
-                        var compressedData = await _imageCompressionService.CompressImageAsync(fileUpload.FileData).WaitAsync(cts.Token);
-                        compressedResults.Add(new FileDownloadDto(fileUpload, compressedData));
+                        if (fileUpload.FileData != null && IsImageFile(fileUpload.FileExtension) && fileUpload.FileData.Length > 200 * 1024) // 200KB
+                        {
+                            // Check available memory before processing each image
+                            var availableMemory = GC.GetTotalMemory(false);
+                            if (availableMemory < fileUpload.FileData.Length * 4) // Need 4x image size for processing
+                            {
+                                _logger.LogWarning($"Skipping compression for {fileUpload.FileName} due to insufficient memory. Available: {availableMemory}");
+                                compressedResults.Add(new FileDownloadDto(fileUpload));
+                                continue;
+                            }
+
+                            // Compress the image with timeout
+                            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(15)); // Reduced timeout for containers
+                            var compressedData = await _imageCompressionService.CompressImageAsync(fileUpload.FileData).WaitAsync(cts.Token);
+                            compressedResults.Add(new FileDownloadDto(fileUpload, compressedData));
+                        }
+                        else
+                        {
+                            // Use original data
+                            compressedResults.Add(new FileDownloadDto(fileUpload));
+                        }
                     }
                     catch (OperationCanceledException)
                     {
                         _logger.LogWarning($"Image compression timed out for file {fileUpload.FileName}, using original data");
                         compressedResults.Add(new FileDownloadDto(fileUpload));
+                    }
+                    catch (OutOfMemoryException ex)
+                    {
+                        _logger.LogError(ex, $"Out of memory error compressing image {fileUpload.FileName}, using original data");
+                        compressedResults.Add(new FileDownloadDto(fileUpload));
+                        
+                        // Force garbage collection after memory error
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
                     }
                     catch (Exception ex)
                     {
@@ -247,14 +276,31 @@ namespace PetTracker.Infrastucture.Services
                         compressedResults.Add(new FileDownloadDto(fileUpload));
                     }
                 }
-                else
-                {
-                    // Use original data
-                    compressedResults.Add(new FileDownloadDto(fileUpload));
-                }
-            }
 
-            return compressedResults;
+                // Final garbage collection to free memory
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                // Validate and limit payload size to 300KB
+                var limitedResults = _payloadSizeService.LimitPhotosToSize(compressedResults, 300);
+                
+                if (limitedResults.Count < compressedResults.Count)
+                {
+                    _logger.LogWarning($"Limited pet photos from {compressedResults.Count} to {limitedResults.Count} to stay under 300KB payload limit");
+                }
+
+                return limitedResults;
+            }
+            catch (OutOfMemoryException ex)
+            {
+                _logger.LogError(ex, $"Out of memory error in GetPetPhotos for petId: {petId}");
+                return new List<FileDownloadDto>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error in GetPetPhotos for petId: {petId}");
+                return new List<FileDownloadDto>();
+            }
         }
 
         public async Task<Dictionary<int, List<FileDownloadDto>>> GetPetPhotosBatch(List<int> petIds)

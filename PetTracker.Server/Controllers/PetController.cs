@@ -12,11 +12,13 @@ namespace PetTracker.Server.Controllers
     {
         private readonly IPetService _PetService;
         private readonly ICachingService _cachingService;
+        private readonly IPayloadSizeService _payloadSizeService;
 
-        public PetController(ILogger<PetController> logger, IPtDbContext dbContext, IPetService petService, ICachingService cachingService) : base(logger,dbContext)
+        public PetController(ILogger<PetController> logger, IPtDbContext dbContext, IPetService petService, ICachingService cachingService, IPayloadSizeService payloadSizeService) : base(logger,dbContext)
         {
             _PetService = petService;
             _cachingService = cachingService;
+            _payloadSizeService = payloadSizeService;
         }
         [HttpGet("GetPets")]
         [Authorize(Roles = "Administrator,Pets Read,Pets Write")]
@@ -148,7 +150,19 @@ namespace PetTracker.Server.Controllers
             try
             {
                 var result = await _PetService.GetPetPhotos(petId);
+                
+                // Add payload size information to response headers
+                var payloadSize = _payloadSizeService.CalculatePayloadSize(result);
+                Response.Headers.Add("X-Payload-Size-Bytes", payloadSize.ToString());
+                Response.Headers.Add("X-Payload-Size-KB", (payloadSize / 1024).ToString());
+                Response.Headers.Add("X-Photo-Count", result.Count.ToString());
+                
                 return new JsonResult(result);
+            }
+            catch (OutOfMemoryException ex)
+            {
+                _logger.LogError(ex, $"Out of memory error when getting pet photos for petId: {petId}");
+                return new JsonResult(HandleUIException(ex));
             }
             catch (Exception ex)
             {

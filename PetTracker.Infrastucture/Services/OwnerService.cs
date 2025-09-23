@@ -15,11 +15,13 @@ namespace PetTracker.Infrastucture.Services
     {
         private readonly IFileUploadService _fileUploadService;
         private readonly IImageCompressionService _imageCompressionService;
+        private readonly IPayloadSizeService _payloadSizeService;
 
-        public OwnerService(ILogger<OwnerService> logger, IPtDbContext dbContext, IFileUploadService fileUploadService, IImageCompressionService imageCompressionService) : base(logger, dbContext)
+        public OwnerService(ILogger<OwnerService> logger, IPtDbContext dbContext, IFileUploadService fileUploadService, IImageCompressionService imageCompressionService, IPayloadSizeService payloadSizeService) : base(logger, dbContext)
         {
             _fileUploadService = fileUploadService;
             _imageCompressionService = imageCompressionService;
+            _payloadSizeService = payloadSizeService;
         }
         public async Task<int> CreateOwner(AddOwnerDto owner)
         {
@@ -151,36 +153,55 @@ namespace PetTracker.Infrastucture.Services
 
         public async Task<List<FileDownloadDto>> GetOwnerPhotos(int ownerId)
         {
-            var results = await _dbContext.Owners
-                .AsNoTracking()
-                .Include(o => o.FileUploadMappings)
-                    .ThenInclude(fum => fum.FileUpload)
-                .Where(o => o.Id == ownerId)
-                .SelectMany(o => o.FileUploadMappings)
-                .Select(fum => fum.FileUpload)
-                .ToListAsync();
-
-            if (results == null || !results.Any())
+            try
             {
-                return new List<FileDownloadDto>();
-            }
+                var results = await _dbContext.Owners
+                    .AsNoTracking()
+                    .Include(o => o.FileUploadMappings)
+                        .ThenInclude(fum => fum.FileUpload)
+                    .Where(o => o.Id == ownerId)
+                    .SelectMany(o => o.FileUploadMappings)
+                    .Select(fum => fum.FileUpload)
+                    .ToListAsync();
 
-            var compressedResults = new List<FileDownloadDto>();
-            
-            foreach (var fileUpload in results)
-            {
-                if (fileUpload.FileData != null && IsImageFile(fileUpload.FileExtension) && fileUpload.FileData.Length > 200 * 1024) // 200KB
+                if (results == null || !results.Any())
+                {
+                    return new List<FileDownloadDto>();
+                }
+
+                var compressedResults = new List<FileDownloadDto>();
+                
+                // Process images one at a time to manage memory in container environments
+                foreach (var fileUpload in results)
                 {
                     try
                     {
-                        // Compress the image with timeout
-                        var compressedData = await _imageCompressionService.CompressImageAsync(fileUpload.FileData);
-                        compressedResults.Add(new FileDownloadDto(fileUpload, compressedData));
+                        if (fileUpload.FileData != null && IsImageFile(fileUpload.FileExtension))
+                        {
+                            // Always compress images to ensure they're under 200KB
+                            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+                            var compressedData = await _imageCompressionService.CompressImageAsync(fileUpload.FileData).WaitAsync(cts.Token);
+                            compressedResults.Add(new FileDownloadDto(fileUpload, compressedData));
+                        }
+                        else
+                        {
+                            // Use original data for non-image files
+                            compressedResults.Add(new FileDownloadDto(fileUpload));
+                        }
                     }
                     catch (OperationCanceledException)
                     {
                         _logger.LogWarning($"Image compression timed out for file {fileUpload.FileName}, using original data");
                         compressedResults.Add(new FileDownloadDto(fileUpload));
+                    }
+                    catch (OutOfMemoryException ex)
+                    {
+                        _logger.LogError(ex, $"Out of memory error compressing image {fileUpload.FileName}, using original data");
+                        compressedResults.Add(new FileDownloadDto(fileUpload));
+                        
+                        // Force garbage collection after memory error
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
                     }
                     catch (Exception ex)
                     {
@@ -188,14 +209,31 @@ namespace PetTracker.Infrastucture.Services
                         compressedResults.Add(new FileDownloadDto(fileUpload));
                     }
                 }
-                else
-                {
-                    // Use original data
-                    compressedResults.Add(new FileDownloadDto(fileUpload));
-                }
-            }
 
-            return compressedResults;
+                // Force garbage collection to free memory
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                // Validate and limit payload size to 300KB
+                var limitedResults = _payloadSizeService.LimitPhotosToSize(compressedResults, 300);
+                
+                if (limitedResults.Count < compressedResults.Count)
+                {
+                    _logger.LogWarning($"Limited owner photos from {compressedResults.Count} to {limitedResults.Count} to stay under 300KB payload limit");
+                }
+
+                return limitedResults;
+            }
+            catch (OutOfMemoryException ex)
+            {
+                _logger.LogError(ex, $"Out of memory error in GetOwnerPhotos for ownerId: {ownerId}");
+                return new List<FileDownloadDto>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error in GetOwnerPhotos for ownerId: {ownerId}");
+                return new List<FileDownloadDto>();
+            }
         }
 
         public async Task<Dictionary<int, List<FileDownloadDto>>> GetOwnerPhotosBatch(List<int> ownerIds)
