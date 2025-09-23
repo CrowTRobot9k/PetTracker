@@ -103,7 +103,7 @@ function MyComponent() {
 
 ## Error Handling
 
-The system includes comprehensive error handling:
+The system includes error handling:
 - Network errors are caught and logged
 - Failed authentication checks fall back to unauthenticated state
 - Server logout failures don't prevent local logout

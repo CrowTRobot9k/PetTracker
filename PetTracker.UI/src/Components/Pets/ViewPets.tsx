@@ -18,6 +18,7 @@ import Chip from '@mui/material/Chip';
 import Fab from '@mui/material/Fab';
 import { getImageUrlFromBlob } from '../../Util/CommonFunctions.tsx'
 import usePetsStore from '../../Stores/PetsStore.tsx';
+import useExistingPetsStore from '../../Stores/ExistingPetStore.tsx';
 import ConfirmDialog from '../ConfirmDialog.tsx';
 import ErrorDisplay from '../ErrorDisplay.tsx';
 import { useSearch } from '../SearchProvider.tsx';
@@ -43,8 +44,11 @@ export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boo
     const getPetTypes = usePetsStore((state) => state.getPetTypes);
     const getPetPhotos = usePetsStore((state) => state.getPetPhotos);
     const getPetPhotosSync = usePetsStore((state) => state.getPetPhotosSync);
-    const getPetPhotosBatch = usePetsStore((state) => state.getPetPhotosBatch);
     const petTypes = usePetsStore((state) => state.petTypes);
+    
+    // Use existing pets store for photo management
+    const getExistingPetPhotos = useExistingPetsStore((state) => state.getPetPhotos);
+    const getExistingPetPhotosSync = useExistingPetsStore((state) => state.getPetPhotosSync);
     const {
         pets,
         loadingPets,
@@ -75,21 +79,28 @@ export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boo
         getPets(props.ownerId);
     }, [reloadPets, props.ownerId]);
 
-    // Load photos in batch when pets are loaded
+    // Load photos individually when pets are loaded
     useEffect(() => {
         if (pets && pets.length > 0) {
-            const petIds = pets.map(pet => pet.id).filter(id => id);
-            if (petIds.length > 0) {
-                // Check which pets don't have photos loaded yet
-                const petsNeedingPhotos = petIds.filter(petId => {
-                    const existingPhotos = getPetPhotosSync(petId);
-                    return !existingPhotos || existingPhotos.length === 0;
-                });
-                
-                if (petsNeedingPhotos.length > 0) {
-                    getPetPhotosBatch(petsNeedingPhotos);
+            pets.forEach(pet => {
+                if (pet.id) {
+                    // First check if photos are already cached in existing pets store
+                    const existingPhotos = getExistingPetPhotosSync(pet.id);
+                    
+                    if (existingPhotos && existingPhotos.length > 0) {
+                        // Photos already exist in existing pets store, no need to fetch
+                        return;
+                    }
+                    
+                    // Check if photos are already cached in main pets store
+                    const cachedPhotos = getPetPhotosSync(pet.id);
+                    
+                    if (!cachedPhotos || cachedPhotos.length === 0) {
+                        // Fetch photos using individual getPetPhotos
+                        getPetPhotos(pet.id);
+                    }
                 }
-            }
+            });
         }
     }, [pets]);
 
@@ -120,7 +131,14 @@ export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boo
             Cat: "/Cat Placeholder.png",
             Dog: "/Dog Placeholder.png",
         }
-        const photos = getPetPhotosSync(petId);
+        
+        // First check existing pets store for photos
+        let photos = getExistingPetPhotosSync(petId);
+        
+        // If no photos in existing pets store, check main pets store
+        if (!photos || photos.length === 0) {
+            photos = getPetPhotosSync(petId);
+        }
         
         if (!photos || photos.length === 0) {
             return [<img key="no-image" src={placeholderDict[petType]} />]
@@ -132,7 +150,15 @@ export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boo
     }
 
     const loadPetPhotos = async (petId) => {
-        const existingPhotos = getPetPhotosSync(petId);
+        // First check existing pets store
+        let existingPhotos = getExistingPetPhotosSync(petId);
+        
+        // If no photos in existing pets store, check main pets store
+        if (!existingPhotos || existingPhotos.length === 0) {
+            existingPhotos = getPetPhotosSync(petId);
+        }
+        
+        // If still no photos, fetch them
         if (!existingPhotos || existingPhotos.length === 0) {
             await getPetPhotos(petId);
         }

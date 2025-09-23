@@ -19,6 +19,7 @@ import Typography from '@mui/material/Typography';
 import { Pet } from '../../Types/SharedTypes';
 import usePetStore from '../../Stores/PetStore';
 import usePetsStore from '../../Stores/PetsStore';
+import useExistingPetsStore from '../../Stores/ExistingPetStore';
 import dayjs, { Dayjs } from 'dayjs';
 import ErrorDisplay from '../ErrorDisplay';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -44,7 +45,11 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
 
     const getPetBreeds = usePetStore((state) => state.getPetBreeds);
     const petBreeds = usePetStore((state) => state.petBreeds);
-    const { getPetPhotos, getPetPhotosSync, getPetPhotosBatch, updatePet } = usePetsStore();
+    const { getPetPhotos, getPetPhotosSync, updatePet } = usePetsStore();
+    
+    // Use existing pets store for photo management
+    const getExistingPetPhotos = useExistingPetsStore((state) => state.getPetPhotos);
+    const getExistingPetPhotosSync = useExistingPetsStore((state) => state.getPetPhotosSync);
 
     const {
         errorMessage,
@@ -78,8 +83,13 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
 
     const loadPetPhotos = async () => {
         try {
-            // First check if photos are already cached
-            const existingPhotos = getPetPhotosSync(viewPet.id);
+            // First check if photos are already cached in existing pets store
+            let existingPhotos = getExistingPetPhotosSync(viewPet.id);
+            
+            // If no photos in existing pets store, check main pets store
+            if (!existingPhotos || existingPhotos.length === 0) {
+                existingPhotos = getPetPhotosSync(viewPet.id);
+            }
             
             if (existingPhotos && existingPhotos.length > 0) {
                 // Use cached photos
