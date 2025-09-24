@@ -7,6 +7,7 @@ interface AuthState {
     isLoading: boolean;
     error: string | null;
     isLoggingOut: boolean;
+    sessionCheckInterval: NodeJS.Timeout | null;
     
     // Actions
     login: (user: User) => void;
@@ -14,8 +15,10 @@ interface AuthState {
     setLoading: (loading: boolean) => void;
     setError: (error: string | null) => void;
     setLoggingOut: (loggingOut: boolean) => void;
-    initializeAuth: () => void;
+    initializeAuth: () => Promise<void>;
     checkAuth: () => Promise<boolean>;
+    startSessionValidation: () => void;
+    stopSessionValidation: () => void;
 }
 
 // localStorage keys
@@ -55,14 +58,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     isLoading: false,
     error: null,
     isLoggingOut: false,
+    sessionCheckInterval: null,
 
     login: (user: User) => {
         set({ user, isAuthenticated: true, error: null });
         saveToStorage(AUTH_STORAGE_KEY, true);
         saveToStorage(USER_STORAGE_KEY, user);
+        
+        // Start periodic session validation
+        get().startSessionValidation();
     },
 
     logout: () => {
+        // Stop session validation
+        get().stopSessionValidation();
+        
         set({ user: null, isAuthenticated: false, error: null, isLoggingOut: false });
         removeFromStorage(AUTH_STORAGE_KEY);
         removeFromStorage(USER_STORAGE_KEY);
@@ -80,16 +90,24 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         set({ error });
     },
 
-    initializeAuth: () => {
+    initializeAuth: async () => {
         const isAuth = getFromStorage(AUTH_STORAGE_KEY);
         const user = getFromStorage(USER_STORAGE_KEY);
         
+        // Always validate with server, even if we have local auth data
         if (isAuth && user) {
             set({ 
                 isAuthenticated: true, 
                 user: user as User,
-                isLoading: false 
+                isLoading: true // Set loading while we validate
             });
+            
+            // Validate with server
+            const isValid = await get().checkAuth();
+            if (!isValid) {
+                // Server says we're not authenticated, clear local state
+                get().logout();
+            }
         } else {
             set({ 
                 isAuthenticated: false, 
@@ -100,19 +118,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     },
 
     checkAuth: async () => {
-        const { isAuthenticated } = get();
-        
-        // If already authenticated via localStorage, return true
-        if (isAuthenticated) {
-            return true;
-        }
-
-        // If not authenticated, try to verify with server
+        // Always verify with server, regardless of local state
         set({ isLoading: true, error: null });
         
         try {
             const response = await fetch("/getauth", {
                 method: "GET",
+                credentials: 'include' // Ensure cookies are sent
             });
 
             if (response.status === 200) {
@@ -129,9 +141,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                     roles: userData.roles || []
                 };
                 
+                // Update local state with fresh server data
                 get().login(user);
                 return true;
-            } else if (response.status === 401) {
+            } else if (response.status === 401 || response.status === 404) {
+                // Server says we're not authenticated
                 get().logout();
                 return false;
             } else {
@@ -144,6 +158,35 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             return false;
         } finally {
             get().setLoading(false);
+        }
+    },
+
+    startSessionValidation: () => {
+        const { sessionCheckInterval } = get();
+        
+        // Clear existing interval if any
+        if (sessionCheckInterval) {
+            clearInterval(sessionCheckInterval);
+        }
+        
+        // Start new interval - check every 5 minutes
+        const interval = setInterval(async () => {
+            const { isAuthenticated } = get();
+            if (isAuthenticated) {
+                console.log('Performing periodic session validation...');
+                await get().checkAuth();
+            }
+        }, 5 * 60 * 1000); // 5 minutes
+        
+        set({ sessionCheckInterval: interval });
+    },
+
+    stopSessionValidation: () => {
+        const { sessionCheckInterval } = get();
+        
+        if (sessionCheckInterval) {
+            clearInterval(sessionCheckInterval);
+            set({ sessionCheckInterval: null });
         }
     }
 }));

@@ -10,6 +10,7 @@ import Appointments from './Pages/Appointments.tsx';
 import Users from './Pages/Users.tsx';
 import Blog from './Pages/Blog.tsx';
 import '../src/Styles/petTracker.css';
+import './Utils/AuthInterceptor'; // Import global auth interceptor
 
 function App() {
     return (

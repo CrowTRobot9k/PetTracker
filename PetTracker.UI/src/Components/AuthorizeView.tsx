@@ -5,17 +5,21 @@ import { Navigate } from 'react-router';
 // import { User } from '../Types/SharedTypes';
 import { useLocation } from 'react-router';
 import { useAuthStore } from '../Stores/AuthStore';
+import SessionWarning from './SessionWarning';
 
 const UserContext = createContext({});
 
 function AuthorizeView(props: { children: React.ReactNode }) {
-    const { isAuthenticated, user, isLoading, isLoggingOut, initializeAuth, checkAuth } = useAuthStore();
+    const { isAuthenticated, user, isLoading, isLoggingOut, initializeAuth, checkAuth, logout } = useAuthStore();
     const location = useLocation();
     const currentRoute = location.pathname;
 
     useEffect(() => {
-        // Initialize auth from localStorage on component mount
-        initializeAuth();
+        // Initialize auth from localStorage on component mount and validate with server
+        const initAuth = async () => {
+            await initializeAuth();
+        };
+        initAuth();
     }, []);
 
     useEffect(() => {
@@ -61,6 +65,10 @@ function AuthorizeView(props: { children: React.ReactNode }) {
     if (isAuthenticated) {
         return (
             <>
+                <SessionWarning 
+                    onExtendSession={checkAuth}
+                    onLogout={logout}
+                />
                 <UserContext.Provider value={user || {}}>{props.children}</UserContext.Provider>
             </>
         );
