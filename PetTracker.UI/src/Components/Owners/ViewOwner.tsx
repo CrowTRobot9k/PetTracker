@@ -19,6 +19,9 @@ import ViewPets from '../Pets/ViewPets';
 import ErrorDisplay from '../ErrorDisplay';
 import useOwnersStore from '../../Stores/OwnersStore.tsx';
 import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 
 
@@ -42,6 +45,8 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
     const [isSaving, setIsSaving] = useState(false);
     
     const { getOwnerPhotos, getOwnerPhotosSync, getOwnerPhotosBatch, updateOwner } = useOwnersStore();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
 
     useEffect(() => {
@@ -146,9 +151,10 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                 hidden={value !== index}
                 id={`simple-tabpanel-${index}`}
                 aria-labelledby={`simple-tab-${index}`}
+                style={{ width: '100%' }}
                 {...other}
             >
-                {value === index && <Box sx={{ p: 0 }}>{children}</Box>}
+                {value === index && <Box sx={{ p: 0, width: '100%' }}>{children}</Box>}
             </div>
         );
     }
@@ -221,10 +227,11 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
             open={open}
             onClose={handleClose}
             fullWidth
-            maxWidth="lg"
+            maxWidth={isMobile ? "sm" : "lg"}
+            fullScreen={isMobile}
         >
-            <form name="saveOwnerForm" onSubmit={handleSaveOwnerSubmit}>
-                <DialogContent sx={{ height:800}}>
+            <form name="saveOwnerForm" onSubmit={handleSaveOwnerSubmit} style={{ width: '100%' }}>
+                <DialogContent sx={{ height: isMobile ? 'auto' : 800, maxHeight: isMobile ? '80vh' : 'none', width: '100%' }}>
                     <DialogContent
                         sx={{
                             display: 'flex',
@@ -232,7 +239,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                             flexWrap: 'wrap',
                             width: '100%',
                             alignItems: 'center',
-                            p:0
+                            p: 0
                         }}
                     >
                         <DialogTitle sx={{ p: 0 }} >
@@ -243,220 +250,230 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                         )}
                         <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} readonly={!hasWriteAccess} />
                     </DialogContent>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <Tabs value={tabIndex} onChange={handleTabChange}>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>
+                        <Tabs value={tabIndex} onChange={handleTabChange} sx={{ width: '100%' }}>
                             <Tab label="Info" {...a11yProps(0)} />
                             <Tab label="Pets" {...a11yProps(1)} />
                         </Tabs>
                     </Box>
                     <CustomTabPanel value={tabIndex} index={0}>
-                        <DialogContent
-                            sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width: '100%'  }}
-                        >
-                            <DialogContent
-                                sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', flex: 1 }}
-                            >
-                                <DialogContentText>
-                                    First Name
-                                </DialogContentText>
-                                <OutlinedInput
-                                    autoFocus
-                                    // required
-                                    margin="dense"
-                                    id="firstName"
-                                    name="firstName"
-                                    label="First Name"
-                                    placeholder="First Name"
-                                    type="text"
-                                    value={editOwner.firstName}
-                                    onChange={handleChange}
-                                    disabled={!hasWriteAccess}
-                                />
-                                <DialogContentText>
-                                    Address
-                                </DialogContentText>
-                                <OutlinedInput
-                                    autoFocus
-                                    //required
-                                    margin="dense"
-                                    id="address"
-                                    name="address"
-                                    label="Address"
-                                    placeholder="Address"
-                                    type="text"
-                                    value={editOwner.address}
-                                    onChange={handleChange}
-                                    disabled={!hasWriteAccess}
-                                />
-                                <DialogContentText>
-                                    State
-                                </DialogContentText>
-                                <FormControl fullWidth>
-                                    <Select
-                                        displayEmpty
-                                        id="select-owner-state"
-                                        name="ownerState"
-                                        value={editOwner.state}
-                                        label="Pet Type"
-                                        onChange={handleChangeState}
+                        <DialogContent sx={{ p: { xs: 2, sm: 3 }, width: '100%', maxWidth: '100%' }}>
+                            <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ width: '100%' }}>
+                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                    <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                        First Name
+                                    </DialogContentText>
+                                    <OutlinedInput
+                                        autoFocus
+                                        margin="dense"
+                                        id="firstName"
+                                        name="firstName"
+                                        label="First Name"
+                                        placeholder="First Name"
+                                        type="text"
+                                        fullWidth
+                                        value={editOwner.firstName}
+                                        onChange={handleChange}
                                         disabled={!hasWriteAccess}
-                                        renderValue={(selected) => {
-                                            if (!selected) {
-                                                return <em>Select</em>;
-                                            }
-
-                                            return selected;
-                                        }}
-                                    >
-                                        {ownerStates?.length > 0 && (ownerStates?.map(m =>
-
-                                            <MenuItem key={m} value={m.abbr}>{m.name}</MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                                <DialogContentText>
-                                    Email
-                                </DialogContentText>
-                                <OutlinedInput
-                                    margin="dense"
-                                    id="ownerEmail"
-                                    name="email"
-                                    label="Owner Email"
-                                    placeholder="Email"
-                                    type="text"
-                                    fullWidth
-                                    value={editOwner.email}
-                                    onChange={handleChange}
-                                    disabled={!hasWriteAccess}
-                                />
-                                <DialogContentText>
-                                    Primary Phone
-                                </DialogContentText>
-                                <OutlinedInput
-                                    margin="dense"
-                                    id="primaryPhone"
-                                    name="primaryPhone"
-                                    label="Primary Phone"
-                                    placeholder="Primary Phone"
-                                    type="text"
-                                    fullWidth
-                                    value={editOwner.primaryPhone}
-                                    onChange={handleChange}
-                                    disabled={!hasWriteAccess}
-                                />
-                                <DialogContentText>
-                                    Veterinarian
-                                </DialogContentText>
-                                <OutlinedInput
-                                    margin="dense"
-                                    id="vet"
-                                    name="vet"
-                                    label="Veterinarian"
-                                    placeholder="Veterinarian"
-                                    type="text"
-                                    fullWidth
-                                    value={editOwner.vet}
-                                    onChange={handleChange}
-                                    disabled={!hasWriteAccess}
-                                />
-                            </DialogContent>
-                            <DialogContent
-                                sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', flex: 1 }}
-                            >
-                                <DialogContentText>
-                                    Last Name
-                                </DialogContentText>
-                                <OutlinedInput
-                                    autoFocus
-                                    //required
-                                    margin="dense"
-                                    id="lastName"
-                                    name="lastName"
-                                    label="Last Name"
-                                    placeholder="Last Name"
-                                    type="text"
-                                    value={editOwner.lastName}
-                                    onChange={handleChange}
-                                    disabled={!hasWriteAccess}
-                                />
-                                <DialogContentText>
-                                    City
-                                </DialogContentText>
-                                <OutlinedInput
-                                    autoFocus
-                                    //required
-                                    margin="dense"
-                                    id="city"
-                                    name="city"
-                                    label="city"
-                                    placeholder="City"
-                                    type="text"
-                                    value={editOwner.city}
-                                    onChange={handleChange}
-                                    disabled={!hasWriteAccess}
-                                />
-                                <DialogContentText>
-                                    Zip Code
-                                </DialogContentText>
-                                <OutlinedInput
-                                    margin="dense"
-                                    id="zipCode"
-                                    name="zipCode"
-                                    label="Owner Zip"
-                                    placeholder="Zip Code"
-                                    type="text"
-                                    fullWidth
-                                    value={editOwner.zipCode}
-                                    onChange={handleChange}
-                                    disabled={!hasWriteAccess}
-                                />
-                                <DialogContentText>
-                                    Referred By
-                                </DialogContentText>
-                                <OutlinedInput
-                                    margin="dense"
-                                    id="referredBy"
-                                    name="referredBy"
-                                    label="Referred By"
-                                    placeholder="Referred By"
-                                    type="text"
-                                    fullWidth
-                                    value={editOwner.referredBy}
-                                    onChange={handleChange}
-                                    disabled={!hasWriteAccess}
-                                />
-                                <DialogContentText>
-                                    Secondary Phone
-                                </DialogContentText>
-                                <OutlinedInput
-                                    margin="dense"
-                                    id="secondaryPhone"
-                                    name="secondaryPhone"
-                                    label="Secondary Phone"
-                                    placeholder="Secondary Phone"
-                                    type="text"
-                                    fullWidth
-                                    value={editOwner.secondaryPhone}
-                                    onChange={handleChange}
-                                    disabled={!hasWriteAccess}
-                                />
-                                <DialogContentText>
-                                    Veterinarian Phone
-                                </DialogContentText>
-                                <OutlinedInput
-                                    margin="dense"
-                                    id="vetPhone"
-                                    name="vetPhone"
-                                    label="Veterinarian Phone"
-                                    placeholder="Veterinarian Phone"
-                                    type="text"
-                                    fullWidth
-                                    value={editOwner.vetPhone}
-                                    onChange={handleChange}
-                                    disabled={!hasWriteAccess}
-                                />
-
-                            </DialogContent>
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                    <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                        Last Name
+                                    </DialogContentText>
+                                    <OutlinedInput
+                                        margin="dense"
+                                        id="lastName"
+                                        name="lastName"
+                                        label="Last Name"
+                                        placeholder="Last Name"
+                                        type="text"
+                                        fullWidth
+                                        value={editOwner.lastName}
+                                        onChange={handleChange}
+                                        disabled={!hasWriteAccess}
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                    <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                        Email
+                                    </DialogContentText>
+                                    <OutlinedInput
+                                        margin="dense"
+                                        id="ownerEmail"
+                                        name="email"
+                                        label="Email"
+                                        placeholder="Email"
+                                        type="email"
+                                        fullWidth
+                                        value={editOwner.email}
+                                        onChange={handleChange}
+                                        disabled={!hasWriteAccess}
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                    <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                        Address
+                                    </DialogContentText>
+                                    <OutlinedInput
+                                        margin="dense"
+                                        id="address"
+                                        name="address"
+                                        label="Address"
+                                        placeholder="Address"
+                                        type="text"
+                                        fullWidth
+                                        value={editOwner.address}
+                                        onChange={handleChange}
+                                        disabled={!hasWriteAccess}
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                    <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                        Primary Phone
+                                    </DialogContentText>
+                                    <OutlinedInput
+                                        margin="dense"
+                                        id="primaryPhone"
+                                        name="primaryPhone"
+                                        label="Primary Phone"
+                                        placeholder="Primary Phone"
+                                        type="tel"
+                                        fullWidth
+                                        value={editOwner.primaryPhone}
+                                        onChange={handleChange}
+                                        disabled={!hasWriteAccess}
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                    <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                        Referred By
+                                    </DialogContentText>
+                                    <OutlinedInput
+                                        margin="dense"
+                                        id="referredBy"
+                                        name="referredBy"
+                                        label="Referred By"
+                                        placeholder="Referred By"
+                                        type="text"
+                                        fullWidth
+                                        value={editOwner.referredBy}
+                                        onChange={handleChange}
+                                        disabled={!hasWriteAccess}
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                    <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                        City
+                                    </DialogContentText>
+                                    <OutlinedInput
+                                        margin="dense"
+                                        id="city"
+                                        name="city"
+                                        label="City"
+                                        placeholder="City"
+                                        type="text"
+                                        fullWidth
+                                        value={editOwner.city}
+                                        onChange={handleChange}
+                                        disabled={!hasWriteAccess}
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                    <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                        State
+                                    </DialogContentText>
+                                    <FormControl fullWidth>
+                                        <Select
+                                            displayEmpty
+                                            id="select-owner-state"
+                                            name="ownerState"
+                                            value={editOwner.state}
+                                            label="State"
+                                            onChange={handleChangeState}
+                                            disabled={!hasWriteAccess}
+                                            renderValue={(selected) => {
+                                                if (!selected) {
+                                                    return <em>Select</em>;
+                                                }
+                                                return selected;
+                                            }}
+                                        >
+                                            {ownerStates?.length > 0 && (ownerStates?.map(m =>
+                                                <MenuItem key={m} value={m.abbr}>{m.name}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                    <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                        Zip Code
+                                    </DialogContentText>
+                                    <OutlinedInput
+                                        margin="dense"
+                                        id="zipCode"
+                                        name="zipCode"
+                                        label="Zip Code"
+                                        placeholder="Zip Code"
+                                        type="text"
+                                        fullWidth
+                                        value={editOwner.zipCode}
+                                        onChange={handleChange}
+                                        disabled={!hasWriteAccess}
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                    <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                        Secondary Phone
+                                    </DialogContentText>
+                                    <OutlinedInput
+                                        margin="dense"
+                                        id="secondaryPhone"
+                                        name="secondaryPhone"
+                                        label="Secondary Phone"
+                                        placeholder="Secondary Phone"
+                                        type="tel"
+                                        fullWidth
+                                        value={editOwner.secondaryPhone}
+                                        onChange={handleChange}
+                                        disabled={!hasWriteAccess}
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                    <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                        Veterinarian
+                                    </DialogContentText>
+                                    <OutlinedInput
+                                        margin="dense"
+                                        id="vet"
+                                        name="vet"
+                                        label="Veterinarian"
+                                        placeholder="Veterinarian"
+                                        type="text"
+                                        fullWidth
+                                        value={editOwner.vet}
+                                        onChange={handleChange}
+                                        disabled={!hasWriteAccess}
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                    <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                        Veterinarian Phone
+                                    </DialogContentText>
+                                    <OutlinedInput
+                                        margin="dense"
+                                        id="vetPhone"
+                                        name="vetPhone"
+                                        label="Veterinarian Phone"
+                                        placeholder="Veterinarian Phone"
+                                        type="tel"
+                                        fullWidth
+                                        value={editOwner.vetPhone}
+                                        onChange={handleChange}
+                                        disabled={!hasWriteAccess}
+                                    />
+                                </Grid>
+                            </Grid>
                         </DialogContent>
                     </CustomTabPanel>
                     <CustomTabPanel value={tabIndex} index={1}>
@@ -465,8 +482,18 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                         </DialogContent>
                     </CustomTabPanel>
                 </DialogContent>
-                <DialogActions sx={{ pb: 3, px: 3 }}>
-                    <Button onClick={handleClose} disabled={isSaving}>
+                <DialogActions sx={{ 
+                    pb: isMobile ? 2 : 3, 
+                    px: isMobile ? 2 : 3,
+                    flexDirection: isMobile ? 'column' : 'row',
+                    gap: isMobile ? 1 : 0
+                }}>
+                    <Button 
+                        onClick={handleClose} 
+                        disabled={isSaving}
+                        fullWidth={isMobile}
+                        variant={isMobile ? "outlined" : "text"}
+                    >
                         {hasWriteAccess ? 'Cancel' : 'Close'}
                     </Button>
                     {hasWriteAccess && (
@@ -475,6 +502,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                             color="info" 
                             type="submit"
                             disabled={isSaving}
+                            fullWidth={isMobile}
                             startIcon={isSaving ? <CircularProgress size={20} color="inherit" /> : null}
                         >
                             {isSaving ? 'Saving...' : 'Save'}

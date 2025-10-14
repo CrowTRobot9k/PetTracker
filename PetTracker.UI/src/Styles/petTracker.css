@@ -29,6 +29,20 @@ body {
     overflow-x: hidden; /* Hides the horizontal scrollbar */
 }
 
+/* Owner modal responsive layout improvements */
+@media (min-width: 480px) and (orientation: landscape), (min-width: 900px) {
+    .owner-modal-field {
+        width: 50% !important;
+        max-width: 50% !important;
+        flex-basis: 50% !important;
+    }
+    
+    .owner-modal-field .MuiOutlinedInput-root,
+    .owner-modal-field .MuiFormControl-root {
+        width: 100% !important;
+    }
+}
+
 /* Mobile-friendly improvements */
 @media (max-width: 600px) {
     .MuiContainer-root {
