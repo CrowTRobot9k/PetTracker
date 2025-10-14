@@ -1,43 +1,22 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
-import CardContent from '@mui/material/CardContent';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
-import useOwnersStore from '../../Stores/OwnersStore.tsx';
-import Carousel from '../Carousel/Carousel.tsx';
-import EditIcon from '@mui/icons-material/Edit';
-import Fab from '@mui/material/Fab';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import useOwnersStore from '../../Stores/OwnersStore.tsx';
 import AddOwner from './AddOwner.tsx';
 import ViewOwner from './ViewOwner.tsx';
-import { getImageUrlFromBlob } from '../../Util/CommonFunctions.tsx'
 import LoadingPlaceholder from '../LoadingPlaceholder.tsx';
 import ErrorDisplay from '../ErrorDisplay.tsx';
 import { useSearch } from '../SearchProvider.tsx';
 import { useAuthStore } from '../../Stores/AuthStore';
-
-const SyledCardContent = styled(CardContent)({
-    display: 'flex',
-    flexDirection: 'column',
-});
-
-const StyledTypography = styled(Typography)({
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-    WebkitLineClamp: 2,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-});
+import { Owner } from '../../Types/SharedTypes';
 
 export default function ViewOwners() {
     const getOwners = useOwnersStore((state) => state.getOwners);
     const getStates = useOwnersStore((state) => state.getStates);
-    const getOwnerPhotos = useOwnersStore((state) => state.getOwnerPhotos);
-    const getOwnerPhotosSync = useOwnersStore((state) => state.getOwnerPhotosSync);
-    const getOwnerPhotosBatch = useOwnersStore((state) => state.getOwnerPhotosBatch);
     const states = useOwnersStore((state) => state.states);
     const { searchTerm } = useSearch();
     const { user } = useAuthStore();
@@ -55,38 +34,34 @@ export default function ViewOwners() {
     const {
         owners,
         loadingOwners,
-        loadingOwnerPhotos,
-        ownerPhotos,
         errorMessage,
         showErrors
     } = useOwnersStore();
+    
     const [open, setOpen] = React.useState(false);
     const [openViewOwner, setOpenViewOwner] = React.useState(false);
-    const [selectedOwner, setSelectedOwner] = useState<Owner>(
-        {
-        });
+    const [selectedOwner, setSelectedOwner] = useState<Owner>({
+        id: 0,
+        userId: 0,
+        firstName: '',
+        lastName: '',
+        fullName: '',
+        address: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        email: '',
+        primaryPhone: '',
+        secondaryPhone: '',
+        referredBy: '',
+        vet: '',
+        vetPhone: ''
+    });
     const [reloadOwners, setReloadOwners] = React.useState(false);
+
     useEffect(() => {
         getOwners();
     }, [reloadOwners]);
-
-    // Load photos in batch when owners are loaded
-    useEffect(() => {
-        if (owners && owners.length > 0) {
-            const ownerIds = owners.map(owner => owner.id).filter(id => id);
-            if (ownerIds.length > 0) {
-                // Check which owners don't have photos loaded yet
-                const ownersNeedingPhotos = ownerIds.filter(ownerId => {
-                    const existingPhotos = getOwnerPhotosSync(ownerId);
-                    return !existingPhotos || existingPhotos.length === 0;
-                });
-                
-                if (ownersNeedingPhotos.length > 0) {
-                    getOwnerPhotosBatch(ownersNeedingPhotos);
-                }
-            }
-        }
-    }, [owners]);
 
     useMemo(() => {
         getStates();
@@ -100,27 +75,7 @@ export default function ViewOwners() {
         setOpen(false);
     };
 
-    const getOwnerSlides = (ownerId) =>
-    {
-        const photos = getOwnerPhotosSync(ownerId);
-        
-        if (!photos || photos.length === 0) {
-            return [<img key="no-image" src="/Owner Placeholder.png"/>];
-        }
-
-        return Array.from(photos.map((f, index) => (
-            <img key={`${index}_${f.fileName}`} src={getImageUrlFromBlob(f.fileDataBase64)} />
-        )))
-    }
-
-    const loadOwnerPhotos = async (ownerId) => {
-        const existingPhotos = getOwnerPhotosSync(ownerId);
-        if (!existingPhotos || existingPhotos.length === 0) {
-            await getOwnerPhotos(ownerId);
-        }
-    }
-
-    const handleOpenOwner = (owner) => {
+    const handleOpenOwner = (owner: Owner) => {
         const copiedOwner = JSON.parse(JSON.stringify(owner));
         setSelectedOwner(copiedOwner);
         setOpenViewOwner(true);
@@ -130,138 +85,183 @@ export default function ViewOwners() {
         setOpenViewOwner(false);
     };
 
+    // Filter owners based on search term
+    const filteredOwners = useMemo(() => {
+        if (!owners) return [];
+        if (!searchTerm || searchTerm === '') return owners;
+        
+        return owners.filter(owner => {
+            const fullName = `${owner.firstName} ${owner.lastName}`.toLowerCase();
+            return fullName.indexOf(searchTerm.toLowerCase()) > -1;
+        });
+    }, [owners, searchTerm]);
+
+    // Define columns for DataGrid
+    const columns: GridColDef[] = [
+        {
+            field: 'fullName',
+            headerName: 'Name',
+            flex: 1,
+            minWidth: 150,
+            filterable: false,
+            valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
+        },
+        {
+            field: 'address',
+            headerName: 'Address',
+            flex: 1.5,
+            minWidth: 200,
+            filterable: false,
+            valueGetter: (value, row) => {
+                const parts = [row.address, row.city, row.state, row.zipCode].filter(Boolean);
+                return parts.join(', ');
+            },
+        },
+        {
+            field: 'primaryPhone',
+            headerName: 'Phone',
+            flex: 0.8,
+            minWidth: 130,
+            filterable: false,
+        },
+        {
+            field: 'email',
+            headerName: 'Email',
+            flex: 1,
+            minWidth: 150,
+            filterable: false,
+        },
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            sortable: false,
+            filterable: false,
+            width: 80,
+            renderCell: (params: GridRenderCellParams) => (
+                <IconButton
+                    color="primary"
+                    onClick={() => handleOpenOwner(params.row as Owner)}
+                    disabled={!hasReadAccess}
+                    size="small"
+                >
+                    <EditIcon />
+                </IconButton>
+            ),
+        },
+    ];
+
     return (       
         <>
             {showErrors && (
-                        <ErrorDisplay error={errorMessage} height={700} />
-                    )}
+                <ErrorDisplay error={errorMessage} height={700} />
+            )}
             {loadingOwners && (
-                        <LoadingPlaceholder />
+                <LoadingPlaceholder />
+            )}
+            {!(showErrors) && !loadingOwners && (
+                <>
+                    {hasWriteAccess && (
+                        <Box sx={{ display: 'flex', gap: 2, mb: 2, mt: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
+                            <Button 
+                                onClick={handleClickOpen} 
+                                variant="contained" 
+                                color="info" 
+                                endIcon={<AddIcon />}
+                                size="medium"
+                                sx={{ 
+                                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                                }}
+                            >
+                                Add Owner
+                            </Button>
+                        </Box>
                     )}
-            {!(showErrors) && (
-                        <>
-                            {(!loadingOwners) && (
-                                <>
-                                    {hasWriteAccess && (
-                                        <Box sx={{ display: 'flex', gap: 2, mb: 1, mt: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
-                                            <Button 
-                                                onClick={handleClickOpen} 
-                                                variant="contained" 
-                                                color="info" 
-                                                endIcon={<AddIcon />}
-                                                size="medium"
-                                                sx={{ 
-                                                    fontSize: { xs: '0.875rem', sm: '1rem' }
-                                                }}
-                                            >
-                                                Add Owner
-                                            </Button>
-                                        </Box>
-                                    )}
-                                    <Grid container spacing={2} sx={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                    }}>
-                                    <AddOwner open={open} handleClose={handleClose} ownerStates={states} reloadOwners={reloadOwners} setReloadOwners={setReloadOwners} />
-                            {owners?.filter(f => (
-                                (searchTerm ?? '') == '' ||
-                                ((f.firstName + " " + f.lastName).toLowerCase().indexOf(searchTerm?.toLowerCase()) > -1)
-                            )).map(m =>
-                                        <Grid
-                                            key={m.id}
-                                            xs={12}
-                                            sm={6}
-                                            md={4}
-                                            lg={3}
-                                            xl={2}
-                                            sx={{ 
-                                                height: { xs: '380px', sm: '360px', md: '400px' },
-                                                minHeight: '380px'
-                                            }}
-                                        >
-                                            <Card
-                                                variant="outlined"
-                                                sx={{
-                                                    height: '100%',
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                <Carousel 
-                                                    cards={getOwnerSlides(m.id)} 
-                                                    onVisible={() => loadOwnerPhotos(m.id)}
-                                                />
-                                                <SyledCardContent sx={{
-                                                    p: { xs: 0.25, sm: 0.5 },
-                                                    flexGrow: 1,
-                                                }}>
-                                                    <Typography 
-                                                        gutterBottom 
-                                                        variant="h6" 
-                                                        component="div"
-                                                        sx={{
-                                                            fontSize: { xs: '0.9rem', sm: '1.1rem' },
-                                                            textAlign: 'center',
-                                                            wordBreak: 'break-word',
-                                                            mb: { xs: 0.125, sm: 0.25 },
-                                                        }}
-                                                    >
-                                                        {m.firstName} {m.lastName}
-                                                    </Typography>
-                                                    <StyledTypography 
-                                                        variant="body2" 
-                                                        color="text.secondary" 
-                                                        gutterBottom
-                                                        sx={{
-                                                            fontSize: { xs: '0.7rem', sm: '0.8rem' },
-                                                            textAlign: 'center',
-                                                            mb: { xs: 0.125, sm: 0.25 },
-                                                        }}
-                                                    >
-                                                        {m.Address}
-                                                    </StyledTypography>
-                                                    <StyledTypography 
-                                                        variant="body2" 
-                                                        color="text.secondary" 
-                                                        gutterBottom
-                                                        sx={{
-                                                            fontSize: { xs: '0.7rem', sm: '0.8rem' },
-                                                            textAlign: 'center',
-                                                            mb: { xs: 0.125, sm: 0.25 },
-                                                        }}
-                                                    >
-                                                        {m.city} {m.state} {m.zipCode}
-                                                    </StyledTypography>
-                                                </SyledCardContent>
-                                                {hasReadAccess && (
-                                                    <SyledCardContent sx={{ 
-                                                        my: { xs: 0.125, sm: 0 },
-                                                        p: { xs: 0.25, sm: 0.5 },
-                                                    }}>
-                                                        <Fab 
-                                                            size="small" 
-                                                            color="primary" 
-                                                            sx={{ 
-                                                                alignSelf: 'center',
-                                                                width: { xs: '36px', sm: '44px' },
-                                                                height: { xs: '36px', sm: '44px' },
-                                                            }} 
-                                                            onClick={() => handleOpenOwner(m)} 
-                                                            aria-label="view"
-                                                        >
-                                                            <EditIcon sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
-                                                        </Fab>
-                                                    </SyledCardContent>
-                                                )}
-                                            </Card>
-                                        </Grid>
-                                    )}
-                                    </Grid>
-                                </>
-                            )}
-                            <ViewOwner open={openViewOwner} viewOwner={selectedOwner} handleClose={handleCloseOwner} ownerStates={states} reloadOwners={reloadOwners} setReloadOwners={setReloadOwners} hasWriteAccess={hasWriteAccess} />
-                        </>
-                    )}
+                    
+                    <Box sx={{ height: 600, width: '100%', maxHeight: 'calc(100vh - 220px)' }}>
+                        <DataGrid
+                            rows={filteredOwners}
+                            columns={columns}
+                            initialState={{
+                                pagination: {
+                                    paginationModel: { pageSize: 25, page: 0 },
+                                },
+                                sorting: {
+                                    sortModel: [{ field: 'fullName', sort: 'asc' }],
+                                },
+                            }}
+                            pageSizeOptions={[10, 25, 50, 100]}
+                            disableRowSelectionOnClick
+                            disableColumnMenu
+                            sx={{
+                                '& .MuiDataGrid-cell:focus': {
+                                    outline: 'none',
+                                },
+                                '& .MuiDataGrid-cell:focus-within': {
+                                    outline: 'none',
+                                },
+                                '& .MuiDataGrid-columnHeaders': {
+                                    background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
+                                    color: '#fff',
+                                    fontSize: '1rem',
+                                    fontWeight: 600,
+                                },
+                                '& .MuiDataGrid-columnHeader': {
+                                    background: 'transparent',
+                                    color: '#fff',
+                                },
+                                '& .MuiDataGrid-columnHeaderTitle': {
+                                    fontWeight: 600,
+                                    color: '#fff',
+                                },
+                                '& .MuiDataGrid-columnSeparator': {
+                                    color: 'rgba(255, 255, 255, 0.3)',
+                                },
+                                '& .MuiDataGrid-footerContainer': {
+                                    background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
+                                    color: '#fff',
+                                },
+                                '& .MuiTablePagination-root': {
+                                    color: '#fff',
+                                },
+                                '& .MuiTablePagination-selectIcon': {
+                                    color: '#fff',
+                                },
+                                '& .MuiTablePagination-actions .MuiIconButton-root': {
+                                    color: '#fff',
+                                },
+                                '& .MuiDataGrid-sortIcon': {
+                                    color: '#fff',
+                                    opacity: 1,
+                                },
+                                '& .MuiDataGrid-menuIconButton': {
+                                    color: '#fff',
+                                    opacity: 1,
+                                },
+                                '& .MuiDataGrid-iconButtonContainer': {
+                                    color: '#fff',
+                                },
+                            }}
+                        />
+                    </Box>
+
+                    <AddOwner 
+                        open={open} 
+                        handleClose={handleClose} 
+                        ownerStates={states} 
+                        reloadOwners={reloadOwners} 
+                        setReloadOwners={setReloadOwners} 
+                    />
+                    <ViewOwner 
+                        open={openViewOwner} 
+                        viewOwner={selectedOwner} 
+                        handleClose={handleCloseOwner} 
+                        ownerStates={states} 
+                        reloadOwners={reloadOwners} 
+                        setReloadOwners={setReloadOwners} 
+                        hasWriteAccess={hasWriteAccess} 
+                    />
+                </>
+            )}
         </>
     );
 }

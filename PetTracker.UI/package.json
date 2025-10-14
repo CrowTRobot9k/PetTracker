@@ -16,6 +16,7 @@
     "@mui/icons-material": "^7.0.1",
     "@mui/material": "^7.1.0",
     "@mui/styles": "^6.4.11",
+    "@mui/x-data-grid": "^8.14.0",
     "@mui/x-date-pickers": "^8.4.0",
     "lodash": "^4.17.21",
     "mui-styles": "^2.0.7",

@@ -1,24 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Dialog from '@mui/material/Dialog';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import { styled } from '@mui/material/styles';
-import Carousel from '../Carousel/Carousel';
 import useExistingPetsStore from '../../Stores/ExistingPetStore';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
-import { getImageUrlFromBlob } from '../../Util/CommonFunctions'
 import OutlinedInput from '@mui/material/OutlinedInput';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import DialogContent from '@mui/material/DialogContent';
 import ErrorDisplay from '../ErrorDisplay';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 interface AddExistingPetProps {
     open: boolean;
@@ -28,71 +21,112 @@ interface AddExistingPetProps {
     ownerId?: number;
 }
 
-const SyledCardContent = styled(CardContent)({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 1,
-    padding: 2,
-    flexGrow: 1,
-
-});
-
 export default function AddExistingPet({ open, handleClose, reloadPets, setReloadPets, ownerId }: AddExistingPetProps) {
-    const [submitSuccessMessage, setSuccessMessage] = useState('');
     const [submitErrorMessage, setSubmitErrorMessage] = useState('');
     const getExistingPets = useExistingPetsStore((state) => state.getExistingPets);
-    const getPetPhotos = useExistingPetsStore((state) => state.getPetPhotos);
-    const getPetPhotosSync = useExistingPetsStore((state) => state.getPetPhotosSync);
     const { existingPets, loadingExistingPets } = useExistingPetsStore();
     const [searchValue, setSearchValue] = useState('');
-    const [ selectedPets, setSelectedPets ] = useState({});
+    const [ selectedPets, setSelectedPets ] = useState<Record<number, boolean>>({});
 
-     useEffect(() => {
-         getExistingPets(ownerId);
-     }, [ownerId]);
+    useEffect(() => {
+        getExistingPets(ownerId);
+    }, [ownerId]);
 
-    const getPetSlides = (petId, petType: string) =>
-    {
-        const placeholderDict =
-        {
-            Cat: "/Cat Placeholder.png",
-            Dog: "/Dog Placeholder.png",
-        }
-        const photos = getPetPhotosSync(petId);
-        
-        if (!photos || photos.length === 0) {
-            return [<img key="no-image" src={placeholderDict[petType]} />]
-        }
-
-        return Array.from(photos.map((f, index) => (
-            <img key={`${index}_${f.fileName}`} src={getImageUrlFromBlob(f.fileDataBase64)} />
-        )))
-    }
-
-    const loadPetPhotos = async (petId) => {
-        const existingPhotos = getPetPhotosSync(petId);
-        if (!existingPhotos || existingPhotos.length === 0) {
-            await getPetPhotos(petId);
-        }
-    }
-
-    const handleSearchChange = (e) => {
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.target.value);
     };
 
-    const handlePetCheckboxChange = (e) => {
-        const { name, checked } = e.target;
+    const handleCheckboxChange = (petId: number, checked: boolean) => {
         setSelectedPets(prevState => ({
             ...prevState,
-            [name]: checked,
+            [petId]: checked,
         }));
     };
 
+    // Filter pets based on search
+    const filteredPets = useMemo(() => {
+        if (!existingPets) return [];
+        
+        const searchLower = searchValue.toLowerCase();
+        if (!searchLower) return existingPets;
+        
+        return existingPets.filter((pet: any) => 
+            pet.name?.toLowerCase().includes(searchLower)
+        );
+    }, [existingPets, searchValue]);
+
+    // Define DataGrid columns
+    const columns: GridColDef[] = [
+        {
+            field: 'name',
+            headerName: 'Name',
+            flex: 1,
+            minWidth: 150,
+            filterable: false,
+        },
+        {
+            field: 'petType',
+            headerName: 'Type',
+            flex: 0.8,
+            minWidth: 100,
+            filterable: false,
+            valueGetter: (value, row) => row.petType?.type || '',
+        },
+        {
+            field: 'breeds',
+            headerName: 'Breeds',
+            flex: 1.5,
+            minWidth: 200,
+            filterable: false,
+            renderCell: (params: GridRenderCellParams) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, py: 0.5 }}>
+                    {params.row.breedTypes?.map((breed: any, index: number) => (
+                        <Chip 
+                            key={index}
+                            label={breed.name}
+                            size="small"
+                            sx={{ fontSize: '0.75rem' }}
+                        />
+                    ))}
+                </Box>
+            ),
+        },
+        {
+            field: 'sex',
+            headerName: 'Sex',
+            flex: 0.6,
+            minWidth: 80,
+            filterable: false,
+        },
+        {
+            field: 'color',
+            headerName: 'Color',
+            flex: 0.8,
+            minWidth: 100,
+            filterable: false,
+        },
+        {
+            field: 'select',
+            headerName: 'Select',
+            flex: 0.6,
+            minWidth: 80,
+            sortable: false,
+            filterable: false,
+            renderCell: (params: GridRenderCellParams) => (
+                <Checkbox
+                    checked={selectedPets[params.row.id] || false}
+                    onChange={(e) => handleCheckboxChange(params.row.id, e.target.checked)}
+                />
+            ),
+        },
+    ];
+
     const AddExistingPetsToOwner = async () => {
-        setSuccessMessage("");
         setSubmitErrorMessage("");
 
-        const selectedPetIds = Object.keys(selectedPets).filter(key => selectedPets[key] === true).map(Number);
+        const selectedPetIds = Object.keys(selectedPets)
+            .filter(key => selectedPets[parseInt(key)] === true)
+            .map(Number);
 
         const addExistingPetsModel = {
             OwnerId: ownerId,
@@ -114,13 +148,11 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
 
             if (response.status == 200) {
                 setReloadPets(!reloadPets);
-                setSelectedPets({
-                });
-                setSuccessMessage("Pets Added")
+                setSelectedPets({});
                 handleClose();
             }
-        } catch (e) {
-            setSubmitErrorMessage(e.message);
+        } catch (e: any) {
+            setSubmitErrorMessage(e.message || 'An error occurred');
         } 
     }
 
@@ -157,7 +189,7 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
                     />
                 </Container>
                 {submitErrorMessage?.length > 0 && (
-                    <ErrorDisplay error={submitErrorMessage} />
+                    <ErrorDisplay error={submitErrorMessage} height={100} />
                 )}
                 {loadingExistingPets && (
                     <Container
@@ -176,133 +208,73 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
                         <CircularProgress />
                     </Container>
                 )}
-                <Container
-                    maxWidth="xl"
-                    component="main"
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        my: 0,
-                        gap: 2,
-
-                    }}
-                >
-                    {(!loadingExistingPets) && (
-                        <Grid container spacing={2} sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                        }}>
-                            {existingPets?.filter(f => ((searchValue ?? '') == '' || (f.name.toLowerCase().indexOf(searchValue?.toLowerCase())>-1))).map(m =>
-                                <Grid 
-                                    key={m.id}
-                                    xs={12}
-                                    sm={6}
-                                    md={4}
-                                    lg={3}
-                                    xl={2}
-                                    sx={{ 
-                                        height: { xs: '320px', sm: '360px', md: '400px' },
-                                        minHeight: '320px'
-                                    }}
-                                >
-                                    <Card
-                                        variant="outlined"
-                                        sx={{
-                                            height: '100%',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                        }}
-                                    >
-                                        <Carousel 
-                                            cards={getPetSlides(m.id, m.petType?.type)} 
-                                            onVisible={() => loadPetPhotos(m.id)}
-                                        />
-                                        <SyledCardContent sx={{
-                                            p: { xs: 0.5, sm: 1 },
-                                            flexGrow: 1,
-                                        }}>
-                                            <Typography 
-                                                gutterBottom 
-                                                variant="h6" 
-                                                component="div"
-                                                sx={{
-                                                    fontSize: { xs: '0.9rem', sm: '1.1rem' },
-                                                    textAlign: 'center',
-                                                    wordBreak: 'break-word',
-                                                    mb: { xs: 0.5, sm: 1 },
-                                                }}
-                                            >
-                                                {m.name}
-                                            </Typography>
-                                        </SyledCardContent>
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                flexWrap: 'wrap',
-                                                bgcolor: 'background.paper',
-                                                borderRadius: 1,
-                                                mx: 'auto',
-                                                p: { xs: 0.25, sm: 0.5 },
-                                                justifyContent: 'center',
-                                                mb: { xs: 0.5, sm: 1 },
-                                            }}
-                                        >
-                                            {m.breedTypes?.length > 0 && (m.breedTypes?.map((b, index) =>
-                                                <Chip 
-                                                    key={index}
-                                                    sx={{
-                                                        m: { xs: 0.125, sm: 0.25 },
-                                                        fontSize: { xs: '0.7rem', sm: '0.8rem' },
-                                                        height: { xs: '20px', sm: '28px' },
-                                                    }} 
-                                                    label={b.name} 
-                                                />
-                                            ))}
-                                        </Box>
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                bgcolor: 'background.paper',
-                                                borderRadius: 1,
-                                                mx: 'auto',
-                                                p: { xs: 0.25, sm: 0.5 },
-                                                justifyContent: 'center',
-                                            }}
-                                        >
-                                            <FormControlLabel 
-                                                control={
-                                                    <Checkbox
-                                                        sx={{ 
-                                                            '& .MuiSvgIcon-root': { 
-                                                                fontSize: { xs: 24, sm: 28 } 
-                                                            } 
-                                                        }}
-                                                        checked={selectedPets[m.id]||false}
-                                                        onChange={handlePetCheckboxChange}
-                                                        name={m.id}
-                                                    />
-                                                }
-                                                label={
-                                                    <Typography sx={{
-                                                        fontSize: { xs: '0.75rem', sm: '0.875rem' }
-                                                    }}>
-                                                        Add Pet
-                                                    </Typography>
-                                                }
-                                            />
-                                        </Box>
-                                    </Card>
-                                </Grid>
-                            )}
-                        </Grid>
-                    )}
-                </Container>
+                {!loadingExistingPets && (
+                    <Box sx={{ 
+                        height: 500,
+                        maxHeight: 'calc(100vh - 300px)',
+                        width: '100%',
+                        px: 2
+                    }}>
+                        <DataGrid
+                            rows={filteredPets}
+                            columns={columns}
+                            initialState={{
+                                pagination: {
+                                    paginationModel: { 
+                                        pageSize: 25, 
+                                        page: 0 
+                                    },
+                                },
+                            }}
+                            pageSizeOptions={[10, 25, 50, 100]}
+                            disableRowSelectionOnClick
+                            disableColumnMenu
+                            sx={{
+                                '& .MuiDataGrid-columnHeaders': {
+                                    background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
+                                    color: '#fff',
+                                    fontSize: '1rem',
+                                    fontWeight: 'bold',
+                                },
+                                '& .MuiDataGrid-columnHeader': {
+                                    backgroundColor: 'transparent',
+                                },
+                                '& .MuiDataGrid-columnHeaderTitle': {
+                                    fontWeight: 'bold',
+                                    color: '#fff',
+                                },
+                                '& .MuiDataGrid-sortIcon': {
+                                    color: '#fff',
+                                    opacity: 1,
+                                },
+                                '& .MuiDataGrid-menuIconButton': {
+                                    color: '#fff',
+                                    opacity: 1,
+                                },
+                                '& .MuiDataGrid-iconButtonContainer': {
+                                    color: '#fff',
+                                },
+                                '& .MuiDataGrid-footerContainer': {
+                                    background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
+                                    color: '#fff',
+                                },
+                                '& .MuiTablePagination-root': {
+                                    color: '#fff',
+                                },
+                                '& .MuiTablePagination-selectIcon': {
+                                    color: '#fff',
+                                },
+                                '& .MuiTablePagination-actions button': {
+                                    color: '#fff',
+                                },
+                            }}
+                        />
+                    </Box>
+                )}
                 <DialogActions sx={{ pb: 3, px: 3 }}>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button variant="contained" color="info" onClick={AddExistingPetsToOwner }>Save Pets</Button>
-                    </DialogActions>
+                    <Button variant="contained" color="info" onClick={AddExistingPetsToOwner}>Save Pets</Button>
+                </DialogActions>
             </DialogContent>
         </Dialog>
      );

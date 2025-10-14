@@ -4,26 +4,38 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import Container from '@mui/material/Container';
 import Carousel from '../Components/Carousel/Carousel';
 import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 import { getImageUrlFromBlob } from '../Util/CommonFunctions'
+
+interface PhotoFile {
+    id?: number;
+    fileName?: string;
+    name?: string;
+    fileDataBase64?: string;
+    size?: number;
+}
 
 interface FileUploadProps {
     label: string;
-    selectedFiles: File[],
-    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    selectedFiles: PhotoFile[] | File[];
+    onChange: (e: any) => void;
     readonly?: boolean;
 }
 
 export default function ImageUpload({ label, selectedFiles, onChange, readonly = false }: FileUploadProps) {
     const [slides, setSlides] = useState<React.ReactElement[]>([]);
     const [errorMessage, setErrorMessage] = React.useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() =>
     {
-        if (selectedFiles.length > 0)
+        if (selectedFiles && selectedFiles.length > 0)
         {
-            const files = [];
-            Array.from(selectedFiles).map((f) => {
-                if (f) {
+            setIsLoading(true);
+            const files: any[] = [];
+            Array.from(selectedFiles).forEach((f: any) => {
+                if (f && f.fileDataBase64) {
                     try {
                         const fileUrl = getImageUrlFromBlob(f.fileDataBase64);
                         files.push({ id: f.id, fileName: f.fileName, src: fileUrl, });
@@ -39,22 +51,28 @@ export default function ImageUpload({ label, selectedFiles, onChange, readonly =
             )))
 
             setSlides(updateSlides);
+            setIsLoading(false);
+        } else {
+            setSlides([]);
+            setIsLoading(false);
         }
-    }, []);
+    }, [selectedFiles]);
 
-    const handleFileChange = (e) =>
+    const handleFileChange = (e: any) =>
     {
         setErrorMessage("");
+        setIsLoading(true);
 
-        if (Array.from(e.target.files).some(s => s.size > 10000000)) {
+        if (Array.from(e.target.files).some((s: any) => s.size > 10000000)) {
             setErrorMessage("Files cannot be larger than 10MB");
+            setIsLoading(false);
         }
         else {
             onChange(e.target.files);
 
-            const files = [];
+            const files: any[] = [];
             let idx = 1;
-            Array.from(e.target.files).map((f) => {
+            Array.from(e.target.files).forEach((f: any) => {
                 if (f) {
                     try {
                         const fileUrl = URL.createObjectURL(f)
@@ -72,6 +90,7 @@ export default function ImageUpload({ label, selectedFiles, onChange, readonly =
             )))
 
             setSlides(updateSlides);
+            setIsLoading(false);
         }
     };
 
@@ -102,9 +121,14 @@ export default function ImageUpload({ label, selectedFiles, onChange, readonly =
                 maxWidth="sm"
                 sx={{ display: 'flex', flexDirection: 'column', my: 1, gap: 0 }}
             >
-            {selectedFiles?.length > 0 && (
+            {isLoading && (
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 3 }}>
+                    <CircularProgress />
+                </Box>
+            )}
+            {!isLoading && selectedFiles?.length > 0 && (
 
-                <Carousel cards={slides} />
+                <Carousel cards={slides} onVisible={() => {}} />
                 )
             }
             {errorMessage?.length > 0 && (

@@ -1,29 +1,32 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import IconButton from '@mui/material/IconButton';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import AddPet from './AddPet.tsx';
 import AddExistingPet from './AddExistingPet.tsx';
 import ViewPet from './ViewPet.tsx';
 import LoadingPlaceholder from '../LoadingPlaceholder.tsx';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import { styled } from '@mui/material/styles';
-import Carousel from '../Carousel/Carousel.tsx';
-import EditIcon from '@mui/icons-material/Edit';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import Chip from '@mui/material/Chip';
-import Fab from '@mui/material/Fab';
-import { getImageUrlFromBlob } from '../../Util/CommonFunctions.tsx'
 import usePetsStore from '../../Stores/PetsStore.tsx';
-import useExistingPetsStore from '../../Stores/ExistingPetStore.tsx';
 import ConfirmDialog from '../ConfirmDialog.tsx';
 import ErrorDisplay from '../ErrorDisplay.tsx';
 import { useSearch } from '../SearchProvider.tsx';
 import { useAuthStore } from '../../Stores/AuthStore';
 import { Pet } from '../../Types/SharedTypes.tsx';
+
+interface PetGridRow {
+    id: number;
+    name: string;
+    petType: string;
+    breeds: string;
+    sex: string;
+    color: string;
+    _originalPet: any; // Reference to full pet object
+}
 
 export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boolean }) {
     const { user } = useAuthStore();
@@ -42,27 +45,19 @@ export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boo
     
     const getPets = usePetsStore((state) => state.getPets);
     const getPetTypes = usePetsStore((state) => state.getPetTypes);
-    const getPetPhotos = usePetsStore((state) => state.getPetPhotos);
-    const getPetPhotosSync = usePetsStore((state) => state.getPetPhotosSync);
     const petTypes = usePetsStore((state) => state.petTypes);
     
-    // Use existing pets store for photo management
-    const getExistingPetPhotos = useExistingPetsStore((state) => state.getPetPhotos);
-    const getExistingPetPhotosSync = useExistingPetsStore((state) => state.getPetPhotosSync);
     const {
         pets,
         loadingPets,
-        loadingPetPhotos,
-        petPhotos,
         errorMessage,
         showErrors
     } = usePetsStore();
+    
     const [open, setOpen] = React.useState(false);
     const [openAddExistingPet, setOpenAddExistingPet] = React.useState(false);
     const [openViewPet, setOpenViewPet] = React.useState(false);
-    const [selectedPet, setSelectedPet] = useState<Pet>(
-        {
-        });
+    const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
     const [removePetId, setRemovePetId] = useState<number>(0);
     const [deletePetId, setDeletePetId] = useState<number>(0);
 
@@ -73,36 +68,9 @@ export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boo
     const [submitErrorMessage, setSubmitErrorMessage] = React.useState('');
     const { searchTerm } = useSearch();
 
-
-
     useEffect(() => {
         getPets(props.ownerId);
     }, [reloadPets, props.ownerId]);
-
-    // Load photos individually when pets are loaded
-    useEffect(() => {
-        if (pets && pets.length > 0) {
-            pets.forEach(pet => {
-                if (pet.id) {
-                    // First check if photos are already cached in existing pets store
-                    const existingPhotos = getExistingPetPhotosSync(pet.id);
-                    
-                    if (existingPhotos && existingPhotos.length > 0) {
-                        // Photos already exist in existing pets store, no need to fetch
-                        return;
-                    }
-                    
-                    // Check if photos are already cached in main pets store
-                    const cachedPhotos = getPetPhotosSync(pet.id);
-                    
-                    if (!cachedPhotos || cachedPhotos.length === 0) {
-                        // Fetch photos using individual getPetPhotos
-                        getPetPhotos(pet.id);
-                    }
-                }
-            });
-        }
-    }, [pets]);
 
     useMemo(() => {
         getPetTypes();
@@ -124,47 +92,7 @@ export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boo
         setOpenAddExistingPet(false);
     };
 
-    const getPetSlides = (petId, petType:string) =>
-    {
-        const placeholderDict =
-        {
-            Cat: "/Cat Placeholder.png",
-            Dog: "/Dog Placeholder.png",
-        }
-        
-        // First check existing pets store for photos
-        let photos = getExistingPetPhotosSync(petId);
-        
-        // If no photos in existing pets store, check main pets store
-        if (!photos || photos.length === 0) {
-            photos = getPetPhotosSync(petId);
-        }
-        
-        if (!photos || photos.length === 0) {
-            return [<img key="no-image" src={placeholderDict[petType]} />]
-        }
-
-        return Array.from(photos.map((f, index) => (
-            <img key={`${index}_${f.fileName}`} src={getImageUrlFromBlob(f.fileDataBase64)} />
-        )))
-    }
-
-    const loadPetPhotos = async (petId) => {
-        // First check existing pets store
-        let existingPhotos = getExistingPetPhotosSync(petId);
-        
-        // If no photos in existing pets store, check main pets store
-        if (!existingPhotos || existingPhotos.length === 0) {
-            existingPhotos = getPetPhotosSync(petId);
-        }
-        
-        // If still no photos, fetch them
-        if (!existingPhotos || existingPhotos.length === 0) {
-            await getPetPhotos(petId);
-        }
-    }
-
-    const handleOpenPet = (pet) => {
+    const handleOpenPet = (pet: any) => {
         const copiedPet = JSON.parse(JSON.stringify(pet));
         setSelectedPet(copiedPet);
         setOpenViewPet(true);
@@ -174,25 +102,25 @@ export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boo
         setOpenViewPet(false);
     };
 
-    const handleConfirmOpenRemove = (pet) => {
-        setRemovePetId(pet.id);
+    const handleConfirmOpenRemove = (petId: number) => {
+        setRemovePetId(petId);
         setOpenConfirmRemove(true);
     };
 
-    const handleConfirmOpenDelete = (pet) => {
-        setDeletePetId(pet.id);
+    const handleConfirmOpenDelete = (petId: number) => {
+        setDeletePetId(petId);
         setOpenConfirmDelete(true);
     };
 
     const handleConfirmCloseRemove = () => {
         setOpenConfirmRemove(false);
     };
+    
     const handleConfirmCloseDelete = () => {
         setOpenConfirmDelete(false);
     };
 
     const handleConfirmRemovePet = async () => {
-
         setSubmitErrorMessage("");
 
         const removeExistingPetsModel = {
@@ -216,15 +144,14 @@ export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boo
             }
 
             if (response.status == 200) {
-                setReloadPets(true);
+                setReloadPets(!reloadPets);
             }
-        } catch (e) {
+        } catch (e: any) {
             setSubmitErrorMessage(e.message);
         } 
     };
 
     const handleConfirmDeletePet = async () => {
-
         setSubmitErrorMessage("");
 
         try {
@@ -243,23 +170,118 @@ export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boo
             }
 
             if (response.status == 200) {
-                setReloadPets(true);
+                setReloadPets(!reloadPets);
             }
-        } catch (e) {
+        } catch (e: any) {
             setSubmitErrorMessage(e.message);
         }
     };
 
-    const SyledCardContent = styled(CardContent)({
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 1,
-        padding: 2,
-        flexGrow: 1,
-        '&:last-child': {
-            paddingBottom: 2,
+    // Filter pets based on search term
+    const filteredPets = useMemo(() => {
+        if (!pets) return [];
+        if (!searchTerm || searchTerm === '') return pets;
+        
+        return pets.filter((pet: any) => {
+            const name = pet.name?.toLowerCase() || '';
+            const hasBreedMatch = pet.breedTypes?.some((b: any) => 
+                b.name?.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1
+            ) || false;
+            
+            return name.indexOf(searchTerm.toLowerCase()) > -1 || hasBreedMatch;
+        });
+    }, [pets, searchTerm]);
+
+    // Transform pets data for DataGrid
+    const gridRows: PetGridRow[] = useMemo(() => {
+        return filteredPets.map((pet: any): PetGridRow => ({
+            id: pet.id,
+            name: pet.name || '',
+            petType: pet.petType?.type || '',
+            breeds: pet.breedTypes?.map((b: any) => b.name).join(', ') || '',
+            sex: pet.sex || '',
+            color: pet.color || '',
+            _originalPet: pet // Keep reference to original pet object
+        }));
+    }, [filteredPets]);
+
+    // Define columns for DataGrid
+    const columns: GridColDef[] = [
+        {
+            field: 'name',
+            headerName: 'Name',
+            flex: 1,
+            minWidth: 120,
+            filterable: false,
         },
-    });
+        {
+            field: 'petType',
+            headerName: 'Type',
+            flex: 0.7,
+            minWidth: 100,
+            filterable: false,
+        },
+        {
+            field: 'breeds',
+            headerName: 'Breed(s)',
+            flex: 1.5,
+            minWidth: 150,
+            filterable: false,
+        },
+        {
+            field: 'sex',
+            headerName: 'Sex',
+            flex: 0.5,
+            minWidth: 80,
+            filterable: false,
+        },
+        {
+            field: 'color',
+            headerName: 'Color',
+            flex: 0.8,
+            minWidth: 100,
+            filterable: false,
+        },
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            sortable: false,
+            filterable: false,
+            width: props.ownerId != null ? 120 : 80,
+            renderCell: (params: GridRenderCellParams) => (
+                <Box sx={{ display: 'flex', gap: 0.5 }}>
+                    <IconButton
+                        color="primary"
+                        onClick={() => handleOpenPet(params.row._originalPet)}
+                        size="small"
+                        aria-label={hasWriteAccess ? "edit" : "view"}
+                    >
+                        <EditIcon fontSize="small" />
+                    </IconButton>
+                    {hasWriteAccess && props.ownerId != null && (
+                        <IconButton
+                            color="warning"
+                            onClick={() => handleConfirmOpenRemove(params.row.id)}
+                            size="small"
+                            aria-label="remove"
+                        >
+                            <RemoveCircleIcon fontSize="small" />
+                        </IconButton>
+                    )}
+                    {hasWriteAccess && props.ownerId == null && (
+                        <IconButton
+                            color="error"
+                            onClick={() => handleConfirmOpenDelete(params.row.id)}
+                            size="small"
+                            aria-label="delete"
+                        >
+                            <RemoveCircleIcon fontSize="small" />
+                        </IconButton>
+                    )}
+                </Box>
+            ),
+        },
+    ];
 
     // Check if user has read access to pets (only applies when not used within owner context)
     if (props.ownerId === undefined && !hasReadAccess) {
@@ -278,192 +300,160 @@ export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boo
                 <ErrorDisplay error={errorMessage} height={700} />
             )}
             {submitErrorMessage?.length > 0 && (
-                <ErrorDisplay error={submitErrorMessage} />
+                <ErrorDisplay error={submitErrorMessage} height={100} />
             )}
             {loadingPets && (
                 <LoadingPlaceholder />
             )}
-            {!(showErrors) && (
+            {!(showErrors) && !loadingPets && (
                 <>
-                    {(!loadingPets) && (
-                        <>
-                            {hasWriteAccess && (
-                                <Box sx={{ display: 'flex', gap: 2, mb: 1, mt: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
-                                    <Button 
-                                        onClick={handleClickOpen} 
-                                        variant="contained" 
-                                        color="info" 
-                                        endIcon={<AddIcon />}
-                                        size="medium"
-                                        sx={{ 
-                                            fontSize: { xs: '0.875rem', sm: '1rem' }
-                                        }}
-                                    >
-                                        Add New Pet
-                                    </Button>
-                                    {props.ownerId != null && (
-                                        <Button 
-                                            onClick={handleClickOpenAddExisting} 
-                                            variant="outlined" 
-                                            color="info" 
-                                            endIcon={<AddIcon />}
-                                            size="medium"
-                                            sx={{ 
-                                                fontSize: { xs: '0.875rem', sm: '1rem' }
-                                            }}
-                                        >
-                                            Add/Move Existing Pets
-                                        </Button>
-                                    )}
-                                </Box>
-                            )}
-                            <Grid container spacing={2} sx={{
-                                height: '100%',
-                                display: 'flex',
-                                flexDirection: 'row',
-                            }}>
-                            <AddPet open={open} handleClose={handleClose} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} ownerId={props.ownerId} />
-                            <AddExistingPet open={openAddExistingPet} handleClose={handleCloseAddExisting} reloadPets={reloadPets} setReloadPets={setReloadPets} ownerId={props.ownerId} />
-                            {pets?.filter(f => (
-                                (searchTerm ?? '') == '' ||
-                                ((f.name).toLowerCase().indexOf(searchTerm?.toLowerCase()) > -1) ||
-                                (f.breedTypes.some(s => s.name.toLowerCase().indexOf(searchTerm?.toLowerCase()) > -1))
-                            )).map(m =>
-                                                                <Grid 
-                                    key={m.id}
-                                    xs={12}
-                                    sm={6}
-                                    md={4}
-                                    lg={3}
-                                    xl={2}
+                    {hasWriteAccess && (
+                        <Box sx={{ display: 'flex', gap: 2, mb: 2, mt: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
+                            <Button 
+                                onClick={handleClickOpen} 
+                                variant="contained" 
+                                color="info" 
+                                endIcon={<AddIcon />}
+                                size="medium"
+                                sx={{ 
+                                    fontSize: { xs: '0.875rem', sm: '1rem' }
+                                }}
+                            >
+                                Add New Pet
+                            </Button>
+                            {props.ownerId != null && (
+                                <Button 
+                                    onClick={handleClickOpenAddExisting} 
+                                    variant="outlined" 
+                                    color="info" 
+                                    endIcon={<AddIcon />}
+                                    size="medium"
                                     sx={{ 
-                                        height: { xs: '380px', sm: '360px', md: '400px' },
-                                        minHeight: '380px'
+                                        fontSize: { xs: '0.875rem', sm: '1rem' }
                                     }}
                                 >
-                                    <Card
-                                        variant="outlined"
-                                        sx={{
-                                            height: '100%',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                        }}
-                                    >
-                                        <Carousel 
-                                            cards={getPetSlides(m.id, m.petType?.type)} 
-                                            onVisible={() => loadPetPhotos(m.id)}
-                                        />
-                                        <SyledCardContent sx={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            p: { xs: 0.25, sm: 0.5 },
-                                            flexGrow: 0,
-                                        }}>
-                                            <Typography 
-                                                gutterBottom 
-                                                variant="h6" 
-                                                component="div"
-                                                sx={{
-                                                    fontSize: { xs: '0.9rem', sm: '1.1rem' },
-                                                    textAlign: 'center',
-                                                    wordBreak: 'break-word',
-                                                    mb: { xs: 0.125, sm: 0.25 },
-                                                }}
-                                            >
-                                                {m.name}
-                                            </Typography>
-                                        </SyledCardContent>
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                flexWrap: 'wrap',
-                                                bgcolor: 'background.paper',
-                                                borderRadius: 1,
-                                                mx: 'auto',
-                                                p: { xs: 0.125, sm: 0.25 },
-                                                justifyContent: 'center',
-                                                mb: { xs: 0.125, sm: 0.25 },
-                                            }}
-                                        >
-                                            {m.breedTypes?.length > 0 && (m.breedTypes?.map((b, index) =>
-                                                <Chip 
-                                                    key={index}
-                                                    sx={{
-                                                        m: { xs: 0.0625, sm: 0.125 },
-                                                        fontSize: { xs: '0.65rem', sm: '0.75rem' },
-                                                        height: { xs: '18px', sm: '24px' },
-                                                    }} 
-                                                    label={b.name} 
-                                                />
-                                            ))}
-                                        </Box>
-                                        <SyledCardContent sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            my: { xs: 0.125, sm: 0.25 },
-                                            p: { xs: 0.25, sm: 0.5 },
-                                        }}>
-                                            <Fab 
-                                                size="small" 
-                                                color="primary" 
-                                                sx={{ 
-                                                    alignSelf: 'center', 
-                                                    m: { xs: 0.25, sm: 0.5 },
-                                                    width: { xs: '36px', sm: '44px' },
-                                                    height: { xs: '36px', sm: '44px' },
-                                                }} 
-                                                onClick={() => handleOpenPet(m)} 
-                                                aria-label={hasWriteAccess ? "edit" : "view"}
-                                            >
-                                                <EditIcon sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
-                                            </Fab>
-                                            {hasWriteAccess && props.ownerId != null && (
-                                                <Fab 
-                                                    size="small" 
-                                                    color="warning" 
-                                                    sx={{ 
-                                                        alignSelf: 'center', 
-                                                        m: { xs: 0.25, sm: 0.5 },
-                                                        width: { xs: '36px', sm: '44px' },
-                                                        height: { xs: '36px', sm: '44px' },
-                                                    }} 
-                                                    onClick={() => handleConfirmOpenRemove(m)} 
-                                                    aria-label="remove"
-                                                >
-                                                    <RemoveCircleIcon sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
-                                                </Fab>
-                                            )}
-                                            {hasWriteAccess && props.ownerId == null && (
-                                                <Fab 
-                                                    size="small" 
-                                                    color="error" 
-                                                    sx={{ 
-                                                        alignSelf: 'center', 
-                                                        m: { xs: 0.25, sm: 0.5 },
-                                                        width: { xs: '36px', sm: '44px' },
-                                                        height: { xs: '36px', sm: '44px' },
-                                                    }} 
-                                                    onClick={() => handleConfirmOpenDelete(m)} 
-                                                    aria-label="delete"
-                                                >
-                                                    <RemoveCircleIcon sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }} />
-                                                </Fab>
-                                            )}
-                                        </SyledCardContent>
-                                    </Card>
-                                </Grid>
+                                    Add/Move Existing Pets
+                                </Button>
                             )}
-                            </Grid>
-                        </>
+                        </Box>
                     )}
-                    <ViewPet open={openViewPet} viewPet={selectedPet} handleClose={handleClosePet} petTypes={petTypes} reloadPets={reloadPets} setReloadPets={setReloadPets} hasWriteAccess={hasWriteAccess} />
-                    <ConfirmDialog open={openConfirmRemove} handleClose={handleConfirmCloseRemove} handleConfirm={handleConfirmRemovePet} confirmTitle={"Remove Pet"} confirmDescription={"Remove pet from this owner?"} confirmbuttonText="Yes" />
-                    <ConfirmDialog open={openConfirmDelete} handleClose={handleConfirmCloseDelete} handleConfirm={handleConfirmDeletePet} confirmTitle={"Delete Pet"} confirmDescription={"Are you sure you want to delete this pet?"} confirmbuttonText="Yes" />
+                    
+                    <Box sx={{ 
+                        height: props.ownerId != null ? 450 : 600,
+                        maxHeight: props.ownerId != null ? 450 : 'calc(100vh - 220px)',
+                        width: '100%'
+                    }}>
+                        <DataGrid
+                            rows={gridRows}
+                            columns={columns}
+                            initialState={{
+                                pagination: {
+                                    paginationModel: { 
+                                        pageSize: props.ownerId != null ? 10 : 25, 
+                                        page: 0 
+                                    },
+                                },
+                                sorting: {
+                                    sortModel: [{ field: 'name', sort: 'asc' }],
+                                },
+                            }}
+                            pageSizeOptions={props.ownerId != null ? [5, 10, 25] : [10, 25, 50, 100]}
+                            disableRowSelectionOnClick
+                            disableColumnMenu
+                            sx={{
+                                '& .MuiDataGrid-cell:focus': {
+                                    outline: 'none',
+                                },
+                                '& .MuiDataGrid-cell:focus-within': {
+                                    outline: 'none',
+                                },
+                                '& .MuiDataGrid-columnHeaders': {
+                                    background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
+                                    color: '#fff',
+                                    fontSize: '1rem',
+                                    fontWeight: 600,
+                                },
+                                '& .MuiDataGrid-columnHeader': {
+                                    background: 'transparent',
+                                    color: '#fff',
+                                },
+                                '& .MuiDataGrid-columnHeaderTitle': {
+                                    fontWeight: 600,
+                                    color: '#fff',
+                                },
+                                '& .MuiDataGrid-columnSeparator': {
+                                    color: 'rgba(255, 255, 255, 0.3)',
+                                },
+                                '& .MuiDataGrid-footerContainer': {
+                                    background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
+                                    color: '#fff',
+                                },
+                                '& .MuiTablePagination-root': {
+                                    color: '#fff',
+                                },
+                                '& .MuiTablePagination-selectIcon': {
+                                    color: '#fff',
+                                },
+                                '& .MuiTablePagination-actions .MuiIconButton-root': {
+                                    color: '#fff',
+                                },
+                                '& .MuiDataGrid-sortIcon': {
+                                    color: '#fff',
+                                    opacity: 1,
+                                },
+                                '& .MuiDataGrid-menuIconButton': {
+                                    color: '#fff',
+                                    opacity: 1,
+                                },
+                                '& .MuiDataGrid-iconButtonContainer': {
+                                    color: '#fff',
+                                },
+                            }}
+                        />
+                    </Box>
+
+                    <AddPet 
+                        open={open} 
+                        handleClose={handleClose} 
+                        petTypes={petTypes} 
+                        reloadPets={reloadPets} 
+                        setReloadPets={setReloadPets} 
+                        ownerId={props.ownerId} 
+                    />
+                    <AddExistingPet 
+                        open={openAddExistingPet} 
+                        handleClose={handleCloseAddExisting} 
+                        reloadPets={reloadPets} 
+                        setReloadPets={setReloadPets} 
+                        ownerId={props.ownerId} 
+                    />
+                    {selectedPet && (
+                        <ViewPet 
+                            open={openViewPet} 
+                            viewPet={selectedPet}
+                            handleClose={handleClosePet} 
+                            petTypes={petTypes} 
+                            reloadPets={reloadPets} 
+                            setReloadPets={setReloadPets} 
+                            hasWriteAccess={hasWriteAccess} 
+                        />
+                    )}
+                    <ConfirmDialog 
+                        open={openConfirmRemove} 
+                        handleClose={handleConfirmCloseRemove} 
+                        handleConfirm={handleConfirmRemovePet} 
+                        confirmTitle={"Remove Pet"} 
+                        confirmDescription={"Remove pet from this owner?"} 
+                        confirmbuttonText="Yes" 
+                    />
+                    <ConfirmDialog 
+                        open={openConfirmDelete} 
+                        handleClose={handleConfirmCloseDelete} 
+                        handleConfirm={handleConfirmDeletePet} 
+                        confirmTitle={"Delete Pet"} 
+                        confirmDescription={"Are you sure you want to delete this pet?"} 
+                        confirmbuttonText="Yes" 
+                    />
                 </>
             )}
         </>
