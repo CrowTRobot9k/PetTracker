@@ -107,16 +107,18 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
         },
         {
             field: 'select',
-            headerName: 'Select',
+            headerName: '',
             flex: 0.6,
             minWidth: 80,
             sortable: false,
             filterable: false,
             renderCell: (params: GridRenderCellParams) => (
-                <Checkbox
-                    checked={selectedPets[params.row.id] || false}
-                    onChange={(e) => handleCheckboxChange(params.row.id, e.target.checked)}
-                />
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+                    <Checkbox
+                        checked={selectedPets[params.row.id] || false}
+                        onChange={(e) => handleCheckboxChange(params.row.id, e.target.checked)}
+                    />
+                </Box>
             ),
         },
     ];
@@ -229,6 +231,15 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
                             pageSizeOptions={[10, 25, 50, 100]}
                             disableRowSelectionOnClick
                             disableColumnMenu
+                            slots={{
+                                noRowsOverlay: () => (
+                                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                                        <Box sx={{ textAlign: 'center' }}>
+                                            No pets found
+                                        </Box>
+                                    </Box>
+                                ),
+                            }}
                             sx={{
                                 '& .MuiDataGrid-columnHeaders': {
                                     background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
@@ -272,7 +283,7 @@ export default function AddExistingPet({ open, handleClose, reloadPets, setReloa
                     </Box>
                 )}
                 <DialogActions sx={{ pb: 3, px: 3 }}>
-                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClose} variant="contained" color="secondary">Cancel</Button>
                     <Button variant="contained" color="info" onClick={AddExistingPetsToOwner}>Save Pets</Button>
                 </DialogActions>
             </DialogContent>

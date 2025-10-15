@@ -67,11 +67,16 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                 >
                     {/* Welcome Message */}
                     <Box sx={{ textAlign: 'center', mb: 4 }}>
-                        <Typography variant="h2" component="h1" gutterBottom sx={{ 
-                            fontWeight: 'bold', 
-                            color: 'primary.main',
-                            mb: 2 
-                        }}>
+                        <Typography 
+                            variant="h2" 
+                            component="h1" 
+                            gutterBottom 
+                            className="gradient-text"
+                            sx={{ 
+                                fontWeight: 'bold',
+                                mb: 2 
+                            }}
+                        >
                             Welcome to Pet Tracker
                         </Typography>
                         <Typography variant="h5" component="h2" color="text.secondary" sx={{ mb: 3 }}>
@@ -102,7 +107,14 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                             onClick={hasPermission('owners') ? () => navigate('/owners') : undefined}
                         >
                             <CardContent>
-                                <People sx={{ fontSize: 48, color: hasPermission('owners') ? 'primary.main' : 'text.disabled', mb: 2 }} />
+                                <People 
+                                    className={hasPermission('owners') ? 'gradient-icon' : ''}
+                                    sx={{ 
+                                        fontSize: 48, 
+                                        mb: 2,
+                                        color: hasPermission('owners') ? undefined : 'text.disabled',
+                                    }} 
+                                />
                                 <Typography variant="h6" component="h3" gutterBottom>
                                     Owner Profiles
                                 </Typography>
@@ -134,7 +146,14 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                             onClick={hasPermission('pets') ? () => navigate('/pets') : undefined}
                         >
                             <CardContent>
-                                <Pets sx={{ fontSize: 48, color: hasPermission('pets') ? 'primary.main' : 'text.disabled', mb: 2 }} />
+                                <Pets 
+                                    className={hasPermission('pets') ? 'gradient-icon' : ''}
+                                    sx={{ 
+                                        fontSize: 48, 
+                                        mb: 2,
+                                        color: hasPermission('pets') ? undefined : 'text.disabled',
+                                    }} 
+                                />
                                 <Typography variant="h6" component="h3" gutterBottom>
                                     Pet Management
                                 </Typography>
@@ -166,7 +185,14 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                             onClick={hasPermission('appointments') ? () => navigate('/appointments') : undefined}
                         >
                             <CardContent>
-                                <Event sx={{ fontSize: 48, color: hasPermission('appointments') ? 'primary.main' : 'text.disabled', mb: 2 }} />
+                                <Event 
+                                    className={hasPermission('appointments') ? 'gradient-icon' : ''}
+                                    sx={{ 
+                                        fontSize: 48, 
+                                        mb: 2,
+                                        color: hasPermission('appointments') ? undefined : 'text.disabled',
+                                    }} 
+                                />
                                 <Typography variant="h6" component="h3" gutterBottom>
                                     Appointment Scheduling
                                 </Typography>
@@ -198,7 +224,14 @@ export default function Home(props: { disableCustomTheme?: boolean }) {
                             onClick={hasPermission('users') ? () => navigate('/users') : undefined}
                         >
                             <CardContent>
-                                <Person sx={{ fontSize: 48, color: hasPermission('users') ? 'primary.main' : 'text.disabled', mb: 2 }} />
+                                <Person 
+                                    className={hasPermission('users') ? 'gradient-icon' : ''}
+                                    sx={{ 
+                                        fontSize: 48, 
+                                        mb: 2,
+                                        color: hasPermission('users') ? undefined : 'text.disabled',
+                                    }} 
+                                />
                                 <Typography variant="h6" component="h3" gutterBottom>
                                     User Management
                                 </Typography>

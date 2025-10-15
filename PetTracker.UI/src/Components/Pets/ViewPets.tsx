@@ -244,12 +244,12 @@ export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boo
         },
         {
             field: 'actions',
-            headerName: 'Actions',
+            headerName: '',
             sortable: false,
             filterable: false,
             width: props.ownerId != null ? 120 : 80,
             renderCell: (params: GridRenderCellParams) => (
-                <Box sx={{ display: 'flex', gap: 0.5 }}>
+                <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
                     <IconButton
                         color="primary"
                         onClick={() => handleOpenPet(params.row._originalPet)}
@@ -360,6 +360,15 @@ export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boo
                             pageSizeOptions={props.ownerId != null ? [5, 10, 25] : [10, 25, 50, 100]}
                             disableRowSelectionOnClick
                             disableColumnMenu
+                            slots={{
+                                noRowsOverlay: () => (
+                                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                                        <Box sx={{ textAlign: 'center' }}>
+                                            No pets found
+                                        </Box>
+                                    </Box>
+                                ),
+                            }}
                             sx={{
                                 '& .MuiDataGrid-cell:focus': {
                                     outline: 'none',

@@ -151,10 +151,16 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                 hidden={value !== index}
                 id={`simple-tabpanel-${index}`}
                 aria-labelledby={`simple-tab-${index}`}
-                style={{ width: '100%' }}
+                style={{ 
+                    width: '100%', 
+                    height: '100%',
+                    overflow: 'auto',
+                    flex: 1,
+                    display: value === index ? 'block' : 'none'
+                }}
                 {...other}
             >
-                {value === index && <Box sx={{ p: 0, width: '100%' }}>{children}</Box>}
+                {value === index && <Box sx={{ p: 0, width: '100%', height: '100%' }}>{children}</Box>}
             </div>
         );
     }
@@ -227,39 +233,64 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
             open={open}
             onClose={handleClose}
             fullWidth
-            maxWidth={isMobile ? "sm" : "lg"}
+            maxWidth={isMobile ? "sm" : "xl"}
             fullScreen={isMobile}
+            sx={{
+                '& .MuiDialog-paper': {
+                    height: isMobile ? '100%' : '90vh',
+                    maxHeight: isMobile ? '100%' : '90vh'
+                }
+            }}
         >
-            <form name="saveOwnerForm" onSubmit={handleSaveOwnerSubmit} style={{ width: '100%' }}>
-                <DialogContent sx={{ height: isMobile ? 'auto' : 800, maxHeight: isMobile ? '80vh' : 'none', width: '100%' }}>
-                    <DialogContent
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            flexWrap: 'wrap',
-                            width: '100%',
-                            alignItems: 'center',
-                            p: 0
-                        }}
-                    >
-                        <DialogTitle sx={{ p: 0 }} >
-                            View Owner
-                        </DialogTitle>
-                        {submitErrorMessage?.length > 0 && (
-                            <ErrorDisplay error={submitErrorMessage} />
-                        )}
-                        <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} readonly={!hasWriteAccess} />
-                    </DialogContent>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>
-                        <Tabs value={tabIndex} onChange={handleTabChange} sx={{ width: '100%' }}>
-                            <Tab label="Info" {...a11yProps(0)} />
-                            <Tab label="Pets" {...a11yProps(1)} />
-                        </Tabs>
-                    </Box>
+            <form name="saveOwnerForm" onSubmit={handleSaveOwnerSubmit} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        flexWrap: 'wrap',
+                        width: '100%',
+                        alignItems: 'center',
+                        pt: { xs: 2, sm: 3 },
+                        pb: 0,
+                        px: { xs: 2, sm: 3 },
+                        flexShrink: 0
+                    }}
+                >
+                    <DialogTitle sx={{ p: 0, mb: 1 }} >
+                        View Owner
+                    </DialogTitle>
+                    {submitErrorMessage?.length > 0 && (
+                        <ErrorDisplay error={submitErrorMessage} />
+                    )}
+                    <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} readonly={!hasWriteAccess} />
+                </Box>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%', flexShrink: 0 }}>
+                    <Tabs value={tabIndex} onChange={handleTabChange} sx={{ width: '100%' }}>
+                        <Tab label="Info" {...a11yProps(0)} />
+                        <Tab label="Pets" {...a11yProps(1)} />
+                    </Tabs>
+                </Box>
+                <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <CustomTabPanel value={tabIndex} index={0}>
-                        <DialogContent sx={{ p: { xs: 2, sm: 3 }, width: '100%', maxWidth: '100%' }}>
-                            <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ width: '100%' }}>
-                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                        <DialogContent sx={{ p: { xs: 2, sm: 3 }, width: '100%', maxWidth: '100%', height: '100%', overflow: 'auto' }}>
+                            <Grid 
+                                container 
+                                columns={12} 
+                                spacing={{ xs: 2, sm: 3 }} 
+                                sx={{ 
+                                    width: '100%',
+                                    display: 'flex',
+                                    flexWrap: 'wrap'
+                                }}
+                            >
+                                <Grid 
+                                    size={{ xs: 12, sm: 6, md: 6, lg: 6 }} 
+                                    className="owner-modal-field"
+                                    sx={{
+                                        flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' },
+                                        maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' }
+                                    }}
+                                >
                                     <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
                                         First Name
                                     </DialogContentText>
@@ -277,7 +308,14 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                         disabled={!hasWriteAccess}
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                <Grid 
+                                    size={{ xs: 12, sm: 6, md: 6, lg: 6 }} 
+                                    className="owner-modal-field"
+                                    sx={{
+                                        flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' },
+                                        maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' }
+                                    }}
+                                >
                                     <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
                                         Last Name
                                     </DialogContentText>
@@ -294,7 +332,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                         disabled={!hasWriteAccess}
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                <Grid size={{ xs: 12, sm: 6, md: 6, lg: 6 }} className="owner-modal-field" sx={{ flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' }, maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' } }}>
                                     <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
                                         Email
                                     </DialogContentText>
@@ -311,7 +349,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                         disabled={!hasWriteAccess}
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                <Grid size={{ xs: 12, sm: 6, md: 6, lg: 6 }} className="owner-modal-field" sx={{ flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' }, maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' } }}>
                                     <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
                                         Address
                                     </DialogContentText>
@@ -328,7 +366,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                         disabled={!hasWriteAccess}
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                <Grid size={{ xs: 12, sm: 6, md: 6, lg: 6 }} className="owner-modal-field" sx={{ flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' }, maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' } }}>
                                     <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
                                         Primary Phone
                                     </DialogContentText>
@@ -345,7 +383,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                         disabled={!hasWriteAccess}
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                <Grid size={{ xs: 12, sm: 6, md: 6, lg: 6 }} className="owner-modal-field" sx={{ flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' }, maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' } }}>
                                     <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
                                         Referred By
                                     </DialogContentText>
@@ -362,7 +400,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                         disabled={!hasWriteAccess}
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                <Grid size={{ xs: 12, sm: 6, md: 6, lg: 6 }} className="owner-modal-field" sx={{ flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' }, maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' } }}>
                                     <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
                                         City
                                     </DialogContentText>
@@ -379,7 +417,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                         disabled={!hasWriteAccess}
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                <Grid size={{ xs: 12, sm: 6, md: 6, lg: 6 }} className="owner-modal-field" sx={{ flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' }, maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' } }}>
                                     <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
                                         State
                                     </DialogContentText>
@@ -405,7 +443,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                <Grid size={{ xs: 12, sm: 6, md: 6, lg: 6 }} className="owner-modal-field" sx={{ flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' }, maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' } }}>
                                     <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
                                         Zip Code
                                     </DialogContentText>
@@ -422,7 +460,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                         disabled={!hasWriteAccess}
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                <Grid size={{ xs: 12, sm: 6, md: 6, lg: 6 }} className="owner-modal-field" sx={{ flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' }, maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' } }}>
                                     <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
                                         Secondary Phone
                                     </DialogContentText>
@@ -439,7 +477,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                         disabled={!hasWriteAccess}
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                <Grid size={{ xs: 12, sm: 6, md: 6, lg: 6 }} className="owner-modal-field" sx={{ flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' }, maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' } }}>
                                     <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
                                         Veterinarian
                                     </DialogContentText>
@@ -456,7 +494,7 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                                         disabled={!hasWriteAccess}
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6, md: 6 }} className="owner-modal-field">
+                                <Grid size={{ xs: 12, sm: 6, md: 6, lg: 6 }} className="owner-modal-field" sx={{ flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' }, maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' } }}>
                                     <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
                                         Veterinarian Phone
                                     </DialogContentText>
@@ -477,22 +515,24 @@ export default function ViewOwner({ open, viewOwner, handleClose, ownerStates, r
                         </DialogContent>
                     </CustomTabPanel>
                     <CustomTabPanel value={tabIndex} index={1}>
-                        <DialogContent>
+                        <DialogContent sx={{ p: { xs: 2, sm: 3 }, width: '100%', height: '100%', overflow: 'auto' }}>
                             <ViewPets ownerId={viewOwner.id} hasWriteAccess={hasWriteAccess} />
                         </DialogContent>
                     </CustomTabPanel>
-                </DialogContent>
+                </Box>
                 <DialogActions sx={{ 
                     pb: isMobile ? 2 : 3, 
                     px: isMobile ? 2 : 3,
                     flexDirection: isMobile ? 'column' : 'row',
-                    gap: isMobile ? 1 : 0
+                    gap: isMobile ? 1 : 0,
+                    flexShrink: 0
                 }}>
                     <Button 
                         onClick={handleClose} 
                         disabled={isSaving}
                         fullWidth={isMobile}
-                        variant={isMobile ? "outlined" : "text"}
+                        variant="contained"
+                        color="secondary"
                     >
                         {hasWriteAccess ? 'Cancel' : 'Close'}
                     </Button>

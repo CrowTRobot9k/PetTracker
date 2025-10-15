@@ -74,8 +74,8 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
         />
       </DialogContent>
       <DialogActions sx={{ pb: 3, px: 3 }}>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button variant="contained" type="submit">Continue</Button>
+        <Button onClick={handleClose} variant="contained" color="secondary">Cancel</Button>
+        <Button variant="contained" color="info" type="submit">Continue</Button>
       </DialogActions>
       {submitSuccessMessage?.length > 0 && (
           <Alert variant="filled" severity="success">

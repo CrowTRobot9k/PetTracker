@@ -20,32 +20,15 @@ namespace PetTracker.Server.Controllers
         [Authorize(Roles = "Administrator,Appointments Read,Appointments Write")]
         public async Task<IActionResult> GetAppointments(int? companyId)
         {
-            try
-            {
-                var result = await _AppointmentService.GetAppointments(companyId);
-
-                return NewtonsoftJson(result);
-            }
-            catch (Exception ex)
-            {
-                return NewtonsoftJson(HandleUIException(ex));
-            }
+            var result = await _AppointmentService.GetAppointments(companyId);
+            return NewtonsoftJson(result);
         }
 
         [HttpPost("CreateAppointment")]
         [Authorize(Roles = "Administrator,Appointments Write")]
         public async Task<IActionResult> CreateAppointment(AppointmentDto model)
-
         {
-            try
-            {
-                var result = await _AppointmentService.CreateAppointment(model);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex, model));
-            }
-
+            var result = await _AppointmentService.CreateAppointment(model);
             return new JsonResult(true);
         }
 
@@ -53,17 +36,8 @@ namespace PetTracker.Server.Controllers
         [HttpPost("UpdateAppointment")]
         [Authorize(Roles = "Administrator,Appointments Write")]
         public async Task<IActionResult> UpdateAppointment(AppointmentDto model)
-
         {
-            try
-            {
-                var result = await _AppointmentService.UpdateAppointment(model);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex, model));
-            }
-
+            var result = await _AppointmentService.UpdateAppointment(model);
             return new JsonResult(true);
         }
 
@@ -72,15 +46,7 @@ namespace PetTracker.Server.Controllers
         [Authorize(Roles = "Administrator,Appointments Write")]
         public async Task<IActionResult> DeleteAppointment([FromBody] int id)
         {
-            try
-            {
-                var result = await _AppointmentService.DeleteAppointment(id);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex, id));
-            }
-
+            var result = await _AppointmentService.DeleteAppointment(id);
             return new JsonResult(true);
         }
 

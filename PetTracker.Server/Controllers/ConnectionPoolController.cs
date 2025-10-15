@@ -28,15 +28,8 @@ namespace PetTracker.Server.Controllers
         [HttpGet("stats")]
         public async Task<IActionResult> GetConnectionPoolStats()
         {
-            try
-            {
-                var stats = await _connectionPoolMonitoringService.GetConnectionPoolStatsAsync();
-                return Ok(stats);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex));
-            }
+            var stats = await _connectionPoolMonitoringService.GetConnectionPoolStatsAsync();
+            return Ok(stats);
         }
 
         /// <summary>
@@ -45,15 +38,8 @@ namespace PetTracker.Server.Controllers
         [HttpGet("health")]
         public async Task<IActionResult> GetConnectionPoolHealth()
         {
-            try
-            {
-                var isHealthy = await _connectionPoolMonitoringService.IsConnectionPoolHealthyAsync();
-                return Ok(new { isHealthy, status = isHealthy ? "Healthy" : "Unhealthy" });
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex));
-            }
+            var isHealthy = await _connectionPoolMonitoringService.IsConnectionPoolHealthyAsync();
+            return Ok(new { isHealthy, status = isHealthy ? "Healthy" : "Unhealthy" });
         }
 
         /// <summary>
@@ -62,15 +48,8 @@ namespace PetTracker.Server.Controllers
         [HttpGet("config")]
         public async Task<IActionResult> GetConnectionStringConfig()
         {
-            try
-            {
-                var config = await _connectionPoolMonitoringService.GetConnectionStringInfoAsync();
-                return Ok(new { configuration = config });
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex));
-            }
+            var config = await _connectionPoolMonitoringService.GetConnectionStringInfoAsync();
+            return Ok(new { configuration = config });
         }
     }
 }

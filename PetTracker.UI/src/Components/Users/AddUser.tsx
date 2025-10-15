@@ -267,7 +267,7 @@ export default function AddUser(props: AddUserProps) {
                     </DialogContent>
                 </DialogContent>
                 <DialogActions sx={{ pb: 3, px: 3 }}>
-                    <Button onClick={props.handleClose} disabled={isSaving}>Cancel</Button>
+                    <Button onClick={props.handleClose} disabled={isSaving} variant="contained" color="secondary">Cancel</Button>
                     <Button 
                         variant="contained" 
                         color="info" 

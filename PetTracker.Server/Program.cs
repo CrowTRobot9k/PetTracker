@@ -5,6 +5,7 @@ using PetTracker.Domain.Models;
 using PetTracker.Infrastucture.Services;
 using PetTracker.Server.Models;
 using PetTracker.Server.HealthChecks;
+using PetTracker.Server.Filters;
 using PetTracker.SqlDb.Models;
 using Scalar.AspNetCore;
 using System.Security.Claims;
@@ -131,7 +132,11 @@ try
     // API CONFIGURATION
     // =============================================================================
     
-    builder.Services.AddControllers();
+    builder.Services.AddControllers(options =>
+    {
+        // Add global exception filter
+        options.Filters.Add<GlobalExceptionFilter>();
+    });
     builder.Services.AddOpenApi();
     builder.Services.AddHttpContextAccessor();
 

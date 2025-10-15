@@ -343,7 +343,7 @@ export default function ViewAppointment({ open, handleClose, viewAppointment, re
                     </DialogContent>
                 </DialogContent>
                 <DialogActions sx={{ pb: 3, px: 3 }}>
-                    <Button onClick={handleClose} disabled={isSaving}>
+                    <Button onClick={handleClose} disabled={isSaving} variant="contained" color="secondary">
                         {hasWriteAccess ? 'Cancel' : 'Close'}
                     </Button>
                     {hasWriteAccess && (

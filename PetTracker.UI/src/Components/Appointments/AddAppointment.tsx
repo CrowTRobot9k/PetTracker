@@ -283,7 +283,7 @@ export default function AddAppointment({ open, handleClose, reloadAppointments, 
                     </DialogContent>
                 </DialogContent>
                 <DialogActions sx={{ pb: 3, px: 3 }}>
-                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClose} variant="contained" color="secondary">Cancel</Button>
                     <Button variant="contained" color="info" type="submit">Add Appointment</Button>
                 </DialogActions>
             </form>

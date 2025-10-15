@@ -5,6 +5,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import TextField from '@mui/material/TextField';
 import ImageUpload from '../ImageUpload';
 import React, { useState, useEffect } from 'react';
 import FormControl from '@mui/material/FormControl';
@@ -34,6 +35,7 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
     const [submitSuccessMessage, setSuccessMessage] = React.useState('');
     const [submitErrorMessage, setErrorMessage] = React.useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const [weightError, setWeightError] = useState<string>('');
     const [addPet, setAddPet] = useState<Pet>(
         {
             breeds: []
@@ -88,6 +90,20 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
             ...prevState,
             [name]: value,
         }));
+    };
+
+    const handleWeightChange = (e) => {
+        const { value } = e.target;
+        // Validate that weight is a number or empty
+        if (value === '' || /^\d*\.?\d*$/.test(value)) {
+            setAddPet(prevState => ({
+                ...prevState,
+                weight: value,
+            }));
+            setWeightError('');
+        } else {
+            setWeightError('Weight must be a valid number');
+        }
     };
 
     const handleChangeDate = (e) => {
@@ -283,7 +299,7 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
               <DialogContentText>
                   Weight
               </DialogContentText>
-              <OutlinedInput
+              <TextField
                 margin="dense"
                 id="petWeight"
                 name="weight"
@@ -291,8 +307,11 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
                 placeholder="Pet Weight"
                 type="text"
                 fullWidth
-                value={addPet.weight}
-                onChange={handleChange}
+                value={addPet.weight || ''}
+                onChange={handleWeightChange}
+                error={!!weightError}
+                helperText={weightError}
+                size="small"
               />
               <DialogContentText>
                   Sex
@@ -337,7 +356,7 @@ export default function AddPet({ open, handleClose, petTypes, reloadPets, setRel
                         </DialogContent>
           </DialogContent>
           <DialogActions sx={{ pb: 3, px: 3 }}>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleClose} variant="contained" color="secondary">Cancel</Button>
             <Button variant="contained" color="info" type="submit">Add Pet</Button>
           </DialogActions>
           </form>

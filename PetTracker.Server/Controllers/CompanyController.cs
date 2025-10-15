@@ -18,30 +18,23 @@ namespace PetTracker.Server.Controllers
         [HttpGet("GetCompanies")]
         public async Task<IActionResult> GetCompanies(int? companyId)
         {
-            try
+            // Create cache key based on companyId parameter
+            var cacheKey = $"companies_{companyId?.ToString() ?? "all"}";
+            
+            // Try to get from cache first
+            var cachedResult = await _cachingService.GetAsync<object>(cacheKey);
+            if (cachedResult != null)
             {
-                // Create cache key based on companyId parameter
-                var cacheKey = $"companies_{companyId?.ToString() ?? "all"}";
-                
-                // Try to get from cache first
-                var cachedResult = await _cachingService.GetAsync<object>(cacheKey);
-                if (cachedResult != null)
-                {
-                    return new JsonResult(cachedResult);
-                }
-                
-                // If not in cache, fetch from database
-                var result = await _UserService.GetCompanies(companyId);
-                
-                // Cache the result for 1 hour
-                await _cachingService.SetAsync(cacheKey, result, TimeSpan.FromHours(1));
-                
-                return new JsonResult(result);
+                return new JsonResult(cachedResult);
             }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex));
-            }
+            
+            // If not in cache, fetch from database
+            var result = await _UserService.GetCompanies(companyId);
+            
+            // Cache the result for 1 hour
+            await _cachingService.SetAsync(cacheKey, result, TimeSpan.FromHours(1));
+            
+            return new JsonResult(result);
         }
     }
 }

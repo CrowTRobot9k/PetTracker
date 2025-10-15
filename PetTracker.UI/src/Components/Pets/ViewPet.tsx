@@ -5,6 +5,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import TextField from '@mui/material/TextField';
 import ImageUpload from '../ImageUpload';
 import React, { useState, useEffect } from 'react';
 import FormControl from '@mui/material/FormControl';
@@ -40,6 +41,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
     const [submitErrorMessage, setErrorMessage] = React.useState('');
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [openBreeds, setOpenBreeds] = useState(false);
+    const [weightError, setWeightError] = useState<string>('');
     const [editPet, setEditPet] = useState<Pet>({});
     const [isSaving, setIsSaving] = useState(false);
 
@@ -154,6 +156,20 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
             ...prevData,
             [name]: value
         }));
+    };
+
+    const handleWeightChange = (e) => {
+        const { value } = e.target;
+        // Validate that weight is a number or empty
+        if (value === '' || /^\d*\.?\d*$/.test(value)) {
+            setEditPet(prevState => ({
+                ...prevState,
+                weight: value,
+            }));
+            setWeightError('');
+        } else {
+            setWeightError('Weight must be a valid number');
+        }
     };
 
     const handleChangeDate = (e) => {
@@ -362,7 +378,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                         <DialogContentText>
                             Weight
                         </DialogContentText>
-                        <OutlinedInput
+                        <TextField
                             autoFocus
                             margin="dense"
                             id="petWeight"
@@ -372,8 +388,10 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                             type="text"
                             fullWidth
                             value={editPet.weight}
-                            onChange={handleChange}
+                            onChange={handleWeightChange}
                             disabled={!hasWriteAccess}
+                            error={!!weightError}
+                            helperText={weightError}
                         />
                         <DialogContentText>
                             Sex
@@ -421,7 +439,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                     </DialogContent>
                 </DialogContent>
                 <DialogActions sx={{ pb: 3, px: 3 }}>
-                    <Button onClick={handleClose} disabled={isSaving}>
+                    <Button onClick={handleClose} disabled={isSaving} variant="contained" color="secondary">
                         {hasWriteAccess ? 'Cancel' : 'Close'}
                     </Button>
                     {hasWriteAccess && (

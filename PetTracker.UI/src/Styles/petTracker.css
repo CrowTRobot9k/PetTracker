@@ -29,12 +29,69 @@ body {
     overflow-x: hidden; /* Hides the horizontal scrollbar */
 }
 
+/* Gradient text styling */
+.gradient-text {
+    background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    -moz-background-clip: text !important;
+    -moz-text-fill-color: transparent !important;
+    display: inline-block !important;
+}
+
+/* Gradient icon styling */
+.gradient-icon {
+    color: #1976d2 !important;
+    filter: drop-shadow(0 2px 4px rgba(66, 165, 245, 0.4)) !important;
+}
+
+/* Gradient button styling for info colored buttons */
+.MuiButton-containedInfo {
+    background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%) !important;
+}
+
+.MuiButton-containedInfo:hover {
+    background: linear-gradient(135deg, #1565c0 0%, #1e88e5 100%) !important;
+}
+
+/* Gradient button styling for secondary colored buttons - brown from logo */
+.MuiButton-containedSecondary {
+    background: linear-gradient(135deg, #D2691E 0%, #CD853F 100%) !important;
+    color: white !important;
+}
+
+.MuiButton-containedSecondary:hover {
+    background: linear-gradient(135deg, #C2581E 0%, #BD752F 100%) !important;
+}
+
+/* Brown gradient for outlined secondary buttons */
+.MuiButton-outlinedSecondary {
+    border-color: #D2691E !important;
+    color: #D2691E !important;
+}
+
+.MuiButton-outlinedSecondary:hover {
+    border-color: #C2581E !important;
+    background-color: rgba(210, 105, 30, 0.08) !important;
+}
+
+/* Override Material-UI's default secondary color for contained buttons */
+.MuiButton-root.MuiButton-containedSecondary {
+    background: linear-gradient(135deg, #D2691E 0%, #CD853F 100%) !important;
+}
+
+.MuiButton-root.MuiButton-containedSecondary:hover {
+    background: linear-gradient(135deg, #C2581E 0%, #BD752F 100%) !important;
+}
+
 /* Owner modal responsive layout improvements */
-@media (min-width: 480px) and (orientation: landscape), (min-width: 900px) {
-    .owner-modal-field {
-        width: 50% !important;
-        max-width: 50% !important;
-        flex-basis: 50% !important;
+@media (min-width: 600px) {
+    /* Target Grid items within the Dialog */
+    .MuiDialog-root .owner-modal-field {
+        flex: 0 0 calc(50% - 12px) !important;
+        max-width: calc(50% - 12px) !important;
+        flex-basis: calc(50% - 12px) !important;
     }
     
     .owner-modal-field .MuiOutlinedInput-root,

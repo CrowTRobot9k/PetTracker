@@ -24,45 +24,23 @@ namespace PetTracker.Server.Controllers
         [Authorize(Roles = "Administrator,Pets Read,Pets Write")]
         public async Task<IActionResult> GetPets(int? ownerId)
         {
-            try
-            {
-               var result = await _PetService.GetPets(ownerId);
-               return new JsonResult(result);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex, ownerId));
-            }
+            var result = await _PetService.GetPets(ownerId);
+            return new JsonResult(result);
         }
 
         [HttpGet("GetPetList")]
         [Authorize(Roles = "Administrator,Pets Read,Pets Write")]
         public async Task<IActionResult> GetPetList(int? ownerId)
         {
-            try
-            {
-                var result = await _PetService.GetPetList(ownerId);
-                return new JsonResult(result);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex, ownerId));
-            }
+            var result = await _PetService.GetPetList(ownerId);
+            return new JsonResult(result);
         }
 
         [HttpPost("CreatePet")]
         [Authorize(Roles = "Administrator,Pets Write")]
         public async Task<IActionResult> CreatePet([FromForm] AddPetDto model)
         {
-            try
-            {
-                var result = await _PetService.CreatePet(model);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex, model));
-            }
-
+            var result = await _PetService.CreatePet(model);
             return new JsonResult(true);
         }
 
@@ -71,15 +49,7 @@ namespace PetTracker.Server.Controllers
         [Authorize(Roles = "Administrator,Pets Write")]
         public async Task<IActionResult> UpdatePet([FromForm] AddPetDto model)
         {
-            try
-            {
-                var result = await _PetService.UpdatePet(model);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex,model));
-            }
-
+            var result = await _PetService.UpdatePet(model);
             return new JsonResult(true);
         }
 
@@ -87,15 +57,7 @@ namespace PetTracker.Server.Controllers
         [Authorize(Roles = "Administrator,Pets Write")]
         public async Task<IActionResult> DeletePet([FromBody]int id)
         {
-            try
-            {
-                var result = await _PetService.DeletePet(id);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex, id));
-            }
-
+            var result = await _PetService.DeletePet(id);
             return new JsonResult(true);
         }
 
@@ -103,86 +65,53 @@ namespace PetTracker.Server.Controllers
         [Authorize(Roles = "Administrator,Pets Read,Pets Write")]
         public async Task<IActionResult> GetPetTypes()
         {
-            try
-            {
-                return new JsonResult(await _PetService.GetPetTypes());
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex));
-            }
+            return new JsonResult(await _PetService.GetPetTypes());
         }
 
         [HttpGet("GetPetBreeds")]
         [Authorize(Roles = "Administrator,Pets Read,Pets Write")]
         public async Task<IActionResult> GetPetBreeds(int petTypeId)
         {
-            try
+            // Create cache key based on petTypeId parameter
+            var cacheKey = $"pet_breeds_{petTypeId}";
+            
+            // Try to get from cache first
+            var cachedResult = await _cachingService.GetAsync<object>(cacheKey);
+            if (cachedResult != null)
             {
-                // Create cache key based on petTypeId parameter
-                var cacheKey = $"pet_breeds_{petTypeId}";
-                
-                // Try to get from cache first
-                var cachedResult = await _cachingService.GetAsync<object>(cacheKey);
-                if (cachedResult != null)
-                {
-                    return new JsonResult(cachedResult);
-                }
-                
-                // If not in cache, fetch from database
-                var result = await _PetService.GetPetBreeds(petTypeId);
-                
-                // Cache the result for 1 hour (breeds don't change frequently)
-                await _cachingService.SetAsync(cacheKey, result, TimeSpan.FromHours(1));
-                
-                return new JsonResult(result);
+                return new JsonResult(cachedResult);
             }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex));
-            }
+            
+            // If not in cache, fetch from database
+            var result = await _PetService.GetPetBreeds(petTypeId);
+            
+            // Cache the result for 1 hour (breeds don't change frequently)
+            await _cachingService.SetAsync(cacheKey, result, TimeSpan.FromHours(1));
+            
+            return new JsonResult(result);
         }
 
         [HttpGet("GetPetPhotos")]
         [Authorize(Roles = "Administrator,Pets Read,Pets Write")]
         public async Task<IActionResult> GetPetPhotos(int petId)
         {
-            try
-            {
-                var result = await _PetService.GetPetPhotos(petId);
-                
-                // Add payload size information to response headers
-                var payloadSize = _payloadSizeService.CalculatePayloadSize(result);
-                Response.Headers.Add("X-Payload-Size-Bytes", payloadSize.ToString());
-                Response.Headers.Add("X-Payload-Size-KB", (payloadSize / 1024).ToString());
-                Response.Headers.Add("X-Photo-Count", result.Count.ToString());
-                
-                return new JsonResult(result);
-            }
-            catch (OutOfMemoryException ex)
-            {
-                _logger.LogError(ex, $"Out of memory error when getting pet photos for petId: {petId}");
-                return new JsonResult(HandleUIException(ex));
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex));
-            }
+            var result = await _PetService.GetPetPhotos(petId);
+            
+            // Add payload size information to response headers
+            var payloadSize = _payloadSizeService.CalculatePayloadSize(result);
+            Response.Headers.Append("X-Payload-Size-Bytes", payloadSize.ToString());
+            Response.Headers.Append("X-Payload-Size-KB", (payloadSize / 1024).ToString());
+            Response.Headers.Append("X-Photo-Count", result.Count.ToString());
+            
+            return new JsonResult(result);
         }
 
         [HttpPost("GetPetPhotosBatch")]
         [Authorize(Roles = "Administrator,Pets Read,Pets Write")]
         public async Task<IActionResult> GetPetPhotosBatch([FromBody] List<int> petIds)
         {
-            try
-            {
-                var result = await _PetService.GetPetPhotosBatch(petIds);
-                return new JsonResult(result);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex));
-            }
+            var result = await _PetService.GetPetPhotosBatch(petIds);
+            return new JsonResult(result);
         }
     }
 }

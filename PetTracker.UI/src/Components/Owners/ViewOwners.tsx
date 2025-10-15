@@ -133,19 +133,21 @@ export default function ViewOwners() {
         },
         {
             field: 'actions',
-            headerName: 'Actions',
+            headerName: '',
             sortable: false,
             filterable: false,
             width: 80,
             renderCell: (params: GridRenderCellParams) => (
-                <IconButton
-                    color="primary"
-                    onClick={() => handleOpenOwner(params.row as Owner)}
-                    disabled={!hasReadAccess}
-                    size="small"
-                >
-                    <EditIcon />
-                </IconButton>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+                    <IconButton
+                        color="primary"
+                        onClick={() => handleOpenOwner(params.row as Owner)}
+                        disabled={!hasReadAccess}
+                        size="small"
+                    >
+                        <EditIcon />
+                    </IconButton>
+                </Box>
             ),
         },
     ];
@@ -192,6 +194,15 @@ export default function ViewOwners() {
                             pageSizeOptions={[10, 25, 50, 100]}
                             disableRowSelectionOnClick
                             disableColumnMenu
+                            slots={{
+                                noRowsOverlay: () => (
+                                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                                        <Box sx={{ textAlign: 'center' }}>
+                                            No owners found
+                                        </Box>
+                                    </Box>
+                                ),
+                            }}
                             sx={{
                                 '& .MuiDataGrid-cell:focus': {
                                     outline: 'none',

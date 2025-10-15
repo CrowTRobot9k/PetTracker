@@ -312,7 +312,7 @@ export default function AddOwner({ open, handleClose, ownerStates, reloadOwners,
                     </DialogContent>
                 </DialogContent>
                 <DialogActions sx={{ pb: 3, px: 3 }}>
-                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClose} variant="contained" color="secondary">Cancel</Button>
                     <Button variant="contained" color="info" type="submit">Create</Button>
                 </DialogActions>
             </form>

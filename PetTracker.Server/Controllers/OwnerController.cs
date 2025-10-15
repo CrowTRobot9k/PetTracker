@@ -21,46 +21,24 @@ namespace PetTracker.Server.Controllers
         [Authorize(Roles = "Administrator,Owners Read,Owners Write")]
         public async Task<IActionResult> GetOwners()
         {
-            try
-            {
-                var result = await _OwnerService.GetOwners();
-                return new JsonResult(result);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex));
-            }
+            throw new Exception("Test exception from GetOwners");
+            var result = await _OwnerService.GetOwners();
+            return new JsonResult(result);
         }
 
         [HttpGet("GetOwnerList")]
         [Authorize(Roles = "Administrator,Owners Read,Owners Write")]
         public async Task<IActionResult> GetOwnerList()
         {
-            try
-            {
-                var result = await _OwnerService.GetOwnerList();
-                return new JsonResult(result);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex));
-            }
+            var result = await _OwnerService.GetOwnerList();
+            return new JsonResult(result);
         }
 
         [HttpPost("CreateOwner")]
         [Authorize(Roles = "Administrator,Owners Write")]
         public async Task<IActionResult> CreateOwner([FromForm] AddOwnerDto model)
-
         {
-            try
-            {
-                var result = await _OwnerService.CreateOwner(model);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex, model));
-            }
-
+            var result = await _OwnerService.CreateOwner(model);
             return new JsonResult(true);
         }
 
@@ -68,15 +46,7 @@ namespace PetTracker.Server.Controllers
         [Authorize(Roles = "Administrator,Owners Write")]
         public async Task<IActionResult> UpdateOwner([FromForm] AddOwnerDto model)
         {
-            try
-            {
-                var result = await _OwnerService.UpdateOwner(model);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex, model));
-            }
-
+            var result = await _OwnerService.UpdateOwner(model);
             return new JsonResult(true);
         }
 
@@ -84,15 +54,7 @@ namespace PetTracker.Server.Controllers
         [Authorize(Roles = "Administrator,Owners Write")]
         public async Task<IActionResult> AddExistingPetsToOwner(AddExistingPetsToOwnerDto model)
         {
-            try
-            {
-                var result = await _OwnerService.AddExistingPetsToOwner(model);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex, model));
-            }
-
+            var result = await _OwnerService.AddExistingPetsToOwner(model);
             return new JsonResult(true);
         }
 
@@ -100,15 +62,7 @@ namespace PetTracker.Server.Controllers
         [Authorize(Roles = "Administrator,Owners Write")]
         public async Task<IActionResult> RemoveExistingPetFromOwner(AddExistingPetsToOwnerDto model)
         {
-            try
-            {
-                var result = await _OwnerService.RemoveExistingPetsToOwner(model);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex, model));
-            }
-
+            var result = await _OwnerService.RemoveExistingPetsToOwner(model);
             return new JsonResult(true);
         }
 
@@ -116,58 +70,30 @@ namespace PetTracker.Server.Controllers
         [Authorize(Roles = "Administrator,Owners Read,Owners Write")]
         public async Task<IActionResult> GetOwnerPhotos(int ownerId)
         {
-            try
-            {
-                var result = await _OwnerService.GetOwnerPhotos(ownerId);
-                
-                // Add payload size information to response headers
-                var payloadSize = _payloadSizeService.CalculatePayloadSize(result);
-                Response.Headers.Add("X-Payload-Size-Bytes", payloadSize.ToString());
-                Response.Headers.Add("X-Payload-Size-KB", (payloadSize / 1024).ToString());
-                Response.Headers.Add("X-Photo-Count", result.Count.ToString());
-                
-                return new JsonResult(result);
-            }
-            catch (OutOfMemoryException ex)
-            {
-                _logger.LogError(ex, $"Out of memory error when getting owner photos for ownerId: {ownerId}");
-                return new JsonResult(HandleUIException(ex));
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex));
-            }
+            var result = await _OwnerService.GetOwnerPhotos(ownerId);
+            
+            // Add payload size information to response headers
+            var payloadSize = _payloadSizeService.CalculatePayloadSize(result);
+            Response.Headers.Append("X-Payload-Size-Bytes", payloadSize.ToString());
+            Response.Headers.Append("X-Payload-Size-KB", (payloadSize / 1024).ToString());
+            Response.Headers.Append("X-Photo-Count", result.Count.ToString());
+            
+            return new JsonResult(result);
         }
 
         [HttpPost("GetOwnerPhotosBatch")]
         [Authorize(Roles = "Administrator,Owners Read,Owners Write")]
         public async Task<IActionResult> GetOwnerPhotosBatch([FromBody] List<int> ownerIds)
         {
-            try
-            {
-                var result = await _OwnerService.GetOwnerPhotosBatch(ownerIds);
-                return new JsonResult(result);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex));
-            }
+            var result = await _OwnerService.GetOwnerPhotosBatch(ownerIds);
+            return new JsonResult(result);
         }
 
         [HttpGet("GetStates")]
         [Authorize(Roles = "Administrator,Owners Read,Owners Write")]
         public async Task<IActionResult> GetStates()
         {
-            var ret = new List<USState>();
-            try
-            {
-               ret = USState.GetStates();
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(HandleUIException(ex));
-            }
-
+            var ret = USState.GetStates();
             return new JsonResult(ret);
         }
     }

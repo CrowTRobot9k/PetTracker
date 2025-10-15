@@ -148,26 +148,51 @@ export default function AppAppBar(props: { currentPage:string})
           <StyledToolbar variant="dense" disableGutters>
             <Box sx={{ display: 'flex', px: 0, mx: 2, flex: 1 }}>
                   <Box sx={{ mx: 2, display: { xs: 'none', md: 'flex' }, gap: 1 }}>
-                      <Button onClick={() => navigate('/')} variant={props.currentPage == "home" ? "contained" : "text"} color="info" size="small">
+                      <Button 
+                        onClick={() => navigate('/')} 
+                        variant={props.currentPage == "home" ? "contained" : "text"} 
+                        color="info" 
+                        size="small"
+                      >
                           Home
                       </Button>
                       {hasPermission('owners') && (
-                          <Button onClick={() => navigate('/owners')} variant={props.currentPage == "owners" ? "contained" : "text"} color="info" size="small">
+                          <Button 
+                            onClick={() => navigate('/owners')} 
+                            variant={props.currentPage == "owners" ? "contained" : "text"} 
+                            color="info" 
+                            size="small"
+                          >
                               Owners
                           </Button>
                       )}
                       {hasPermission('pets') && (
-                          <Button onClick={() => navigate('/pets')} variant={props.currentPage == "pets" ? "contained" : "text"} color="info" size="small">
+                          <Button 
+                            onClick={() => navigate('/pets')} 
+                            variant={props.currentPage == "pets" ? "contained" : "text"} 
+                            color="info" 
+                            size="small"
+                          >
                               Pets
                           </Button>
                       )}
                       {hasPermission('appointments') && (
-                          <Button onClick={() => navigate('/appointments')} variant={props.currentPage == "appointments" ? "contained" : "text"} color="info" size="small">
+                          <Button 
+                            onClick={() => navigate('/appointments')} 
+                            variant={props.currentPage == "appointments" ? "contained" : "text"} 
+                            color="info" 
+                            size="small"
+                          >
                               Appointments
                           </Button>
                       )}
                       {hasPermission('users') && (
-                          <Button onClick={() => navigate('/users')} variant={props.currentPage == "users" ? "contained" : "text"} color="info" size="small">
+                          <Button 
+                            onClick={() => navigate('/users')} 
+                            variant={props.currentPage == "users" ? "contained" : "text"} 
+                            color="info" 
+                            size="small"
+                          >
                               Users
                           </Button>
                       )}
@@ -209,7 +234,12 @@ export default function AppAppBar(props: { currentPage:string})
                 Welcome, {user.fullName || user.email}
               </Typography>
             )}
-            <Button onClick={navLogout} color="info" variant="contained" size="small">
+            <Button 
+              onClick={navLogout} 
+              color="info" 
+              variant="contained" 
+              size="small"
+            >
                 Logout
             </Button>
           </Box>
