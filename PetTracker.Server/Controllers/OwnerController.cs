@@ -21,7 +21,6 @@ namespace PetTracker.Server.Controllers
         [Authorize(Roles = "Administrator,Owners Read,Owners Write")]
         public async Task<IActionResult> GetOwners()
         {
-            throw new Exception("Test exception from GetOwners");
             var result = await _OwnerService.GetOwners();
             return new JsonResult(result);
         }
