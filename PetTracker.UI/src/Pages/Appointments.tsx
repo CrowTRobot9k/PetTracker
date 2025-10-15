@@ -23,7 +23,10 @@ export default function Appointments(props: { disableCustomTheme?: boolean }) {
                             display: 'flex', 
                             flexDirection: 'column', 
                             my: 2, 
-                            gap: 2
+                            gap: 2,
+                            height: 'calc(100vh - 180px)',
+                            minHeight: 0,
+                            overflow: 'hidden'
                         }}
                     >
                         <AppointmentScheduler></AppointmentScheduler>

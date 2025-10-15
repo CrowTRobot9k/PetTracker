@@ -306,9 +306,15 @@ export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boo
                 <LoadingPlaceholder />
             )}
             {!(showErrors) && !loadingPets && (
-                <>
+                <Box sx={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    height: props.ownerId != null ? 'auto' : '100%',
+                    minHeight: 0,
+                    gap: 2
+                }}>
                     {hasWriteAccess && (
-                        <Box sx={{ display: 'flex', gap: 2, mb: 2, mt: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
+                        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap', flexShrink: 0 }}>
                             <Button 
                                 onClick={handleClickOpen} 
                                 variant="contained" 
@@ -339,9 +345,12 @@ export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boo
                     )}
                     
                     <Box sx={{ 
-                        height: props.ownerId != null ? 450 : 600,
-                        maxHeight: props.ownerId != null ? 450 : 'calc(100vh - 220px)',
-                        width: '100%'
+                        height: props.ownerId != null ? 450 : '100%',
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        minHeight: 0,
+                        flexGrow: props.ownerId != null ? 0 : 1
                     }}>
                         <DataGrid
                             rows={gridRows}
@@ -463,7 +472,7 @@ export default function ViewPets(props: { ownerId?: number; hasWriteAccess?: boo
                         confirmDescription={"Are you sure you want to delete this pet?"} 
                         confirmbuttonText="Yes" 
                     />
-                </>
+                </Box>
             )}
         </>
     );

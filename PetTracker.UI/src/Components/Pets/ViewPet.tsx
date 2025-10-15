@@ -24,6 +24,9 @@ import useExistingPetsStore from '../../Stores/ExistingPetStore';
 import dayjs, { Dayjs } from 'dayjs';
 import ErrorDisplay from '../ErrorDisplay';
 import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 
 interface ViewPetProps {
@@ -48,6 +51,8 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
     const getPetBreeds = usePetStore((state) => state.getPetBreeds);
     const petBreeds = usePetStore((state) => state.petBreeds);
     const { getPetPhotos, getPetPhotosSync, updatePet } = usePetsStore();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     
     // Use existing pets store for photo management
     const getExistingPetPhotos = useExistingPetsStore((state) => state.getPetPhotos);
@@ -242,7 +247,14 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
             open={open}
             onClose={handleClose}
             fullWidth
-            maxWidth="lg"
+            maxWidth={isMobile ? "sm" : "lg"}
+            fullScreen={isMobile}
+            sx={{
+                '& .MuiDialog-paper': {
+                    height: isMobile ? '100%' : '90vh',
+                    maxHeight: isMobile ? '100%' : '90vh'
+                }
+            }}
         >
             <form name="savePetForm" onSubmit={handleSavePetSubmit}>
                 <DialogContent
@@ -256,190 +268,254 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                     )}
                     <ImageUpload label="Upload Photos" selectedFiles={selectedFiles} onChange={handleFileInputChange} readonly={!hasWriteAccess} />
                 </DialogContent>
-                <DialogContent
-                    sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', width: '100%' }}
-                >
-                    <DialogContent
-                        sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', flex: 1 }}
+                <DialogContent sx={{ p: { xs: 2, sm: 3 }, width: '100%', maxWidth: '100%', overflow: 'auto' }}>
+                    <Grid 
+                        container 
+                        columns={12} 
+                        spacing={{ xs: 2, sm: 3 }} 
+                        sx={{ 
+                            width: '100%',
+                            display: 'flex',
+                            flexWrap: 'wrap'
+                        }}
                     >
-                        <DialogContentText>
-                            Name
-                        </DialogContentText>
-                        <OutlinedInput
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="petName"
-                            name="name"
-                            label="Pet Name"
-                            placeholder="Pet Name"
-                            type="text"
-                            value={editPet.name}
-                            onChange={handleChange}
-                            disabled={!hasWriteAccess}
-                        />
-                        <DialogContentText>
-                            Pet Type
-                        </DialogContentText>
-                        <FormControl fullWidth>
-                            <Select
-                                displayEmpty
-                                id="select-pet-type"
-                                name="petType"
-                                value={editPet.petType}
-                                label="Pet Type"
-                                onChange={handleChangePetType}
-                                disabled={!hasWriteAccess}
-                                renderValue={(selected) => {
-                                    if (!selected) {
-                                        return <em>Select</em>;
-                                    }
-
-                                    return selected;
-                                }}
-                            >
-                                {petTypes?.length > 0 && (petTypes?.map((m,index) => (
-
-                                    <MenuItem key={index} value={m.type}>{m.type}</MenuItem>
-                                )))}
-                            </Select>
-                        </FormControl>
-                        <DialogContentText>
-                            Breed
-                        </DialogContentText>
-                        <FormControl fullWidth>
-                            <Select
-                                multiple
-                                displayEmpty
-                                id="select-pet-type"
-                                name="breeds"
-                                value={editPet.breeds}
-                                label="Pet Breed"
-                                open={openBreeds}
-                                onOpen={() => setOpenBreeds(true)}
-                                onClose={() => setOpenBreeds(false)}
-                                onChange={handleChangePetBreed}
-                                renderValue={(selected) => {
-                                    if (petBreeds?.length < 1) {
-                                        return <em>Select Pet Type To View Breeds</em>;
-                                    }
-                                    if (petBreeds?.length > 0 && selected?.length < 1) {
-                                        return <em>Select</em>;
-                                    }
-                                    return (
-                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                            {selected?.map((value) => (
-                                                <Chip key={value} label={value} />
-                                            ))}
-                                        </Box>)
-                                }}
-
-                                disabled={petBreeds?.length > 0 ? !hasWriteAccess : true}
-                            >
-                                {petBreeds?.length > 0 && (petBreeds.map(m =>
-
-                                    <MenuItem key={m.name} value={m.name}>{m.name}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <DialogContentText>
-                            Color
-                        </DialogContentText>
-                        <OutlinedInput
-                            autoFocus
-                            //required
-                            margin="dense"
-                            id="petColor"
-                            name="color"
-                            label="Pet Color"
-                            placeholder="Pet Color"
-                            type="text"
-                            fullWidth
-                            value={editPet.color}
-                            onChange={handleChange}
-                            disabled={!hasWriteAccess}
-                        />
-                    </DialogContent>
-                    <DialogContent
-                        sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', flex: 1 }}
-                    >
-                        <DialogContentText>
-                            Birth Date
-                        </DialogContentText>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                                name="birthDate"
-                                value={editPet.birthDate}
-                                onChange={handleChangeDate}
-                                slotProps={{ textField: { size: 'small' } }}
-                                disabled={!hasWriteAccess}
-                            />
-                        </LocalizationProvider>
-                        <DialogContentText>
-                            Weight
-                        </DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="petWeight"
-                            name="weight"
-                            label="Pet Weight"
-                            placeholder="Pet Weight"
-                            type="text"
-                            fullWidth
-                            value={editPet.weight}
-                            onChange={handleWeightChange}
-                            disabled={!hasWriteAccess}
-                            error={!!weightError}
-                            helperText={weightError}
-                        />
-                        <DialogContentText>
-                            Sex
-                        </DialogContentText>
-                        <Select
-                            displayEmpty
-                            id="select-pet-sex"
-                            name="sex"
-                            value={editPet.sex}
-                            label="Pet Sex"
-                            onChange={handleChangePetSex}
-                            disabled={!hasWriteAccess}
-                            renderValue={(selected) => {
-                                if (!selected) {
-                                    return <em>Select Sex</em>;
-                                }
-
-                                return selected;
+                        <Grid 
+                            size={{ xs: 12, sm: 6, md: 6, lg: 6 }} 
+                            sx={{
+                                flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' },
+                                maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' }
                             }}
                         >
-                            {petGenders?.length > 0 && (petGenders.map((m,index) =>(
-
-                                <MenuItem key={ index} value={m.value}>{m.value}</MenuItem>
-                            )))}
-                        </Select>
-                        <DialogContentText>
-                            Medical Problems
-                        </DialogContentText>
-                        <OutlinedInput
-                            autoFocus
-                            //required
-                            margin="dense"
-                            id="petMedicalProblems"
-                            name="medicalProblems"
-                            label="Pet Medical Problems"
-                            placeholder="Pet Medical Problems"
-                            type="textArea"
-                            multiline
-                            minRows="3"
-                            fullWidth
-                            value={editPet.medicalProblems}
-                            onChange={handleChange}
-                            disabled={!hasWriteAccess}
-                        />
-                    </DialogContent>
+                            <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                Name
+                            </DialogContentText>
+                            <OutlinedInput
+                                autoFocus
+                                required
+                                margin="dense"
+                                id="petName"
+                                name="name"
+                                label="Pet Name"
+                                placeholder="Pet Name"
+                                type="text"
+                                fullWidth
+                                value={editPet.name}
+                                onChange={handleChange}
+                                disabled={!hasWriteAccess}
+                            />
+                        </Grid>
+                        <Grid 
+                            size={{ xs: 12, sm: 6, md: 6, lg: 6 }} 
+                            sx={{
+                                flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' },
+                                maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' }
+                            }}
+                        >
+                            <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                Pet Type
+                            </DialogContentText>
+                            <FormControl fullWidth>
+                                <Select
+                                    displayEmpty
+                                    id="select-pet-type"
+                                    name="petType"
+                                    value={editPet.petType}
+                                    label="Pet Type"
+                                    onChange={handleChangePetType}
+                                    disabled={!hasWriteAccess}
+                                    renderValue={(selected) => {
+                                        if (!selected) {
+                                            return <em>Select</em>;
+                                        }
+                                        return selected;
+                                    }}
+                                >
+                                    {petTypes?.length > 0 && (petTypes?.map((m,index) => (
+                                        <MenuItem key={index} value={m.type}>{m.type}</MenuItem>
+                                    )))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid 
+                            size={{ xs: 12, sm: 6, md: 6, lg: 6 }} 
+                            sx={{
+                                flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' },
+                                maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' }
+                            }}
+                        >
+                            <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                Breed
+                            </DialogContentText>
+                            <FormControl fullWidth>
+                                <Select
+                                    multiple
+                                    displayEmpty
+                                    id="select-pet-breed"
+                                    name="breeds"
+                                    value={editPet.breeds}
+                                    label="Pet Breed"
+                                    open={openBreeds}
+                                    onOpen={() => setOpenBreeds(true)}
+                                    onClose={() => setOpenBreeds(false)}
+                                    onChange={handleChangePetBreed}
+                                    renderValue={(selected) => {
+                                        if (petBreeds?.length < 1) {
+                                            return <em>Select Pet Type To View Breeds</em>;
+                                        }
+                                        if (petBreeds?.length > 0 && selected?.length < 1) {
+                                            return <em>Select</em>;
+                                        }
+                                        return (
+                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                                {selected?.map((value) => (
+                                                    <Chip key={value} label={value} />
+                                                ))}
+                                            </Box>)
+                                    }}
+                                    disabled={petBreeds?.length > 0 ? !hasWriteAccess : true}
+                                >
+                                    {petBreeds?.length > 0 && (petBreeds.map(m =>
+                                        <MenuItem key={m.name} value={m.name}>{m.name}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid 
+                            size={{ xs: 12, sm: 6, md: 6, lg: 6 }} 
+                            sx={{
+                                flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' },
+                                maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' }
+                            }}
+                        >
+                            <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                Color
+                            </DialogContentText>
+                            <OutlinedInput
+                                margin="dense"
+                                id="petColor"
+                                name="color"
+                                label="Pet Color"
+                                placeholder="Pet Color"
+                                type="text"
+                                fullWidth
+                                value={editPet.color}
+                                onChange={handleChange}
+                                disabled={!hasWriteAccess}
+                            />
+                        </Grid>
+                        <Grid 
+                            size={{ xs: 12, sm: 6, md: 6, lg: 6 }} 
+                            sx={{
+                                flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' },
+                                maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' }
+                            }}
+                        >
+                            <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                Birth Date
+                            </DialogContentText>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                    name="birthDate"
+                                    value={editPet.birthDate}
+                                    onChange={handleChangeDate}
+                                    slotProps={{ textField: { size: 'small', fullWidth: true } }}
+                                    disabled={!hasWriteAccess}
+                                    sx={{ width: '100%' }}
+                                />
+                            </LocalizationProvider>
+                        </Grid>
+                        <Grid 
+                            size={{ xs: 12, sm: 6, md: 6, lg: 6 }} 
+                            sx={{
+                                flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' },
+                                maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' }
+                            }}
+                        >
+                            <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                Weight
+                            </DialogContentText>
+                            <TextField
+                                margin="dense"
+                                id="petWeight"
+                                name="weight"
+                                label="Pet Weight"
+                                placeholder="Pet Weight"
+                                type="text"
+                                fullWidth
+                                value={editPet.weight}
+                                onChange={handleWeightChange}
+                                disabled={!hasWriteAccess}
+                                error={!!weightError}
+                                helperText={weightError}
+                            />
+                        </Grid>
+                        <Grid 
+                            size={{ xs: 12, sm: 6, md: 6, lg: 6 }} 
+                            sx={{
+                                flex: { xs: '0 0 100%', sm: '0 0 calc(50% - 12px)' },
+                                maxWidth: { xs: '100%', sm: 'calc(50% - 12px)' }
+                            }}
+                        >
+                            <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                Sex
+                            </DialogContentText>
+                            <FormControl fullWidth>
+                                <Select
+                                    displayEmpty
+                                    id="select-pet-sex"
+                                    name="sex"
+                                    value={editPet.sex}
+                                    label="Pet Sex"
+                                    onChange={handleChangePetSex}
+                                    disabled={!hasWriteAccess}
+                                    renderValue={(selected) => {
+                                        if (!selected) {
+                                            return <em>Select Sex</em>;
+                                        }
+                                        return selected;
+                                    }}
+                                >
+                                    {petGenders?.length > 0 && (petGenders.map((m,index) =>(
+                                        <MenuItem key={index} value={m.value}>{m.value}</MenuItem>
+                                    )))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid 
+                            size={{ xs: 12, sm: 12, md: 12, lg: 12 }} 
+                            sx={{
+                                flex: '0 0 100%',
+                                maxWidth: '100%'
+                            }}
+                        >
+                            <DialogContentText sx={{ mb: 1, fontWeight: 500 }}>
+                                Medical Problems
+                            </DialogContentText>
+                            <OutlinedInput
+                                margin="dense"
+                                id="petMedicalProblems"
+                                name="medicalProblems"
+                                label="Pet Medical Problems"
+                                placeholder="Pet Medical Problems"
+                                type="textArea"
+                                multiline
+                                minRows="3"
+                                fullWidth
+                                value={editPet.medicalProblems}
+                                onChange={handleChange}
+                                disabled={!hasWriteAccess}
+                            />
+                        </Grid>
+                    </Grid>
                 </DialogContent>
-                <DialogActions sx={{ pb: 3, px: 3 }}>
-                    <Button onClick={handleClose} disabled={isSaving} variant="contained" color="secondary">
+                <DialogActions sx={{ 
+                    pb: isMobile ? 2 : 3, 
+                    px: isMobile ? 2 : 3,
+                    flexDirection: isMobile ? 'column' : 'row',
+                    gap: isMobile ? 1 : 0,
+                    flexShrink: 0
+                }}>
+                    <Button onClick={handleClose} disabled={isSaving} variant="contained" color="secondary" fullWidth={isMobile}>
                         {hasWriteAccess ? 'Cancel' : 'Close'}
                     </Button>
                     {hasWriteAccess && (
@@ -448,6 +524,7 @@ export default function ViewPet({ open, viewPet, handleClose, petTypes, reloadPe
                             color="info" 
                             type="submit"
                             disabled={isSaving}
+                            fullWidth={isMobile}
                             startIcon={isSaving ? <CircularProgress size={20} color="inherit" /> : null}
                         >
                             {isSaving ? 'Saving...' : 'Save'}

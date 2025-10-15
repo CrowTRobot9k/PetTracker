@@ -17,7 +17,15 @@ export default function Pets(props: { disableCustomTheme?: boolean }) {
                     <Container
                         maxWidth="lg"
                         component="main"
-                        sx={{ display: 'flex', flexDirection: 'column', my: 2, gap: 2 }}
+                        sx={{ 
+                            display: 'flex', 
+                            flexDirection: 'column', 
+                            my: 2, 
+                            gap: 2,
+                            height: 'calc(100vh - 180px)',
+                            minHeight: 0,
+                            overflow: 'hidden'
+                        }}
                     >
                         <ViewPets />
                     </Container>

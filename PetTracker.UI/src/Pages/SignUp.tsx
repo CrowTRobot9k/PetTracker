@@ -24,13 +24,15 @@ const Card = styled(MuiCard)(({ theme }) => ({
   flexDirection: 'column',
   alignSelf: 'center',
   width: '100%',
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
+  padding: theme.spacing(2),
+  gap: theme.spacing(1),
   margin: 'auto',
   boxShadow:
     'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
   [theme.breakpoints.up('sm')]: {
     width: '450px',
+    padding: theme.spacing(4),
+    gap: theme.spacing(2),
   },
   ...theme.applyStyles('dark', {
     boxShadow:
@@ -189,18 +191,28 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       <CssBaseline enableColorScheme />
       <SignUpContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
-          <img src="/PetTrackerLogoWide.png" width="400" height="120" />
+          <Box 
+            component="img"
+            src="/PetTrackerLogoWide.png"
+            alt="PetTracker Logo"
+            sx={{
+              width: '100%',
+              maxWidth: '400px',
+              height: 'auto',
+              alignSelf: 'center'
+            }}
+          />
           <Typography
             component="h1"
             variant="h4"
-            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
+            sx={{ width: '100%', fontSize: { xs: 'clamp(1.5rem, 8vw, 2rem)', sm: 'clamp(2rem, 10vw, 2.15rem)' } }}
           >
             Sign up
           </Typography>
           <Box
             component="form"
             onSubmit={handleSubmit}
-            sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+            sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1, sm: 2 } }}
           >
             <FormControl>
               <FormLabel htmlFor="firstName">First name</FormLabel>

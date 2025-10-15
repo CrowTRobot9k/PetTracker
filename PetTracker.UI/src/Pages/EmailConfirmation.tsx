@@ -16,11 +16,13 @@ const Card = styled(MuiCard)(({ theme }) => ({
   flexDirection: 'column',
   alignSelf: 'center',
   width: '100%',
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
+  padding: theme.spacing(2),
+  gap: theme.spacing(1),
   margin: 'auto',
   [theme.breakpoints.up('sm')]: {
     maxWidth: '450px',
+    padding: theme.spacing(4),
+    gap: theme.spacing(2),
   },
   boxShadow:
     'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
@@ -166,10 +168,20 @@ export default function EmailConfirmation(props: { disableCustomTheme?: boolean 
       <CssBaseline enableColorScheme />
       <ConfirmationContainer>
         <Card variant="outlined">
-          <img src="/PetTrackerLogoWide.png" width="400" height="120" alt="PetTracker Logo" />
+          <Box 
+            component="img"
+            src="/PetTrackerLogoWide.png"
+            alt="PetTracker Logo"
+            sx={{
+              width: '100%',
+              maxWidth: '400px',
+              height: 'auto',
+              alignSelf: 'center'
+            }}
+          />
           
           {isLoading && (
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
               <CircularProgress />
               <Typography variant="h6" color="text.secondary">
                 Confirming your email...
@@ -178,7 +190,7 @@ export default function EmailConfirmation(props: { disableCustomTheme?: boolean 
           )}
 
           {requiresPasswordChange && (
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1, sm: 2 } }}>
               <Typography variant="h6" color="primary" sx={{ textAlign: 'center' }}>
                 Password Change Required
               </Typography>
@@ -219,7 +231,7 @@ export default function EmailConfirmation(props: { disableCustomTheme?: boolean 
                 onClick={handlePasswordChange}
                 disabled={isChangingPassword || !temporaryPassword || !newPassword || !confirmPassword}
                 fullWidth
-                sx={{ mt: 2 }}
+                sx={{ mt: { xs: 1, sm: 2 } }}
               >
                 {isChangingPassword ? (
                   <>
@@ -240,7 +252,7 @@ export default function EmailConfirmation(props: { disableCustomTheme?: boolean 
           )}
 
           {isSuccess && (
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1, sm: 2 } }}>
               <Alert variant="filled" severity="success">
                 Email confirmed successfully! Redirecting to sign in...
               </Alert>
@@ -248,7 +260,7 @@ export default function EmailConfirmation(props: { disableCustomTheme?: boolean 
           )}
 
           {!isLoading && !isSuccess && !requiresPasswordChange && errorMessage && (
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1, sm: 2 } }}>
               <Alert variant="filled" severity="error">
                 {errorMessage}
               </Alert>

@@ -138,7 +138,7 @@ export default function AppAppBar(props: { currentPage:string})
             maxWidth: '100%',
             height: 'auto',
             width: 'auto',
-            maxHeight: { xs: '80px', sm: '100px', md: '120px', lg: '140px', xl: '160px' }
+            maxHeight: { xs: '85px', sm: '95px', md: '105px', lg: '115px', xl: '130px' }
           }}
           onClick={() => navigate('/')}
           alt="PetTracker Logo - Click to go home"
@@ -197,23 +197,25 @@ export default function AppAppBar(props: { currentPage:string})
                           </Button>
                       )}
                   </Box>
-                  <Box
-                      sx={{
-                          display: { xs: 'none', md: 'flex' },
-                          mx: 2,
-                          alignItems: 'center',
-                          flex: 1,
-                          justifyContent: 'center'
-                      }}
-                  >
-                      <OutlinedInput
-                              placeholder="Search"
-                              type="text"
-                              sx={{ width: "100%", maxWidth: "600px" }}
-                              value={searchTerm}
-                              onChange={handleSearchChange}
-                      />
-                  </Box>
+                  {props.currentPage !== "home" && (
+                      <Box
+                          sx={{
+                              display: { xs: 'none', md: 'flex' },
+                              mx: 2,
+                              alignItems: 'center',
+                              flex: 1,
+                              justifyContent: 'center'
+                          }}
+                      >
+                          <OutlinedInput
+                                  placeholder="Search"
+                                  type="text"
+                                  sx={{ width: "100%", maxWidth: "600px" }}
+                                  value={searchTerm}
+                                  onChange={handleSearchChange}
+                          />
+                      </Box>
+                  )}
             </Box>
           <Box
             sx={{
@@ -244,14 +246,16 @@ export default function AppAppBar(props: { currentPage:string})
             </Button>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1, alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
-            <OutlinedInput
-                placeholder="Search"
-                type="text"
-                sx={{ flex: 1, mr: 1 }}
-                value={searchTerm}
-                onChange={handleSearchChange}
-                size="small"
-            />
+            {props.currentPage !== "home" && (
+                <OutlinedInput
+                    placeholder="Search"
+                    type="text"
+                    sx={{ flex: 1, mr: 1 }}
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    size="small"
+                />
+            )}
             <IconButton aria-label="Menu button" onClick={toggleDrawer()} size="small" sx={{ flexShrink: 0 }}>
               <MenuIcon />
             </IconButton>
@@ -261,8 +265,8 @@ export default function AppAppBar(props: { currentPage:string})
               onClose={toggleDrawer(false)}
               PaperProps={{
                 sx: {
-                  top: '120px', // Reduced height for mobile
-                  maxHeight: 'calc(100vh - 120px)',
+                  top: '80px',
+                  maxHeight: 'calc(100vh - 80px)',
                   backgroundColor: 'background.default',
                   borderTop: '1px solid',
                   borderColor: 'divider',
