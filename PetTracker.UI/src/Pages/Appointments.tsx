@@ -24,7 +24,13 @@ export default function Appointments(props: { disableCustomTheme?: boolean }) {
                             flexDirection: 'column', 
                             my: 2, 
                             gap: 2,
-                            height: 'calc(100vh - 180px)',
+                            height: { 
+                                xs: 'calc(100vh - 200px)', 
+                                sm: 'calc(100vh - 210px)', 
+                                md: 'calc(100vh - 220px)', 
+                                lg: 'calc(100vh - 230px)', 
+                                xl: 'calc(100vh - 245px)' 
+                            },
                             minHeight: 0,
                             overflow: 'hidden'
                         }}
